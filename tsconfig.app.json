@@ -12,7 +12,12 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "strict": true,
-    "skipDefaultLibCheck": true
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "types": ["vite/client", "node"]
   },
   "include": ["src"]
 }

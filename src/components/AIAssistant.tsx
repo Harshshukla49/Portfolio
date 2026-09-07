@@ -112,6 +112,72 @@ export default function AIAssistant({ isOpen, onClose }: AIAssistantProps) {
     ]);
   };
 
+  // Rich Markdown Text Formatter
+  const renderFormattedText = (text: string) => {
+    const lines = text.split('\n');
+    return lines.map((line, lineIdx) => {
+      if (!line.trim()) {
+        return <div key={lineIdx} className="h-1.5" />;
+      }
+
+      const parts = [];
+      const inlineRegex = /(\[([^\]]+)\]\(([^)]+)\)|\*\*([^*]+)\*\*|\*([^*]+)\*)/g;
+      let lastIndex = 0;
+      let match;
+      let keyIdx = 0;
+
+      while ((match = inlineRegex.exec(line)) !== null) {
+        if (match.index > lastIndex) {
+          parts.push(
+            <span key={keyIdx++}>{line.substring(lastIndex, match.index)}</span>
+          );
+        }
+
+        if (match[2] && match[3]) {
+          const isExternal =
+            match[3].startsWith('http') ||
+            match[3].startsWith('mailto:') ||
+            match[3].startsWith('tel:') ||
+            match[3].endsWith('.pdf');
+          parts.push(
+            <a
+              key={keyIdx++}
+              href={match[3]}
+              target={isExternal ? '_blank' : undefined}
+              rel={isExternal ? 'noopener noreferrer' : undefined}
+              className="text-cyan-300 font-semibold underline underline-offset-2 hover:text-cyan-100 transition-colors"
+            >
+              {match[2]}
+            </a>
+          );
+        } else if (match[4]) {
+          parts.push(
+            <strong key={keyIdx++} className="font-bold text-white tracking-wide">
+              {match[4]}
+            </strong>
+          );
+        } else if (match[5]) {
+          parts.push(
+            <em key={keyIdx++} className="italic text-purple-200">
+              {match[5]}
+            </em>
+          );
+        }
+        lastIndex = inlineRegex.lastIndex;
+      }
+
+      if (lastIndex < line.length) {
+        parts.push(<span key={keyIdx++}>{line.substring(lastIndex)}</span>);
+      }
+
+      return (
+        <div key={lineIdx} className="leading-relaxed">
+          {parts.length > 0 ? parts : line}
+        </div>
+      );
+    });
+  };
+
   return (
     <>
       {/* Conversational AI Modal */}
@@ -196,15 +262,33 @@ export default function AIAssistant({ isOpen, onClose }: AIAssistantProps) {
                             : 'border border-white/10 bg-white/[0.04] text-slate-200 rounded-tl-none backdrop-blur-md'
                         }`}
                       >
-                        <p className="whitespace-pre-line">{msg.text}</p>
+                        <div className="space-y-1">{renderFormattedText(msg.text)}</div>
 
                         {/* Interactive Direct Action Button */}
                         {msg.action && (
                           <div className="mt-3 pt-2.5 border-t border-white/10">
                             <a
                               href={msg.action.link}
-                              onClick={onClose}
-                              className="inline-flex items-center gap-1.5 rounded-xl bg-cyan-500/20 border border-cyan-400/40 px-3 py-1.5 text-xs font-mono font-bold text-cyan-200 hover:bg-cyan-500/30 transition-all"
+                              target={
+                                msg.action.link.startsWith('http') ||
+                                msg.action.link.endsWith('.pdf') ||
+                                msg.action.link.startsWith('mailto:') ||
+                                msg.action.link.startsWith('tel:')
+                                  ? '_blank'
+                                  : undefined
+                              }
+                              rel={
+                                msg.action.link.startsWith('http') ||
+                                msg.action.link.endsWith('.pdf')
+                                  ? 'noopener noreferrer'
+                                  : undefined
+                              }
+                              onClick={() => {
+                                if (msg.action?.link.startsWith('#')) {
+                                  onClose();
+                                }
+                              }}
+                              className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-purple-600/30 to-cyan-500/30 border border-cyan-400/50 px-3.5 py-1.5 text-xs font-mono font-bold text-cyan-200 hover:from-purple-600/50 hover:to-cyan-500/50 hover:border-cyan-300 shadow-[0_0_15px_rgba(6,182,212,0.2)] transition-all"
                             >
                               <span>{msg.action.label}</span>
                               <FaArrowUpRightFromSquare className="text-[0.65rem]" />

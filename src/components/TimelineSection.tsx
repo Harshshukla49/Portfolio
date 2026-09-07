@@ -7,7 +7,8 @@ import {
   FaCheck,
   FaBuildingColumns,
   FaCalendarDays,
-  FaLocationDot,
+  FaSchool,
+  FaVolleyball,
   FaStar,
 } from 'react-icons/fa6';
 import { portfolioData } from '../data/portfolioData';
@@ -24,14 +25,14 @@ export default function TimelineSection() {
           </div>
 
           <h2 className="mt-4 text-3xl sm:text-5xl font-black uppercase tracking-tight text-white">
-            MILESTONES &{' '}
+            TRAINING, CERTIFICATIONS &{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400">
               EDUCATION
             </span>
           </h2>
 
           <p className="mt-4 text-base sm:text-lg text-slate-300">
-            Verified academic background, technical certifications, and competitive recognitions.
+            Verified academic background, professional certifications, and institutional recognitions from resume.
           </p>
         </div>
 
@@ -41,7 +42,7 @@ export default function TimelineSection() {
           <div className="lg:col-span-7 flex flex-col gap-6 text-left">
             <div className="flex items-center gap-2.5 pb-2 border-b border-white/10 font-mono text-sm text-cyan-400">
               <FaCertificate />
-              <span className="font-bold uppercase tracking-wider">CERTIFICATIONS & RECOGNITION</span>
+              <span className="font-bold uppercase tracking-wider">TRAINING & CERTIFICATIONS</span>
             </div>
 
             <div className="relative pl-6 space-y-6 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-[2px] before:bg-gradient-to-b before:from-purple-500 before:via-cyan-500 before:to-transparent">
@@ -64,7 +65,7 @@ export default function TimelineSection() {
                       {milestone.organization}
                     </span>
                     <span className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-0.5 text-[0.65rem] font-mono text-slate-400">
-                      {milestone.year}
+                      {milestone.date}
                     </span>
                   </div>
 
@@ -91,76 +92,73 @@ export default function TimelineSection() {
             </div>
           </div>
 
-          {/* Right Column: Education Spotlight Card */}
+          {/* Right Column: Complete Education & Extra-Curricular Spotlight */}
           <div className="lg:col-span-5 flex flex-col gap-6 text-left">
             <div className="flex items-center gap-2.5 pb-2 border-b border-white/10 font-mono text-sm text-purple-400">
               <FaBuildingColumns />
               <span className="font-bold uppercase tracking-wider">ACADEMIC FOUNDATION</span>
             </div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="rounded-3xl border border-white/15 bg-gradient-to-b from-purple-950/20 via-black/80 to-cyan-950/20 p-6 sm:p-8 backdrop-blur-2xl shadow-xl"
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-tr from-purple-600 to-cyan-500 p-0.5 shadow-[0_0_20px_rgba(168,85,247,0.4)]">
-                  <div className="flex h-full w-full items-center justify-center rounded-[14px] bg-black">
-                    <FaGraduationCap className="text-xl text-cyan-300" />
+            <div className="space-y-4">
+              {portfolioData.educationHistory.map((edu, idx) => (
+                <motion.div
+                  key={edu.qualification}
+                  initial={{ opacity: 0, y: 15 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: idx * 0.1 }}
+                  className="rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.03] to-black/60 p-6 backdrop-blur-xl shadow-lg hover:border-purple-500/40 transition-all"
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-purple-500/20 text-cyan-300 border border-purple-500/40 shrink-0">
+                      {idx === 0 ? <FaGraduationCap /> : <FaSchool />}
+                    </div>
+                    <span className="rounded-full border border-white/10 bg-white/5 px-2.5 py-0.5 text-[0.65rem] font-mono text-slate-400">
+                      {edu.year}
+                    </span>
                   </div>
+
+                  <h3 className="mt-3 text-base font-bold text-white leading-snug">
+                    {edu.qualification}
+                  </h3>
+
+                  <p className="mt-1 text-xs font-semibold text-cyan-300">
+                    {edu.institution}
+                  </p>
+
+                  <p className="text-[0.7rem] font-mono text-slate-400">
+                    Board / University: <span className="text-slate-200">{edu.board}</span>
+                  </p>
+
+                  {edu.highlights && (
+                    <p className="mt-2 text-xs text-slate-400 leading-relaxed border-t border-white/5 pt-2">
+                      {edu.highlights}
+                    </p>
+                  )}
+                </motion.div>
+              ))}
+
+              {/* Extra-Curricular Volleyball Card */}
+              <motion.div
+                initial={{ opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="rounded-3xl border border-cyan-500/20 bg-gradient-to-br from-cyan-950/20 via-black to-blue-950/20 p-6 backdrop-blur-xl shadow-lg"
+              >
+                <div className="flex items-center gap-2 text-cyan-400 font-mono text-xs uppercase font-bold tracking-wider">
+                  <FaVolleyball className="text-amber-400 animate-spin-slow" />
+                  <span>EXTRA-CURRICULAR LEADERSHIP</span>
                 </div>
 
-                <div className="rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3 py-1 font-mono text-xs text-emerald-300">
-                  <span>CGPA: </span>
-                  <span className="font-bold">{portfolioData.education.cgpa}</span>
-                </div>
-              </div>
+                <h4 className="mt-2 text-sm font-bold text-white">
+                  {portfolioData.extraCurricular.activity}
+                </h4>
 
-              <h3 className="mt-6 text-2xl font-black text-white uppercase tracking-tight">
-                {portfolioData.education.institution}
-              </h3>
-
-              <p className="mt-1 text-base font-bold text-cyan-300">
-                {portfolioData.education.degree}
-              </p>
-
-              <p className="text-xs font-mono text-purple-300 uppercase tracking-wider mt-0.5">
-                {portfolioData.education.specialization}
-              </p>
-
-              <div className="mt-6 grid grid-cols-2 gap-3 font-mono text-xs text-slate-300">
-                <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3">
-                  <div className="flex items-center gap-1.5 text-slate-400">
-                    <FaCalendarDays className="text-cyan-400" />
-                    <span>TIMELINE</span>
-                  </div>
-                  <p className="mt-1 font-bold text-white">{portfolioData.education.duration}</p>
-                </div>
-
-                <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3">
-                  <div className="flex items-center gap-1.5 text-slate-400">
-                    <FaStar className="text-purple-400" />
-                    <span>STATUS</span>
-                  </div>
-                  <p className="mt-1 font-bold text-emerald-400">In Progress</p>
-                </div>
-              </div>
-
-              <div className="mt-6 pt-6 border-t border-white/10">
-                <p className="text-xs font-mono uppercase tracking-wider text-slate-400 mb-3">
-                  KEY HIGHLIGHTS:
+                <p className="mt-1 text-xs text-slate-300 leading-relaxed">
+                  {portfolioData.extraCurricular.description}
                 </p>
-                <ul className="space-y-2.5 text-xs text-slate-300">
-                  {portfolioData.education.highlights.map((h, i) => (
-                    <li key={i} className="flex items-start gap-2">
-                      <FaCheck className="text-cyan-400 text-xs shrink-0 mt-0.5" />
-                      <span>{h}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </motion.div>
+              </motion.div>
+            </div>
           </div>
         </div>
       </div>

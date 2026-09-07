@@ -5,10 +5,10 @@ import { portfolioData } from '../data/portfolioData';
 
 interface NavbarProps {
   onOpenAI: () => void;
-  onDownloadResume: () => void;
+  onDownloadResume?: () => void;
 }
 
-export default function Navbar({ onOpenAI, onDownloadResume }: NavbarProps) {
+export default function Navbar({ onOpenAI }: NavbarProps) {
   const [activeSection, setActiveSection] = useState('hero');
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -128,14 +128,17 @@ export default function Navbar({ onOpenAI, onDownloadResume }: NavbarProps) {
                 <span>Ask AI</span>
               </button>
 
-              {/* Download Resume Button */}
-              <button
-                onClick={onDownloadResume}
-                className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3.5 py-1.5 text-xs font-medium text-slate-300 hover:border-cyan-400/50 hover:bg-cyan-500/10 hover:text-white transition-all duration-300"
+              {/* Download Official PDF Resume Direct Link */}
+              <a
+                href="/Harsh_Shukla_Resume.pdf"
+                download="Harsh_Shukla_Resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3.5 py-1.5 text-xs font-medium text-slate-300 hover:border-cyan-400/50 hover:bg-cyan-500/10 hover:text-white transition-all duration-300 hover:scale-105"
               >
                 <FaFileArrowDown className="text-cyan-400 text-xs" />
-                <span>Resume</span>
-              </button>
+                <span>Resume (PDF)</span>
+              </a>
 
               {/* Contact Button */}
               <button
@@ -201,16 +204,17 @@ export default function Navbar({ onOpenAI, onDownloadResume }: NavbarProps) {
                   <span>✦ Launch Harsh AI</span>
                 </button>
 
-                <button
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    onDownloadResume();
-                  }}
-                  className="flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/5 py-3 text-sm font-medium text-slate-300"
+                <a
+                  href="/Harsh_Shukla_Resume.pdf"
+                  download="Harsh_Shukla_Resume.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/5 py-3 text-sm font-medium text-slate-300 hover:text-white"
                 >
                   <FaFileArrowDown className="text-cyan-400" />
-                  <span>Download Resume (Verified)</span>
-                </button>
+                  <span>Download Resume (PDF)</span>
+                </a>
               </div>
             </div>
           </motion.div>

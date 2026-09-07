@@ -16,10 +16,10 @@ import {
 import { portfolioData } from '../data/portfolioData';
 
 interface ContactSectionProps {
-  onDownloadResume: () => void;
+  onDownloadResume?: () => void;
 }
 
-export default function ContactSection({ onDownloadResume }: ContactSectionProps) {
+export default function ContactSection() {
   const [formState, setFormState] = useState({ name: '', email: '', message: '' });
   const [copiedEmail, setCopiedEmail] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -121,7 +121,7 @@ export default function ContactSection({ onDownloadResume }: ContactSectionProps
               </p>
             </div>
 
-            {/* Social Channels & Resume Download */}
+            {/* Social Channels & Direct PDF Resume Download */}
             <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur-xl shadow-lg space-y-4">
               <span className="text-xs font-mono text-slate-400 uppercase tracking-wider font-semibold">
                 CONNECT & VERIFY
@@ -149,13 +149,16 @@ export default function ContactSection({ onDownloadResume }: ContactSectionProps
                 </a>
               </div>
 
-              <button
-                onClick={onDownloadResume}
-                className="w-full flex items-center justify-center gap-2 rounded-2xl border border-cyan-400/40 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 p-3.5 text-xs font-bold font-mono text-cyan-300 hover:border-cyan-400 hover:bg-cyan-500/20 transition-all"
+              <a
+                href="/Harsh_Shukla_Resume.pdf"
+                download="Harsh_Shukla_Resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full flex items-center justify-center gap-2 rounded-2xl border border-cyan-400/40 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 p-3.5 text-xs font-bold font-mono text-cyan-300 hover:border-cyan-400 hover:bg-cyan-500/20 transition-all hover:scale-[1.01]"
               >
                 <FaFileArrowDown className="text-sm" />
-                <span>DOWNLOAD RESUME (VERIFIED)</span>
-              </button>
+                <span>DOWNLOAD RESUME (OFFICIAL PDF)</span>
+              </a>
             </div>
           </div>
 

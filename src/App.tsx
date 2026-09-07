@@ -16,72 +16,16 @@ import { portfolioData } from './data/portfolioData';
 export default function App() {
   const [isAIOpen, setIsAIOpen] = useState(false);
 
-  // Verified Resume Downloader
+  // Direct Official PDF Resume Downloader
   const handleDownloadResume = useCallback(() => {
-    const resumeText = [
-      '=====================================================================',
-      `               ${portfolioData.personal.name.toUpperCase()}`,
-      `       ${portfolioData.personal.role.toUpperCase()}`,
-      '=====================================================================',
-      `Email:    ${portfolioData.personal.email}`,
-      `Phone:    ${portfolioData.personal.phone}`,
-      `Location: ${portfolioData.personal.location}`,
-      `GitHub:   ${portfolioData.personal.github}`,
-      `LinkedIn: ${portfolioData.personal.linkedIn}`,
-      '',
-      '---------------------------------------------------------------------',
-      'PROFESSIONAL SUMMARY',
-      '---------------------------------------------------------------------',
-      portfolioData.personal.bio,
-      '',
-      '---------------------------------------------------------------------',
-      'EDUCATION',
-      '---------------------------------------------------------------------',
-      `${portfolioData.education.degree} (${portfolioData.education.specialization})`,
-      `${portfolioData.education.institution} - ${portfolioData.education.location}`,
-      `Timeline: ${portfolioData.education.duration} | CGPA: ${portfolioData.education.cgpa}`,
-      '',
-      '---------------------------------------------------------------------',
-      'CORE TECHNICAL SKILLS',
-      '---------------------------------------------------------------------',
-      'Languages:       Python, C++, JavaScript (ES6+), TypeScript, SQL',
-      'AI & ML:         Machine Learning, Deep Learning, NLP, OpenCV, Scikit-Learn, CNN, LSTM',
-      'Frontend:        React.js, Tailwind CSS, HTML5, CSS3, Framer Motion',
-      'Backend:         Node.js, Express.js, Flask, REST APIs',
-      'Databases:       MongoDB, MySQL, Firebase, Supabase, SQLite',
-      'Developer Tools: Git, GitHub, Postman, VS Code, Vite',
-      '',
-      '---------------------------------------------------------------------',
-      'FEATURED PROJECTS',
-      '---------------------------------------------------------------------',
-      ...portfolioData.projects.map(
-        (p, idx) =>
-          `[${idx + 1}] ${p.title} (${p.category})\n` +
-          `    Tech: ${p.tech.join(', ')}\n` +
-          `    Summary: ${p.description}\n` +
-          (p.liveUrl ? `    Live URL: ${p.liveUrl}\n` : '') +
-          `    GitHub: ${p.githubUrl}\n`
-      ),
-      '',
-      '---------------------------------------------------------------------',
-      'CERTIFICATIONS & ACHIEVEMENTS',
-      '---------------------------------------------------------------------',
-      ...portfolioData.milestones.map(
-        (m, idx) => `[${idx + 1}] ${m.title} - ${m.organization} (${m.year})\n    ${m.details}\n`
-      ),
-      '=====================================================================',
-      'Generated from verified portfolio records.',
-    ].join('\n');
-
-    const blob = new Blob([resumeText], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `Harsh_Shukla_Resume.txt`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    const link = document.createElement('a');
+    link.href = '/Harsh_Shukla_Resume.pdf';
+    link.setAttribute('download', 'Harsh_Shukla_Resume.pdf');
+    link.setAttribute('target', '_blank');
+    link.setAttribute('rel', 'noopener noreferrer');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }, []);
 
   useEffect(() => {

@@ -16,10 +16,10 @@ import AIVisualization from './AIVisualization';
 
 interface HeroProps {
   onOpenAI: () => void;
-  onDownloadResume: () => void;
+  onDownloadResume?: () => void;
 }
 
-export default function Hero({ onOpenAI, onDownloadResume }: HeroProps) {
+export default function Hero({ onOpenAI }: HeroProps) {
   const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
 
   const roles = [
@@ -114,14 +114,17 @@ export default function Hero({ onOpenAI, onDownloadResume }: HeroProps) {
                 <FaArrowRight className="text-xs group-hover:translate-x-1 transition-transform" />
               </button>
 
-              {/* Download Resume Button */}
-              <button
-                onClick={onDownloadResume}
+              {/* Direct Download Official PDF Resume */}
+              <a
+                href="/Harsh_Shukla_Resume.pdf"
+                download="Harsh_Shukla_Resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-5 py-3.5 text-sm font-semibold text-slate-200 hover:border-cyan-400/50 hover:bg-cyan-500/10 hover:text-white transition-all duration-300 hover:scale-105 backdrop-blur-md"
               >
                 <FaFileArrowDown className="text-cyan-400" />
-                <span>Resume (Verified)</span>
-              </button>
+                <span>Resume (PDF)</span>
+              </a>
 
               {/* Ask Harsh AI Trigger */}
               <button

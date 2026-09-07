@@ -5,9 +5,7 @@ import {
   FaCode,
   FaEye,
   FaDatabase,
-  FaGraduationCap,
   FaCircleCheck,
-  FaBolt,
   FaShieldHalved,
   FaTerminal,
 } from 'react-icons/fa6';
@@ -106,15 +104,6 @@ export default function AboutSection() {
                     </div>
                   </div>
                 </div>
-
-                {/* Academic Quick Badge */}
-                <div className="mt-4 flex items-center justify-between rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2.5 font-mono text-xs">
-                  <div className="flex items-center gap-2 text-slate-300">
-                    <FaGraduationCap className="text-purple-400 text-sm" />
-                    <span>UIT Prayagraj</span>
-                  </div>
-                  <span className="text-emerald-400 font-bold">7.2 CGPA</span>
-                </div>
               </div>
             </motion.div>
           </div>
@@ -158,7 +147,7 @@ export default function AboutSection() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {portfolioData.about.pillars.map((pillar, idx) => (
+            {portfolioData.about.pillars.map((pillar) => (
               <motion.div
                 key={pillar.title}
                 whileHover={{ y: -8 }}
@@ -167,7 +156,7 @@ export default function AboutSection() {
               >
                 <div>
                   <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5 shadow-inner group-hover:scale-110 transition-transform">
-                    {pillarIcons[pillar.icon] || <FaBolt className="text-cyan-400" />}
+                    {pillarIcons[pillar.icon] || <FaBrain className="text-cyan-400" />}
                   </div>
 
                   <h4 className="mt-5 text-lg font-bold text-white uppercase tracking-tight group-hover:text-cyan-300 transition-colors">

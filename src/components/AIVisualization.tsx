@@ -298,55 +298,55 @@ export default function AIVisualization() {
     };
   }, []);
 
-  // 4 Core HUD Telemetry Modules (Positioned cleanly to avoid overlap)
+  // 4 Compact HUD Satellite Modules (Guaranteed zero horizontal collisions)
   const hudModules = [
     {
       id: 'pytorch',
-      title: 'PYTORCH ENGINE',
-      subtitle: 'DEEP LEARNING • CUDA',
+      title: 'PYTORCH',
+      subtitle: 'CUDA • DL',
       badge: 'TRAINED',
       icon: SiPytorch,
       iconColor: 'text-orange-400',
       badgeColor: 'border-orange-500/40 text-orange-300 bg-orange-500/10',
-      pos: 'top-14 left-3 sm:left-6',
-      accentGlow: 'hover:shadow-[0_0_30px_rgba(249,115,22,0.45)] hover:border-orange-400/70',
-      activeBorder: 'border-orange-400 shadow-[0_0_25px_rgba(249,115,22,0.5)]',
+      pos: 'top-12 left-3 sm:left-4',
+      accentGlow: 'hover:shadow-[0_0_25px_rgba(249,115,22,0.45)] hover:border-orange-400/70',
+      activeBorder: 'border-orange-400 shadow-[0_0_20px_rgba(249,115,22,0.5)]',
     },
     {
       id: 'cv',
-      title: 'COMPUTER VISION',
-      subtitle: 'OPENCV • 90% ACC',
-      badge: 'BIOMETRIC',
+      title: 'VISION AI',
+      subtitle: 'OPENCV • 90%',
+      badge: 'FACE BIO',
       icon: SiOpencv,
       iconColor: 'text-cyan-400',
       badgeColor: 'border-cyan-500/40 text-cyan-300 bg-cyan-500/10',
-      pos: 'top-14 right-3 sm:right-6',
-      accentGlow: 'hover:shadow-[0_0_30px_rgba(6,182,212,0.45)] hover:border-cyan-400/70',
-      activeBorder: 'border-cyan-400 shadow-[0_0_25px_rgba(6,182,212,0.5)]',
+      pos: 'top-12 right-3 sm:right-4',
+      accentGlow: 'hover:shadow-[0_0_25px_rgba(6,182,212,0.45)] hover:border-cyan-400/70',
+      activeBorder: 'border-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.5)]',
     },
     {
       id: 'nlp',
-      title: 'NLP & TRANSFORMERS',
-      subtitle: 'NLTK • 1000+ TWEETS',
+      title: 'NLP & LLM',
+      subtitle: 'NLTK • VECTOR',
       badge: 'ACC +12%',
       icon: FaBrain,
       iconColor: 'text-purple-400',
       badgeColor: 'border-purple-500/40 text-purple-300 bg-purple-500/10',
-      pos: 'bottom-20 left-3 sm:left-6',
-      accentGlow: 'hover:shadow-[0_0_30px_rgba(168,85,247,0.45)] hover:border-purple-400/70',
-      activeBorder: 'border-purple-400 shadow-[0_0_25px_rgba(168,85,247,0.5)]',
+      pos: 'bottom-16 left-3 sm:left-4',
+      accentGlow: 'hover:shadow-[0_0_25px_rgba(168,85,247,0.45)] hover:border-purple-400/70',
+      activeBorder: 'border-purple-400 shadow-[0_0_20px_rgba(168,85,247,0.5)]',
     },
     {
       id: 'fullstack',
-      title: 'FULL STACK MERN',
-      subtitle: 'REACT • NODE • FIREBASE',
-      badge: 'PRODUCTION',
+      title: 'FULL STACK',
+      subtitle: 'REACT • NODE',
+      badge: 'MERN',
       icon: SiReact,
       iconColor: 'text-emerald-400',
       badgeColor: 'border-emerald-500/40 text-emerald-300 bg-emerald-500/10',
-      pos: 'bottom-20 right-3 sm:right-6',
-      accentGlow: 'hover:shadow-[0_0_30px_rgba(16,185,129,0.45)] hover:border-emerald-400/70',
-      activeBorder: 'border-emerald-400 shadow-[0_0_25px_rgba(16,185,129,0.5)]',
+      pos: 'bottom-16 right-3 sm:right-4',
+      accentGlow: 'hover:shadow-[0_0_25px_rgba(16,185,129,0.45)] hover:border-emerald-400/70',
+      activeBorder: 'border-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.5)]',
     },
   ];
 
@@ -391,24 +391,24 @@ export default function AIVisualization() {
       <canvas ref={canvasRef} className="pointer-events-none absolute inset-0 h-full w-full z-0" />
 
       {/* Top Cybernetic Command Header HUD */}
-      <div className="pointer-events-none absolute inset-x-5 top-4 z-20 flex items-center justify-between border-b border-white/10 pb-2.5 font-mono text-[0.7rem] text-slate-300 backdrop-blur-sm">
+      <div className="pointer-events-none absolute inset-x-4 sm:inset-x-5 top-3.5 z-20 flex items-center justify-between border-b border-white/10 pb-2 font-mono text-[0.68rem] text-slate-300 backdrop-blur-sm">
         <div className="flex items-center gap-2">
           <span className="relative flex h-2.5 w-2.5">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" />
             <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-cyan-500 shadow-[0_0_8px_#06b6d4]" />
           </span>
-          <span className="font-bold tracking-wider text-cyan-300 uppercase">
+          <span className="font-bold tracking-wider text-cyan-300 uppercase text-[0.65rem] sm:text-[0.7rem]">
             HARSH.AI <span className="text-slate-400 font-normal">// COMMAND CENTER</span>
           </span>
         </div>
 
-        <div className="flex items-center gap-3">
-          <div className="hidden sm:flex items-center gap-1.5 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-2.5 py-0.5 text-[0.65rem] text-cyan-300">
-            <span>LATENCY:</span>
+        <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-1 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-2 py-0.5 text-[0.6rem] sm:text-[0.65rem] text-cyan-300">
+            <span>LAT:</span>
             <span className="font-bold text-white">{statusCycle[statusCycleIndex].latency}</span>
           </div>
-          <div className="flex items-center gap-1.5 rounded-full border border-purple-500/30 bg-purple-500/10 px-2.5 py-0.5 text-[0.65rem] text-purple-300">
-            <span>PRECISION:</span>
+          <div className="flex items-center gap-1 rounded-full border border-purple-500/30 bg-purple-500/10 px-2 py-0.5 text-[0.6rem] sm:text-[0.65rem] text-purple-300">
+            <span>PREC:</span>
             <span className="font-bold text-white">{statusCycle[statusCycleIndex].precision}</span>
           </div>
         </div>
@@ -423,11 +423,11 @@ export default function AIVisualization() {
         transition={{ type: 'spring', stiffness: 120, damping: 18 }}
         className="relative z-10 flex items-center justify-center w-full h-full"
       >
-        {/* Outer Orbit (440px) */}
+        {/* Outer Orbit (380px) */}
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 50, repeat: Infinity, ease: 'linear' }}
-          className="pointer-events-none absolute h-[360px] w-[360px] sm:h-[420px] sm:w-[420px] rounded-full border border-cyan-500/20 border-dashed"
+          className="pointer-events-none absolute h-[320px] w-[320px] sm:h-[380px] sm:w-[380px] rounded-full border border-cyan-500/20 border-dashed"
         >
           {/* Satellite Beacon */}
           <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-cyan-400 shadow-[0_0_12px_#06b6d4]">
@@ -436,11 +436,11 @@ export default function AIVisualization() {
           <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 flex h-3 w-3 items-center justify-center rounded-full bg-pink-400 shadow-[0_0_10px_#ec4899]" />
         </motion.div>
 
-        {/* Middle Counter-Rotating Orbit with Ticks (300px) */}
+        {/* Middle Counter-Rotating Orbit with Ticks (260px) */}
         <motion.div
           animate={{ rotate: -360 }}
           transition={{ duration: 32, repeat: Infinity, ease: 'linear' }}
-          className="pointer-events-none absolute h-[260px] w-[260px] sm:h-[300px] sm:w-[300px] rounded-full border border-purple-500/30"
+          className="pointer-events-none absolute h-[220px] w-[220px] sm:h-[260px] sm:w-[260px] rounded-full border border-purple-500/30"
         >
           {/* Degree Ticks */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 h-2 w-[1px] bg-purple-400" />
@@ -455,7 +455,7 @@ export default function AIVisualization() {
         <motion.div
           animate={{ scale: [1, 1.08, 1], opacity: [0.35, 0.7, 0.35] }}
           transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-          className="pointer-events-none absolute h-[200px] w-[200px] sm:h-[220px] sm:w-[220px] rounded-full border-2 border-cyan-400/40 bg-cyan-500/5 blur-[1px]"
+          className="pointer-events-none absolute h-[170px] w-[170px] sm:h-[190px] sm:w-[190px] rounded-full border-2 border-cyan-400/40 bg-cyan-500/5 blur-[1px]"
         />
 
         {/* CENTRAL AI CORE SPHERE */}
@@ -466,41 +466,41 @@ export default function AIVisualization() {
             e.stopPropagation();
             triggerShockwave(undefined, undefined, '#ec4899');
           }}
-          className="relative z-30 flex h-40 w-40 sm:h-48 sm:w-48 cursor-pointer flex-col items-center justify-center rounded-full border-2 border-cyan-400/60 bg-gradient-to-tr from-[#0b0c1e] via-[#070814] to-[#120e28] p-3 text-center shadow-[0_0_50px_rgba(6,182,212,0.45),inset_0_0_35px_rgba(168,85,247,0.35)] backdrop-blur-2xl transition-all duration-300"
+          className="relative z-30 flex h-36 w-36 sm:h-44 sm:w-44 cursor-pointer flex-col items-center justify-center rounded-full border-2 border-cyan-400/60 bg-gradient-to-tr from-[#0b0c1e] via-[#070814] to-[#120e28] p-2 sm:p-3 text-center shadow-[0_0_45px_rgba(6,182,212,0.45),inset_0_0_30px_rgba(168,85,247,0.35)] backdrop-blur-2xl transition-all duration-300"
         >
           {/* Animated Core Perimeter Light Arc */}
           <div className="pointer-events-none absolute inset-0 rounded-full border border-purple-400/40 animate-spin-slow" />
 
           {/* Glowing Neural Brain Icon Crest */}
-          <div className="relative flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-600 via-indigo-600 to-cyan-500 p-[1px] shadow-[0_0_25px_rgba(6,182,212,0.6)]">
+          <div className="relative flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-600 via-indigo-600 to-cyan-500 p-[1px] shadow-[0_0_20px_rgba(6,182,212,0.6)]">
             <div className="flex h-full w-full items-center justify-center rounded-[15px] bg-[#070714]">
-              <FaBrain className="text-xl sm:text-2xl text-cyan-300 animate-pulse" />
+              <FaBrain className="text-lg sm:text-xl text-cyan-300 animate-pulse" />
             </div>
             {/* Pulsing energy ping */}
-            <span className="absolute -top-1 -right-1 flex h-3 w-3">
+            <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-pink-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-3 w-3 bg-pink-500 shadow-[0_0_6px_#ec4899]" />
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-pink-500 shadow-[0_0_6px_#ec4899]" />
             </span>
           </div>
 
           {/* Core Typography */}
-          <div className="mt-2 text-center">
-            <p className="text-sm sm:text-base font-black tracking-widest text-white uppercase font-mono drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]">
+          <div className="mt-1.5 text-center">
+            <p className="text-xs sm:text-sm font-black tracking-widest text-white uppercase font-mono drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]">
               HARSH<span className="text-cyan-400">.AI</span>
             </p>
-            <p className="text-[0.55rem] sm:text-[0.6rem] font-mono tracking-widest text-purple-300 uppercase mt-0.5">
+            <p className="text-[0.5rem] sm:text-[0.55rem] font-mono tracking-widest text-purple-300 uppercase mt-0.5">
               NEURAL INTELLIGENCE
             </p>
           </div>
 
           {/* Pulsing Status Pill */}
-          <div className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-emerald-400/50 bg-emerald-500/15 px-2.5 py-0.5 text-[0.6rem] font-mono text-emerald-300 shadow-[0_0_10px_rgba(16,185,129,0.3)]">
+          <div className="mt-1.5 inline-flex items-center gap-1 rounded-full border border-emerald-400/50 bg-emerald-500/15 px-2 py-0.5 text-[0.55rem] font-mono text-emerald-300 shadow-[0_0_8px_rgba(16,185,129,0.3)]">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
             <span>SYSTEM ONLINE</span>
           </div>
         </motion.div>
 
-        {/* 4 FLOATING HOLOGRAPHIC HUD MODULES */}
+        {/* 4 COMPACT HOLOGRAPHIC SATELLITE CHIPS */}
         {hudModules.map((mod) => {
           const Icon = mod.icon;
           const isSelected = activeModule === mod.id;
@@ -513,26 +513,26 @@ export default function AIVisualization() {
                 triggerShockwave(undefined, undefined, mod.id === 'pytorch' ? '#f97316' : mod.id === 'cv' ? '#06b6d4' : mod.id === 'nlp' ? '#a855f7' : '#10b981');
               }}
               onMouseLeave={() => setActiveModule(null)}
-              whileHover={{ scale: 1.08, y: -4 }}
+              whileHover={{ scale: 1.06, y: -2 }}
               transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-              className={`absolute ${mod.pos} z-20 flex cursor-pointer items-center gap-3 rounded-2xl border bg-black/75 p-2.5 sm:p-3 backdrop-blur-xl transition-all duration-300 ${
+              className={`absolute ${mod.pos} z-20 flex w-[132px] sm:w-[155px] cursor-pointer items-center gap-2 rounded-xl border bg-black/85 p-2 sm:p-2.5 backdrop-blur-xl transition-all duration-300 ${
                 isSelected ? mod.activeBorder : 'border-white/15'
               } ${mod.accentGlow}`}
             >
-              <div className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 shadow-inner shrink-0">
-                <Icon className={`text-base sm:text-lg ${mod.iconColor}`} />
+              <div className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 shadow-inner shrink-0">
+                <Icon className={`text-sm sm:text-base ${mod.iconColor}`} />
               </div>
 
-              <div className="text-left font-mono">
-                <div className="flex items-center gap-2">
-                  <p className="text-[0.7rem] sm:text-xs font-bold text-white tracking-wide uppercase">
+              <div className="text-left font-mono overflow-hidden min-w-0">
+                <div className="flex items-center justify-between gap-1">
+                  <p className="text-[0.62rem] sm:text-[0.7rem] font-bold text-white tracking-wide uppercase truncate">
                     {mod.title}
                   </p>
-                  <span className={`hidden sm:inline-block rounded-md border px-1.5 py-0.2 text-[0.55rem] font-bold ${mod.badgeColor}`}>
+                  <span className={`hidden sm:inline-block rounded px-1 py-0 text-[0.5rem] font-bold shrink-0 border ${mod.badgeColor}`}>
                     {mod.badge}
                   </span>
                 </div>
-                <p className="text-[0.6rem] sm:text-[0.65rem] text-slate-400 mt-0.5 uppercase tracking-tight">
+                <p className="text-[0.52rem] sm:text-[0.58rem] text-slate-400 uppercase tracking-tight truncate mt-0.5">
                   {mod.subtitle}
                 </p>
               </div>
@@ -542,20 +542,20 @@ export default function AIVisualization() {
       </motion.div>
 
       {/* BOTTOM DIAGNOSTIC COMMAND CONSOLE */}
-      <div className="pointer-events-none absolute inset-x-4 sm:inset-x-5 bottom-3.5 z-20 flex flex-wrap items-center justify-between rounded-2xl border border-white/15 bg-black/85 px-4 py-2.5 backdrop-blur-xl font-mono text-[0.65rem] sm:text-xs text-slate-300 shadow-2xl">
+      <div className="pointer-events-none absolute inset-x-3 sm:inset-x-5 bottom-3 z-20 flex flex-wrap items-center justify-between rounded-xl sm:rounded-2xl border border-white/15 bg-black/90 px-3 sm:px-4 py-2 sm:py-2.5 backdrop-blur-xl font-mono text-[0.6rem] sm:text-xs text-slate-300 shadow-2xl">
         {/* Left: Dynamic Status Mode */}
-        <div className="flex items-center gap-2.5">
-          <FaBolt className="text-amber-400 text-xs animate-bounce" />
-          <div className="flex items-center gap-1.5">
-            <span className="text-slate-400 uppercase">STATUS:</span>
-            <span className="font-bold text-cyan-300">
+        <div className="flex items-center gap-2">
+          <FaBolt className="text-amber-400 text-[0.65rem] sm:text-xs animate-bounce" />
+          <div className="flex items-center gap-1">
+            <span className="text-slate-400 uppercase text-[0.55rem] sm:text-[0.65rem]">STATUS:</span>
+            <span className="font-bold text-cyan-300 text-[0.58rem] sm:text-[0.7rem]">
               {statusCycle[statusCycleIndex].mode}
             </span>
           </div>
         </div>
 
         {/* Center: Interactive Subsystem Filters */}
-        <div className="pointer-events-auto flex items-center gap-1.5 text-[0.6rem]">
+        <div className="pointer-events-auto flex items-center gap-1 text-[0.55rem] sm:text-[0.6rem]">
           {['ALL', 'PYTORCH', 'VISION', 'NLP', 'MERN'].map((tag) => (
             <button
               key={tag}
@@ -570,7 +570,7 @@ export default function AIVisualization() {
                 setActiveModule(map[tag]);
                 triggerShockwave();
               }}
-              className={`rounded-md px-2 py-0.5 uppercase transition-all duration-200 ${
+              className={`rounded px-1.5 sm:px-2 py-0.5 uppercase transition-all duration-200 ${
                 (tag === 'ALL' && !activeModule) ||
                 (tag === 'PYTORCH' && activeModule === 'pytorch') ||
                 (tag === 'VISION' && activeModule === 'cv') ||
@@ -586,13 +586,13 @@ export default function AIVisualization() {
         </div>
 
         {/* Right: Soundwave Equalizer Animation */}
-        <div className="hidden sm:flex items-center gap-2 text-slate-400">
+        <div className="hidden sm:flex items-center gap-2 text-slate-400 text-[0.6rem]">
           <span>LOAD: {statusCycle[statusCycleIndex].load}</span>
-          <div className="flex items-end gap-0.5 h-3.5">
+          <div className="flex items-end gap-0.5 h-3">
             {[40, 80, 50, 100, 65, 30].map((h, i) => (
               <div
                 key={i}
-                className="w-1 bg-gradient-to-t from-purple-500 to-cyan-400 rounded-full animate-pulse"
+                className="w-0.5 sm:w-1 bg-gradient-to-t from-purple-500 to-cyan-400 rounded-full animate-pulse"
                 style={{
                   height: `${(h * (statusCycleIndex + 1)) % 100 || 50}%`,
                   animationDuration: `${0.4 + i * 0.15}s`,

@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react';
+import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import {
   FaBrain,
@@ -185,7 +185,7 @@ export default function AIVisualization() {
 
         ctx.beginPath();
         ctx.arc(sw.x, sw.y, sw.radius, 0, Math.PI * 2);
-        ctx.strokeStyle = gba(6, 182, 212, );
+        ctx.strokeStyle = `rgba(6, 182, 212, ${sw.alpha * 0.7})`;
         ctx.lineWidth = 2.2;
         ctx.shadowColor = sw.color;
         ctx.shadowBlur = 15;
@@ -225,7 +225,7 @@ export default function AIVisualization() {
             ctx.beginPath();
             ctx.moveTo(node.x, node.y);
             ctx.lineTo(target.x, target.y);
-            ctx.strokeStyle = gba(147, 51, 234, );
+            ctx.strokeStyle = `rgba(147, 51, 234, ${alpha})`;
             ctx.lineWidth = 0.75;
             ctx.stroke();
           }
@@ -238,7 +238,7 @@ export default function AIVisualization() {
           ctx.beginPath();
           ctx.moveTo(node.x, node.y);
           ctx.lineTo(centerX, centerY);
-          ctx.strokeStyle = gba(6, 182, 212, );
+          ctx.strokeStyle = `rgba(6, 182, 212, ${alpha})`;
           ctx.lineWidth = 0.6;
           ctx.stroke();
         }
@@ -359,59 +359,57 @@ export default function AIVisualization() {
         const rect = containerRef.current?.getBoundingClientRect();
         if (rect) triggerShockwave(e.clientX - rect.left, e.clientY - rect.top);
       }}
-      className=relative flex h-[480px] sm:h-[540px] lg:h-[580px] w-full items-center justify-center overflow-hidden rounded-3xl border border-cyan-500/25 bg-gradient-to-b from-[#0a0a18] via-[#05050f] to-[#080814] p-4 shadow-[0_25px_90px_rgba(0,0,0,0.95)] backdrop-blur-2xl transition-all duration-300 select-none cursor-crosshair group
+      className="relative flex h-[480px] sm:h-[540px] lg:h-[580px] w-full items-center justify-center overflow-hidden rounded-3xl border border-cyan-500/25 bg-gradient-to-b from-[#0a0a18] via-[#05050f] to-[#080814] p-4 shadow-[0_25px_90px_rgba(0,0,0,0.95)] backdrop-blur-2xl transition-all duration-300 select-none cursor-crosshair group"
       style={{ perspective: 1200 }}
     >
       {/* Sci-Fi Corner Bracket Accents */}
-      <div className=pointer-events-none absolute top-3 left-3 text-[0.65rem] font-mono text-cyan-400/70>┌ HS-CORE</div>
-      <div className=pointer-events-none absolute top-3 right-3 text-[0.65rem] font-mono text-cyan-400/70>v2.4 ┐</div>
-      <div className=pointer-events-none absolute bottom-3 left-3 text-[0.65rem] font-mono text-purple-400/70>└ SYNC_OK</div>
-      <div className=pointer-events-none absolute bottom-3 right-3 text-[0.65rem] font-mono text-purple-400/70>IN-NORTH ┘</div>
+      <div className="pointer-events-none absolute top-3 left-3 text-[0.65rem] font-mono text-cyan-400/70">┌ HS-CORE</div>
+      <div className="pointer-events-none absolute top-3 right-3 text-[0.65rem] font-mono text-cyan-400/70">v2.4 ┐</div>
+      <div className="pointer-events-none absolute bottom-3 left-3 text-[0.65rem] font-mono text-purple-400/70">└ SYNC_OK</div>
+      <div className="pointer-events-none absolute bottom-3 right-3 text-[0.65rem] font-mono text-purple-400/70">IN-NORTH ┘</div>
 
       {/* Cybernetic Coordinate Dot Grid */}
       <div
-        className=pointer-events-none absolute inset-0 opacity-[0.045]
+        className="pointer-events-none absolute inset-0 opacity-[0.045]"
         style={{
-          backgroundImage: 
-            radial-gradient(circle, rgba(255, 255, 255, 0.4) 1px, transparent 1px)
-          ,
+          backgroundImage: 'radial-gradient(circle, rgba(255, 255, 255, 0.4) 1px, transparent 1px)',
           backgroundSize: '24px 24px',
         }}
       />
 
       {/* Cosmic Central Ambient Nebula Glow */}
-      <div className=pointer-events-none absolute h-96 w-96 rounded-full bg-[radial-gradient(circle,rgba(168,85,247,0.22),rgba(6,182,212,0.18),transparent_70%)] blur-[90px] animate-pulse />
+      <div className="pointer-events-none absolute h-96 w-96 rounded-full bg-[radial-gradient(circle,rgba(168,85,247,0.22),rgba(6,182,212,0.18),transparent_70%)] blur-[90px] animate-pulse" />
 
       {/* Laser Scanning Beam Sweep */}
       <motion.div
         animate={{ y: ['-100%', '350%'] }}
         transition={{ duration: 5, repeat: Infinity, ease: 'linear' }}
-        className=pointer-events-none absolute inset-x-0 h-28 bg-gradient-to-b from-transparent via-cyan-400/[0.07] to-transparent opacity-70
+        className="pointer-events-none absolute inset-x-0 h-28 bg-gradient-to-b from-transparent via-cyan-400/[0.07] to-transparent opacity-70"
       />
 
       {/* Background Interactive Neural Network Canvas */}
-      <canvas ref={canvasRef} className=pointer-events-none absolute inset-0 h-full w-full z-0 />
+      <canvas ref={canvasRef} className="pointer-events-none absolute inset-0 h-full w-full z-0" />
 
       {/* Top Cybernetic Command Header HUD */}
-      <div className=pointer-events-none absolute inset-x-5 top-4 z-20 flex items-center justify-between border-b border-white/10 pb-2.5 font-mono text-[0.7rem] text-slate-300 backdrop-blur-sm>
-        <div className=flex items-center gap-2>
-          <span className=relative flex h-2.5 w-2.5>
-            <span className=animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75 />
-            <span className=relative inline-flex rounded-full h-2.5 w-2.5 bg-cyan-500 shadow-[0_0_8px_#06b6d4] />
+      <div className="pointer-events-none absolute inset-x-5 top-4 z-20 flex items-center justify-between border-b border-white/10 pb-2.5 font-mono text-[0.7rem] text-slate-300 backdrop-blur-sm">
+        <div className="flex items-center gap-2">
+          <span className="relative flex h-2.5 w-2.5">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" />
+            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-cyan-500 shadow-[0_0_8px_#06b6d4]" />
           </span>
-          <span className=font-bold tracking-wider text-cyan-300 uppercase>
-            HARSH.AI <span className=text-slate-400 font-normal>// COMMAND CENTER</span>
+          <span className="font-bold tracking-wider text-cyan-300 uppercase">
+            HARSH.AI <span className="text-slate-400 font-normal">// COMMAND CENTER</span>
           </span>
         </div>
 
-        <div className=flex items-center gap-3>
-          <div className=hidden sm:flex items-center gap-1.5 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-2.5 py-0.5 text-[0.65rem] text-cyan-300>
+        <div className="flex items-center gap-3">
+          <div className="hidden sm:flex items-center gap-1.5 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-2.5 py-0.5 text-[0.65rem] text-cyan-300">
             <span>LATENCY:</span>
-            <span className=font-bold text-white>{statusCycle[statusCycleIndex].latency}</span>
+            <span className="font-bold text-white">{statusCycle[statusCycleIndex].latency}</span>
           </div>
-          <div className=flex items-center gap-1.5 rounded-full border border-purple-500/30 bg-purple-500/10 px-2.5 py-0.5 text-[0.65rem] text-purple-300>
+          <div className="flex items-center gap-1.5 rounded-full border border-purple-500/30 bg-purple-500/10 px-2.5 py-0.5 text-[0.65rem] text-purple-300">
             <span>PRECISION:</span>
-            <span className=font-bold text-white>{statusCycle[statusCycleIndex].precision}</span>
+            <span className="font-bold text-white">{statusCycle[statusCycleIndex].precision}</span>
           </div>
         </div>
       </div>
@@ -423,50 +421,44 @@ export default function AIVisualization() {
           y: mousePos.targetY,
         }}
         transition={{ type: 'spring', stiffness: 120, damping: 18 }}
-        className=relative z-10 flex items-center justify-center w-full h-full
+        className="relative z-10 flex items-center justify-center w-full h-full"
       >
-        {/* ============================================================ */}
-        {/* MULTI-RING ORBITAL TELEMETRY SYSTEM                         */}
-        {/* ============================================================ */}
-
         {/* Outer Orbit (440px) */}
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 50, repeat: Infinity, ease: 'linear' }}
-          className=pointer-events-none absolute h-[360px] w-[360px] sm:h-[420px] sm:w-[420px] rounded-full border border-cyan-500/20 border-dashed
+          className="pointer-events-none absolute h-[360px] w-[360px] sm:h-[420px] sm:w-[420px] rounded-full border border-cyan-500/20 border-dashed"
         >
           {/* Satellite Beacon */}
-          <div className=absolute -top-1.5 left-1/2 -translate-x-1/2 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-cyan-400 shadow-[0_0_12px_#06b6d4]>
-            <div className=h-1 w-1 rounded-full bg-white />
+          <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-cyan-400 shadow-[0_0_12px_#06b6d4]">
+            <div className="h-1 w-1 rounded-full bg-white" />
           </div>
-          <div className=absolute -bottom-1.5 left-1/2 -translate-x-1/2 flex h-3 w-3 items-center justify-center rounded-full bg-pink-400 shadow-[0_0_10px_#ec4899] />
+          <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 flex h-3 w-3 items-center justify-center rounded-full bg-pink-400 shadow-[0_0_10px_#ec4899]" />
         </motion.div>
 
         {/* Middle Counter-Rotating Orbit with Ticks (300px) */}
         <motion.div
           animate={{ rotate: -360 }}
           transition={{ duration: 32, repeat: Infinity, ease: 'linear' }}
-          className=pointer-events-none absolute h-[260px] w-[260px] sm:h-[300px] sm:w-[300px] rounded-full border border-purple-500/30
+          className="pointer-events-none absolute h-[260px] w-[260px] sm:h-[300px] sm:w-[300px] rounded-full border border-purple-500/30"
         >
           {/* Degree Ticks */}
-          <div className=absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 h-2 w-[1px] bg-purple-400 />
-          <div className=absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 h-2 w-[1px] bg-purple-400 />
-          <div className=absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 w-2 h-[1px] bg-purple-400 />
-          <div className=absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-2 h-[1px] bg-purple-400 />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 h-2 w-[1px] bg-purple-400" />
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 h-2 w-[1px] bg-purple-400" />
+          <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 w-2 h-[1px] bg-purple-400" />
+          <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-2 h-[1px] bg-purple-400" />
 
-          <div className=absolute top-1/4 right-0 h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_10px_#10b981] />
+          <div className="absolute top-1/4 right-0 h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_10px_#10b981]" />
         </motion.div>
 
         {/* Inner Wave Frequency Aura Ring */}
         <motion.div
           animate={{ scale: [1, 1.08, 1], opacity: [0.35, 0.7, 0.35] }}
           transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-          className=pointer-events-none absolute h-[200px] w-[200px] sm:h-[220px] sm:w-[220px] rounded-full border-2 border-cyan-400/40 bg-cyan-500/5 blur-[1px]
+          className="pointer-events-none absolute h-[200px] w-[200px] sm:h-[220px] sm:w-[220px] rounded-full border-2 border-cyan-400/40 bg-cyan-500/5 blur-[1px]"
         />
 
-        {/* ============================================================ */}
-        {/* CENTRAL AI CORE SPHERE (HARSH.AI)                         */}
-        {/* ============================================================ */}
+        {/* CENTRAL AI CORE SPHERE */}
         <motion.div
           whileHover={{ scale: 1.06 }}
           whileTap={{ scale: 0.96 }}
@@ -474,43 +466,41 @@ export default function AIVisualization() {
             e.stopPropagation();
             triggerShockwave(undefined, undefined, '#ec4899');
           }}
-          className=relative z-30 flex h-40 w-40 sm:h-48 sm:w-48 cursor-pointer flex-col items-center justify-center rounded-full border-2 border-cyan-400/60 bg-gradient-to-tr from-[#0b0c1e] via-[#070814] to-[#120e28] p-3 text-center shadow-[0_0_50px_rgba(6,182,212,0.45),inset_0_0_35px_rgba(168,85,247,0.35)] backdrop-blur-2xl transition-all duration-300
+          className="relative z-30 flex h-40 w-40 sm:h-48 sm:w-48 cursor-pointer flex-col items-center justify-center rounded-full border-2 border-cyan-400/60 bg-gradient-to-tr from-[#0b0c1e] via-[#070814] to-[#120e28] p-3 text-center shadow-[0_0_50px_rgba(6,182,212,0.45),inset_0_0_35px_rgba(168,85,247,0.35)] backdrop-blur-2xl transition-all duration-300"
         >
           {/* Animated Core Perimeter Light Arc */}
-          <div className=pointer-events-none absolute inset-0 rounded-full border border-purple-400/40 animate-spin-slow />
+          <div className="pointer-events-none absolute inset-0 rounded-full border border-purple-400/40 animate-spin-slow" />
 
           {/* Glowing Neural Brain Icon Crest */}
-          <div className=relative flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-600 via-indigo-600 to-cyan-500 p-[1px] shadow-[0_0_25px_rgba(6,182,212,0.6)]>
-            <div className=flex h-full w-full items-center justify-center rounded-[15px] bg-[#070714]>
-              <FaBrain className=text-xl sm:text-2xl text-cyan-300 animate-pulse />
+          <div className="relative flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-600 via-indigo-600 to-cyan-500 p-[1px] shadow-[0_0_25px_rgba(6,182,212,0.6)]">
+            <div className="flex h-full w-full items-center justify-center rounded-[15px] bg-[#070714]">
+              <FaBrain className="text-xl sm:text-2xl text-cyan-300 animate-pulse" />
             </div>
             {/* Pulsing energy ping */}
-            <span className=absolute -top-1 -right-1 flex h-3 w-3>
-              <span className=animate-ping absolute inline-flex h-full w-full rounded-full bg-pink-400 opacity-75 />
-              <span className=relative inline-flex rounded-full h-3 w-3 bg-pink-500 shadow-[0_0_6px_#ec4899] />
+            <span className="absolute -top-1 -right-1 flex h-3 w-3">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-pink-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-pink-500 shadow-[0_0_6px_#ec4899]" />
             </span>
           </div>
 
           {/* Core Typography */}
-          <div className=mt-2 text-center>
-            <p className=text-sm sm:text-base font-black tracking-widest text-white uppercase font-mono drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]>
-              HARSH<span className=text-cyan-400>.AI</span>
+          <div className="mt-2 text-center">
+            <p className="text-sm sm:text-base font-black tracking-widest text-white uppercase font-mono drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]">
+              HARSH<span className="text-cyan-400">.AI</span>
             </p>
-            <p className=text-[0.55rem] sm:text-[0.6rem] font-mono tracking-widest text-purple-300 uppercase mt-0.5>
+            <p className="text-[0.55rem] sm:text-[0.6rem] font-mono tracking-widest text-purple-300 uppercase mt-0.5">
               NEURAL INTELLIGENCE
             </p>
           </div>
 
           {/* Pulsing Status Pill */}
-          <div className=mt-2 inline-flex items-center gap-1.5 rounded-full border border-emerald-400/50 bg-emerald-500/15 px-2.5 py-0.5 text-[0.6rem] font-mono text-emerald-300 shadow-[0_0_10px_rgba(16,185,129,0.3)]>
-            <span className=h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse />
+          <div className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-emerald-400/50 bg-emerald-500/15 px-2.5 py-0.5 text-[0.6rem] font-mono text-emerald-300 shadow-[0_0_10px_rgba(16,185,129,0.3)]">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
             <span>SYSTEM ONLINE</span>
           </div>
         </motion.div>
 
-        {/* ============================================================ */}
-        {/* 4 FLOATING HOLOGRAPHIC HUD MODULES (Cleanly Distributed)     */}
-        {/* ============================================================ */}
+        {/* 4 FLOATING HOLOGRAPHIC HUD MODULES */}
         {hudModules.map((mod) => {
           const Icon = mod.icon;
           const isSelected = activeModule === mod.id;
@@ -525,22 +515,24 @@ export default function AIVisualization() {
               onMouseLeave={() => setActiveModule(null)}
               whileHover={{ scale: 1.08, y: -4 }}
               transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-              className={bsolute  z-20 flex cursor-pointer items-center gap-3 rounded-2xl border bg-black/75 p-2.5 sm:p-3 backdrop-blur-xl transition-all duration-300  }
+              className={`absolute ${mod.pos} z-20 flex cursor-pointer items-center gap-3 rounded-2xl border bg-black/75 p-2.5 sm:p-3 backdrop-blur-xl transition-all duration-300 ${
+                isSelected ? mod.activeBorder : 'border-white/15'
+              } ${mod.accentGlow}`}
             >
-              <div className=flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 shadow-inner shrink-0>
-                <Icon className={	ext-base sm:text-lg } />
+              <div className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 shadow-inner shrink-0">
+                <Icon className={`text-base sm:text-lg ${mod.iconColor}`} />
               </div>
 
-              <div className=text-left font-mono>
-                <div className=flex items-center gap-2>
-                  <p className=text-[0.7rem] sm:text-xs font-bold text-white tracking-wide uppercase>
+              <div className="text-left font-mono">
+                <div className="flex items-center gap-2">
+                  <p className="text-[0.7rem] sm:text-xs font-bold text-white tracking-wide uppercase">
                     {mod.title}
                   </p>
-                  <span className={hidden sm:inline-block rounded-md border px-1.5 py-0.2 text-[0.55rem] font-bold }>
+                  <span className={`hidden sm:inline-block rounded-md border px-1.5 py-0.2 text-[0.55rem] font-bold ${mod.badgeColor}`}>
                     {mod.badge}
                   </span>
                 </div>
-                <p className=text-[0.6rem] sm:text-[0.65rem] text-slate-400 mt-0.5 uppercase tracking-tight>
+                <p className="text-[0.6rem] sm:text-[0.65rem] text-slate-400 mt-0.5 uppercase tracking-tight">
                   {mod.subtitle}
                 </p>
               </div>
@@ -549,23 +541,21 @@ export default function AIVisualization() {
         })}
       </motion.div>
 
-      {/* ============================================================ */}
-      {/* BOTTOM DIAGNOSTIC COMMAND CONSOLE                            */}
-      {/* ============================================================ */}
-      <div className=pointer-events-none absolute inset-x-4 sm:inset-x-5 bottom-3.5 z-20 flex flex-wrap items-center justify-between rounded-2xl border border-white/15 bg-black/85 px-4 py-2.5 backdrop-blur-xl font-mono text-[0.65rem] sm:text-xs text-slate-300 shadow-2xl>
+      {/* BOTTOM DIAGNOSTIC COMMAND CONSOLE */}
+      <div className="pointer-events-none absolute inset-x-4 sm:inset-x-5 bottom-3.5 z-20 flex flex-wrap items-center justify-between rounded-2xl border border-white/15 bg-black/85 px-4 py-2.5 backdrop-blur-xl font-mono text-[0.65rem] sm:text-xs text-slate-300 shadow-2xl">
         {/* Left: Dynamic Status Mode */}
-        <div className=flex items-center gap-2.5>
-          <FaBolt className=text-amber-400 text-xs animate-bounce />
-          <div className=flex items-center gap-1.5>
-            <span className=text-slate-400 uppercase>STATUS:</span>
-            <span className=font-bold text-cyan-300>
+        <div className="flex items-center gap-2.5">
+          <FaBolt className="text-amber-400 text-xs animate-bounce" />
+          <div className="flex items-center gap-1.5">
+            <span className="text-slate-400 uppercase">STATUS:</span>
+            <span className="font-bold text-cyan-300">
               {statusCycle[statusCycleIndex].mode}
             </span>
           </div>
         </div>
 
         {/* Center: Interactive Subsystem Filters */}
-        <div className=pointer-events-auto flex items-center gap-1.5 text-[0.6rem]>
+        <div className="pointer-events-auto flex items-center gap-1.5 text-[0.6rem]">
           {['ALL', 'PYTORCH', 'VISION', 'NLP', 'MERN'].map((tag) => (
             <button
               key={tag}
@@ -580,7 +570,15 @@ export default function AIVisualization() {
                 setActiveModule(map[tag]);
                 triggerShockwave();
               }}
-              className={ounded-md px-2 py-0.5 uppercase transition-all duration-200 }
+              className={`rounded-md px-2 py-0.5 uppercase transition-all duration-200 ${
+                (tag === 'ALL' && !activeModule) ||
+                (tag === 'PYTORCH' && activeModule === 'pytorch') ||
+                (tag === 'VISION' && activeModule === 'cv') ||
+                (tag === 'NLP' && activeModule === 'nlp') ||
+                (tag === 'MERN' && activeModule === 'fullstack')
+                  ? 'bg-cyan-500/25 border border-cyan-400 text-cyan-200 font-bold shadow-[0_0_8px_rgba(6,182,212,0.4)]'
+                  : 'border border-white/10 bg-white/5 text-slate-400 hover:text-white'
+              }`}
             >
               {tag}
             </button>
@@ -588,16 +586,16 @@ export default function AIVisualization() {
         </div>
 
         {/* Right: Soundwave Equalizer Animation */}
-        <div className=hidden sm:flex items-center gap-2 text-slate-400>
+        <div className="hidden sm:flex items-center gap-2 text-slate-400">
           <span>LOAD: {statusCycle[statusCycleIndex].load}</span>
-          <div className=flex items-end gap-0.5 h-3.5>
+          <div className="flex items-end gap-0.5 h-3.5">
             {[40, 80, 50, 100, 65, 30].map((h, i) => (
               <div
                 key={i}
-                className=w-1 bg-gradient-to-t from-purple-500 to-cyan-400 rounded-full animate-pulse
+                className="w-1 bg-gradient-to-t from-purple-500 to-cyan-400 rounded-full animate-pulse"
                 style={{
-                  height: ${(h * (statusCycleIndex + 1)) % 100 || 50}%,
-                  animationDuration: ${0.4 + i * 0.15}s,
+                  height: `${(h * (statusCycleIndex + 1)) % 100 || 50}%`,
+                  animationDuration: `${0.4 + i * 0.15}s`,
                 }}
               />
             ))}

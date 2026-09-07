@@ -19,7 +19,7 @@ interface ContactSectionProps {
   onDownloadResume?: () => void;
 }
 
-export default function ContactSection() {
+export default function ContactSection({ onDownloadResume }: ContactSectionProps = {}) {
   const [formState, setFormState] = useState({ name: '', email: '', message: '' });
   const [copiedEmail, setCopiedEmail] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);

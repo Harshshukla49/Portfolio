@@ -15,7 +15,7 @@ import { portfolioData } from '../data/portfolioData';
 
 export default function TimelineSection() {
   return (
-    <section id="milestones" className="relative scroll-mt-24 py-20 lg:py-32 overflow-hidden">
+    <section id="milestones" className="relative scroll-mt-20 py-14 sm:py-16 lg:py-20 overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto">
@@ -24,20 +24,20 @@ export default function TimelineSection() {
             <span>CREDENTIALS & JOURNEY</span>
           </div>
 
-          <h2 className="mt-4 text-3xl sm:text-5xl font-black uppercase tracking-tight text-white">
+          <h2 className="mt-3 text-3xl sm:text-5xl font-black uppercase tracking-tight text-white">
             TRAINING, CERTIFICATIONS &{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400">
               EDUCATION
             </span>
           </h2>
 
-          <p className="mt-4 text-base sm:text-lg text-slate-300">
+          <p className="mt-3 text-base sm:text-lg text-slate-300">
             Verified academic background, professional certifications, and institutional recognitions from resume.
           </p>
         </div>
 
         {/* Dual Grid: Certifications & Education */}
-        <div className="mt-16 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div className="mt-10 sm:mt-12 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Left Column: Certifications & Recognition Timeline */}
           <div className="lg:col-span-7 flex flex-col gap-6 text-left">
             <div className="flex items-center gap-2.5 pb-2 border-b border-white/10 font-mono text-sm text-cyan-400">
@@ -45,7 +45,7 @@ export default function TimelineSection() {
               <span className="font-bold uppercase tracking-wider">TRAINING & CERTIFICATIONS</span>
             </div>
 
-            <div className="relative pl-6 space-y-6 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-[2px] before:bg-gradient-to-b before:from-purple-500 before:via-cyan-500 before:to-transparent">
+            <div className="relative pl-6 space-y-4 sm:space-y-5 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-[2px] before:bg-gradient-to-b before:from-purple-500 before:via-cyan-500 before:to-transparent">
               {portfolioData.milestones.map((milestone, idx) => (
                 <motion.div
                   key={milestone.id}

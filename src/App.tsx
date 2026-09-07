@@ -53,13 +53,23 @@ export default function App() {
           onDownloadResume={handleDownloadResume}
         />
 
+        <div className="w-full max-w-6xl mx-auto h-[1px] bg-gradient-to-r from-transparent via-purple-500/20 via-cyan-500/20 to-transparent" />
+
         <AboutSection />
+
+        <div className="w-full max-w-6xl mx-auto h-[1px] bg-gradient-to-r from-transparent via-cyan-500/20 via-blue-500/20 to-transparent" />
 
         <TechStackSection />
 
+        <div className="w-full max-w-6xl mx-auto h-[1px] bg-gradient-to-r from-transparent via-purple-500/20 via-pink-500/20 to-transparent" />
+
         <ProjectsSection />
 
+        <div className="w-full max-w-6xl mx-auto h-[1px] bg-gradient-to-r from-transparent via-cyan-500/20 via-emerald-500/20 to-transparent" />
+
         <TimelineSection />
+
+        <div className="w-full max-w-6xl mx-auto h-[1px] bg-gradient-to-r from-transparent via-purple-500/20 via-cyan-500/20 to-transparent" />
 
         <ContactSection onDownloadResume={handleDownloadResume} />
       </main>

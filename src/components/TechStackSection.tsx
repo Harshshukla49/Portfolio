@@ -76,7 +76,7 @@ export default function TechStackSection() {
       : portfolioData.skills.filter((skill) => skill.category === selectedCategory);
 
   return (
-    <section id="skills" className="relative scroll-mt-24 py-20 lg:py-32 overflow-hidden">
+    <section id="skills" className="relative scroll-mt-20 py-14 sm:py-16 lg:py-20 overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto">
@@ -85,20 +85,20 @@ export default function TechStackSection() {
             <span>TECHNICAL ARSENAL // STACK</span>
           </div>
 
-          <h2 className="mt-4 text-3xl sm:text-5xl font-black uppercase tracking-tight text-white">
+          <h2 className="mt-3 text-3xl sm:text-5xl font-black uppercase tracking-tight text-white">
             TECH STACK &{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400">
               ECOSYSTEM
             </span>
           </h2>
 
-          <p className="mt-4 text-base sm:text-lg text-slate-300">
+          <p className="mt-3 text-base sm:text-lg text-slate-300">
             Verified technologies, frameworks, and tools used to build end-to-end intelligent systems.
           </p>
         </div>
 
         {/* Category Filters */}
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-2 max-w-4xl mx-auto">
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-2 max-w-4xl mx-auto">
           <button
             onClick={() => setSelectedCategory('all')}
             className={`rounded-full px-4 py-2 text-xs font-mono tracking-wider uppercase transition-all duration-300 ${
@@ -130,7 +130,7 @@ export default function TechStackSection() {
         </div>
 
         {/* Skills Grid */}
-        <motion.div layout className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <motion.div layout className="mt-8 sm:mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           <AnimatePresence>
             {filteredSkills.map((skill) => (
               <motion.div

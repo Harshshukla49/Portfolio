@@ -34,7 +34,7 @@ export default function Footer() {
   };
 
   return (
-    <footer className="relative border-t border-white/10 bg-black/80 backdrop-blur-2xl py-12 text-left">
+    <footer className="relative border-t border-white/10 bg-black/80 backdrop-blur-2xl py-8 sm:py-10 text-left">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center justify-between pb-8 border-b border-white/10">
           {/* Brand & Persona */}

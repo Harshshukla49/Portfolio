@@ -188,7 +188,7 @@ export default function ProjectsSection() {
   };
 
   return (
-    <section id="projects" className="relative scroll-mt-24 py-20 lg:py-32 overflow-hidden">
+    <section id="projects" className="relative scroll-mt-20 py-14 sm:py-16 lg:py-20 overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto">
@@ -197,20 +197,20 @@ export default function ProjectsSection() {
             <span>SELECTED WORK // PORTFOLIO</span>
           </div>
 
-          <h2 className="mt-4 text-3xl sm:text-5xl font-black uppercase tracking-tight text-white">
+          <h2 className="mt-3 text-3xl sm:text-5xl font-black uppercase tracking-tight text-white">
             FEATURED{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400">
               PROJECTS
             </span>
           </h2>
 
-          <p className="mt-4 text-base sm:text-lg text-slate-300">
+          <p className="mt-3 text-base sm:text-lg text-slate-300">
             Real-world systems combining applied machine learning, computer vision, and scalable full-stack engineering.
           </p>
         </div>
 
         {/* Projects Showcase List */}
-        <div className="mt-16 space-y-12 lg:space-y-16">
+        <div className="mt-10 sm:mt-12 space-y-8 sm:space-y-10 lg:space-y-12">
           {portfolioData.projects.map((project, index) => {
             const isEven = index % 2 === 0;
 

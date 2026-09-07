@@ -33,7 +33,7 @@ export default function AboutSection() {
   };
 
   return (
-    <section id="about" className="relative scroll-mt-24 py-20 lg:py-32 overflow-hidden">
+    <section id="about" className="relative scroll-mt-20 py-14 sm:py-16 lg:py-20 overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto">
@@ -42,20 +42,20 @@ export default function AboutSection() {
             <span>WHO I AM // IDENTITY</span>
           </div>
 
-          <h2 className="mt-4 text-3xl sm:text-5xl font-black uppercase tracking-tight text-white leading-tight">
+          <h2 className="mt-3 text-3xl sm:text-5xl font-black uppercase tracking-tight text-white leading-tight">
             BUILDING INTELLIGENT SYSTEMS WITH{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400">
               CODE, DATA & AI.
             </span>
           </h2>
 
-          <p className="mt-4 text-base sm:text-lg text-slate-300 leading-relaxed">
+          <p className="mt-3 text-base sm:text-lg text-slate-300 leading-relaxed">
             {portfolioData.about.subheading}
           </p>
         </div>
 
         {/* Profile Card & Narrative Grid */}
-        <div className="mt-16 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <div className="mt-10 sm:mt-12 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           {/* Left: Cybernetic Photo Frame */}
           <div className="lg:col-span-5 flex justify-center">
             <motion.div
@@ -140,8 +140,8 @@ export default function AboutSection() {
         </div>
 
         {/* 4 Interactive Core Engineering Pillars */}
-        <div className="mt-16">
-          <div className="text-center mb-8">
+        <div className="mt-12 sm:mt-14">
+          <div className="text-center mb-6">
             <p className="text-xs font-mono tracking-widest text-cyan-400 uppercase">CORE DISCIPLINES</p>
             <h3 className="text-2xl sm:text-3xl font-black text-white uppercase mt-1">ENGINEERING PILLARS</h3>
           </div>

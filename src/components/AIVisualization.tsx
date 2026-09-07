@@ -313,7 +313,7 @@ export default function AIVisualization() {
       ref={containerRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="relative flex h-[520px] sm:h-[580px] lg:h-[640px] w-full items-center justify-center overflow-hidden rounded-3xl border border-white/15 bg-gradient-to-b from-[#080812] via-[#04040a] to-[#06060f] p-4 shadow-[0_25px_90px_rgba(0,0,0,0.85)] backdrop-blur-2xl transition-all duration-300 select-none"
+      className="relative flex h-[460px] sm:h-[520px] lg:h-[580px] w-full items-center justify-center overflow-hidden rounded-3xl border border-white/15 bg-gradient-to-b from-[#080812] via-[#04040a] to-[#06060f] p-4 shadow-[0_25px_90px_rgba(0,0,0,0.85)] backdrop-blur-2xl transition-all duration-300 select-none"
       style={{ perspective: 1200 }}
     >
       {/* Background Subtle Coordinate Grid */}

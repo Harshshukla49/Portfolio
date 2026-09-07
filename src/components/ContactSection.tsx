@@ -51,7 +51,7 @@ export default function ContactSection() {
   };
 
   return (
-    <section id="contact" className="relative scroll-mt-24 py-20 lg:py-32 overflow-hidden">
+    <section id="contact" className="relative scroll-mt-20 py-14 sm:py-16 lg:py-20 overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto">
@@ -60,20 +60,20 @@ export default function ContactSection() {
             <span>INITIATE CONTACT // REACH OUT</span>
           </div>
 
-          <h2 className="mt-4 text-3xl sm:text-5xl font-black uppercase tracking-tight text-white leading-tight">
+          <h2 className="mt-3 text-3xl sm:text-5xl font-black uppercase tracking-tight text-white leading-tight">
             LET'S BUILD{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400">
               SOMETHING INTELLIGENT.
             </span>
           </h2>
 
-          <p className="mt-4 text-base sm:text-lg text-slate-300">
+          <p className="mt-3 text-base sm:text-lg text-slate-300">
             Open for software engineering internships, AI/ML research collaborations, and full-time opportunities.
           </p>
         </div>
 
         {/* Contact Content Grid */}
-        <div className="mt-16 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div className="mt-10 sm:mt-12 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Left: Direct Contact Information */}
           <div className="lg:col-span-5 flex flex-col gap-5 text-left">
             {/* Quick Email Card with Copy Feature */}

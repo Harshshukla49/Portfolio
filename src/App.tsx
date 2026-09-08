@@ -13,11 +13,13 @@ import Footer from './components/Footer';
 import AIAssistant from './components/AIAssistant';
 import FloatingAITrigger from './components/FloatingAITrigger';
 import CinematicTransitionTunnel from './components/CinematicTransitionTunnel';
+import WelcomeReveal from './components/WelcomeReveal';
 import { useCinematicNavigation } from './hooks/useCinematicNavigation';
 import { portfolioData } from './data/portfolioData';
 
 export default function App() {
   const [isAIOpen, setIsAIOpen] = useState(false);
+  const [forceShowWelcome, setForceShowWelcome] = useState(false);
   const { activeSection, isTransitioning, targetSection, transitionToSection } =
     useCinematicNavigation();
 
@@ -39,6 +41,12 @@ export default function App() {
 
   return (
     <div className="relative min-h-screen bg-[#030305] text-slate-100 font-sans selection:bg-purple-500/40 selection:text-white overflow-x-hidden">
+      {/* 3D Cinematic Opening Sequence ("WELCOME TO THE HARSH") */}
+      <WelcomeReveal
+        onComplete={() => setForceShowWelcome(false)}
+        forceShow={forceShowWelcome}
+      />
+
       {/* Desktop Magnetic Cyber Cursor */}
       <CustomCursor />
 
@@ -51,12 +59,13 @@ export default function App() {
       {/* Futuristic Background Universe & Grid System */}
       <BackgroundEffects />
 
-      {/* Floating Glassmorphic Navbar with 3D Scene Controls */}
+      {/* Floating Glassmorphic Navbar with 3D Scene Controls & Replay Option */}
       <Navbar
         activeSection={activeSection}
         onNavigate={transitionToSection}
         onOpenAI={() => setIsAIOpen(true)}
         onDownloadResume={handleDownloadResume}
+        onReplayIntro={() => setForceShowWelcome(true)}
       />
 
       {/* Main Content Sections with 3D perspective scene container */}
@@ -64,10 +73,10 @@ export default function App() {
         animate={
           isTransitioning
             ? {
-                scale: 0.94,
-                opacity: 0.25,
-                filter: 'blur(6px)',
-                rotateX: 4,
+                scale: 0.96,
+                opacity: 0.4,
+                filter: 'blur(4px)',
+                rotateX: 2,
               }
             : {
                 scale: 1,
@@ -77,8 +86,8 @@ export default function App() {
               }
         }
         transition={{
-          duration: isTransitioning ? 0.35 : 0.45,
-          ease: 'easeInOut',
+          duration: isTransitioning ? 0.25 : 0.35,
+          ease: 'easeOut',
         }}
         style={{ perspective: 1200, transformStyle: 'preserve-3d' }}
         className="relative z-10 will-change-transform"
@@ -124,3 +133,4 @@ export default function App() {
     </div>
   );
 }
+

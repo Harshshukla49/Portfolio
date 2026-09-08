@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 export type CinematicSection = 'hero' | 'about' | 'skills' | 'projects' | 'milestones' | 'contact';
 
@@ -6,43 +6,40 @@ export function useCinematicNavigation() {
   const [activeSection, setActiveSection] = useState<CinematicSection>('hero');
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [targetSection, setTargetSection] = useState<CinematicSection | null>(null);
-  const isTransitioningRef = useRef(false);
+  const transitionTimerRef = useRef<number | null>(null);
 
-  // Transition to a specific section with cinematic 3D camera flight
+  // Instant non-blocking transition engine
   const transitionToSection = useCallback((sectionId: string) => {
     const cleanId = sectionId.replace('#', '') as CinematicSection;
-    if (isTransitioningRef.current || cleanId === activeSection) {
-      const el = document.getElementById(cleanId);
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
-      return;
+
+    // Clear any active animation timers immediately for rapid-click interruption
+    if (transitionTimerRef.current !== null) {
+      window.clearTimeout(transitionTimerRef.current);
+      transitionTimerRef.current = null;
     }
 
-    isTransitioningRef.current = true;
-    setIsTransitioning(true);
+    // Step 1: Immediately set active state and scroll to target so DOM renders destination instantly
+    setActiveSection(cleanId);
     setTargetSection(cleanId);
+    setIsTransitioning(true);
 
-    // Phase 1: Current scene recoils into 3D depth (0 - 300ms)
-    // Phase 2: Warp tunnel activates & camera travels to destination (300ms - 550ms)
-    setTimeout(() => {
-      const el = document.getElementById(cleanId);
-      if (el) {
-        el.scrollIntoView({ behavior: 'auto' });
-      }
-      setActiveSection(cleanId);
-    }, 380);
+    const el = document.getElementById(cleanId);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
 
-    // Phase 3: Destination scene emerges from depth and lands (550ms - 800ms)
-    setTimeout(() => {
+    // Step 2: Complete the GPU camera jump and settling effect in 550ms
+    transitionTimerRef.current = window.setTimeout(() => {
       setIsTransitioning(false);
       setTargetSection(null);
-      isTransitioningRef.current = false;
-    }, 850);
-  }, [activeSection]);
+      transitionTimerRef.current = null;
+    }, 600);
+  }, []);
 
   // Scrollspy for manual user scrolling
   useEffect(() => {
     const handleScroll = () => {
-      if (isTransitioningRef.current) return;
+      if (isTransitioning) return;
 
       const sections: CinematicSection[] = ['hero', 'about', 'skills', 'projects', 'milestones', 'contact'];
       const scrollPosition = window.scrollY + window.innerHeight * 0.35;
@@ -60,8 +57,13 @@ export function useCinematicNavigation() {
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (transitionTimerRef.current !== null) {
+        window.clearTimeout(transitionTimerRef.current);
+      }
+    };
+  }, [isTransitioning]);
 
   return {
     activeSection,
@@ -70,3 +72,4 @@ export function useCinematicNavigation() {
     transitionToSection,
   };
 }
+

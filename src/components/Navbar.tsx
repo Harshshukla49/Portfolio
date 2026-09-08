@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaBrain, FaBars, FaXmark, FaRocket, FaFileArrowDown, FaWandMagicSparkles } from 'react-icons/fa6';
+import { FaBrain, FaBars, FaXmark, FaRocket, FaFileArrowDown, FaWandMagicSparkles, FaTv } from 'react-icons/fa6';
 import { portfolioData } from '../data/portfolioData';
 
 interface NavbarProps {
@@ -8,6 +8,7 @@ interface NavbarProps {
   onNavigate?: (sectionId: string) => void;
   onOpenAI: () => void;
   onDownloadResume?: () => void;
+  onReplayIntro?: () => void;
 }
 
 export default function Navbar({
@@ -15,6 +16,7 @@ export default function Navbar({
   onNavigate,
   onOpenAI,
   onDownloadResume,
+  onReplayIntro,
 }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -58,14 +60,14 @@ export default function Navbar({
           <div
             className={`flex items-center justify-between rounded-full px-5 py-2.5 transition-all duration-300 ${
               scrolled
-                ? 'border border-white/15 bg-black/80 shadow-[0_15px_50px_rgba(0,0,0,0.8)] backdrop-blur-2xl'
-                : 'border border-white/10 bg-black/45 backdrop-blur-xl shadow-lg'
+                ? 'border border-white/15 bg-black/85 shadow-[0_15px_50px_rgba(0,0,0,0.85)] backdrop-blur-2xl'
+                : 'border border-white/10 bg-black/50 backdrop-blur-xl shadow-lg'
             }`}
           >
             {/* Brand / Logo */}
             <button
               onClick={() => handleNavClick('hero')}
-              className="flex items-center gap-3 text-left group select-none"
+              className="flex items-center gap-3 text-left group select-none active:scale-95 transition-transform"
             >
               <div className="relative flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-tr from-purple-600 via-indigo-500 to-cyan-400 p-[1px] shadow-[0_0_20px_rgba(168,85,247,0.4)] group-hover:scale-105 transition-transform">
                 <div className="flex h-full w-full items-center justify-center rounded-[15px] bg-black/90">
@@ -97,11 +99,11 @@ export default function Navbar({
                     onClick={() => handleNavClick(item.id)}
                     onMouseEnter={() => setHoveredNav(item.id)}
                     onMouseLeave={() => setHoveredNav(null)}
-                    className={`relative rounded-full px-4 py-1.5 text-xs font-medium tracking-wide uppercase transition-all duration-300 select-none ${
+                    className={`relative rounded-full px-4 py-1.5 text-xs font-medium tracking-wide uppercase transition-all duration-200 select-none active:scale-95 ${
                       isActive
                         ? 'text-white font-bold'
                         : isHovered
-                        ? 'text-cyan-300 scale-105'
+                        ? 'text-cyan-300 -translate-y-0.5 scale-[1.03]'
                         : 'text-slate-400 hover:text-white'
                     }`}
                   >
@@ -109,8 +111,8 @@ export default function Navbar({
                     {isActive && (
                       <motion.div
                         layoutId="cinematicActiveNavIndicator"
-                        className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-600/50 via-indigo-600/50 to-cyan-500/50 border border-cyan-400/60 shadow-[0_0_20px_rgba(6,182,212,0.4)] -z-10"
-                        transition={{ type: 'spring', stiffness: 450, damping: 32 }}
+                        className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-600/60 via-indigo-600/60 to-cyan-500/60 border border-cyan-400/70 shadow-[0_0_20px_rgba(6,182,212,0.45)] -z-10"
+                        transition={{ type: 'spring', stiffness: 500, damping: 30 }}
                       />
                     )}
 
@@ -130,11 +132,23 @@ export default function Navbar({
             </nav>
 
             {/* Desktop Action Buttons */}
-            <div className="hidden sm:flex items-center gap-2.5">
+            <div className="hidden sm:flex items-center gap-2">
+              {/* Optional Replay Intro Trigger */}
+              {onReplayIntro && (
+                <button
+                  onClick={onReplayIntro}
+                  title="Replay 3D Cinematic Intro"
+                  className="inline-flex items-center justify-center h-8 w-8 rounded-full border border-white/10 bg-white/5 text-slate-400 hover:border-cyan-400 hover:text-cyan-300 transition-all hover:scale-105"
+                  aria-label="Replay Cinematic Intro"
+                >
+                  <FaTv className="text-xs" />
+                </button>
+              )}
+
               {/* Ask Harsh AI Trigger */}
               <button
                 onClick={onOpenAI}
-                className="relative inline-flex items-center gap-2 rounded-full border border-purple-500/50 bg-gradient-to-r from-purple-900/40 to-indigo-900/40 px-3.5 py-1.5 text-xs font-semibold text-purple-200 shadow-[0_0_20px_rgba(168,85,247,0.25)] hover:border-purple-400 hover:from-purple-800/60 hover:to-cyan-800/60 transition-all duration-300 hover:scale-105"
+                className="relative inline-flex items-center gap-2 rounded-full border border-purple-500/50 bg-gradient-to-r from-purple-900/40 to-indigo-900/40 px-3.5 py-1.5 text-xs font-semibold text-purple-200 shadow-[0_0_20px_rgba(168,85,247,0.25)] hover:border-purple-400 hover:from-purple-800/60 hover:to-cyan-800/60 transition-all duration-300 hover:scale-105 active:scale-95"
               >
                 <FaWandMagicSparkles className="text-cyan-300 text-xs animate-pulse" />
                 <span>Ask AI</span>
@@ -143,7 +157,7 @@ export default function Navbar({
               {/* Download Official PDF Resume Direct Link */}
               <button
                 onClick={onDownloadResume || (() => window.open('/Harsh_Shukla_Resume.pdf', '_blank'))}
-                className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3.5 py-1.5 text-xs font-medium text-slate-300 hover:border-cyan-400/50 hover:bg-cyan-500/10 hover:text-white transition-all duration-300 hover:scale-105"
+                className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3.5 py-1.5 text-xs font-medium text-slate-300 hover:border-cyan-400/50 hover:bg-cyan-500/10 hover:text-white transition-all duration-300 hover:scale-105 active:scale-95"
               >
                 <FaFileArrowDown className="text-cyan-400 text-xs" />
                 <span>Resume (PDF)</span>
@@ -152,7 +166,7 @@ export default function Navbar({
               {/* Contact Button */}
               <button
                 onClick={() => handleNavClick('contact')}
-                className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 px-4 py-1.5 text-xs font-bold text-black shadow-[0_0_20px_rgba(6,182,212,0.4)] hover:brightness-110 transition-all duration-300 hover:scale-105"
+                className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 px-4 py-1.5 text-xs font-bold text-black shadow-[0_0_20px_rgba(6,182,212,0.4)] hover:brightness-110 transition-all duration-300 hover:scale-105 active:scale-95"
               >
                 <FaRocket className="text-black text-xs" />
                 <span>Let's Talk</span>
@@ -232,6 +246,19 @@ export default function Navbar({
                   <FaFileArrowDown className="text-cyan-400" />
                   <span>Download Resume (PDF)</span>
                 </button>
+
+                {onReplayIntro && (
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      onReplayIntro();
+                    }}
+                    className="flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/5 py-2.5 text-xs font-mono text-slate-400 hover:text-cyan-300"
+                  >
+                    <FaTv className="text-xs" />
+                    <span>Replay 3D Cinematic Intro</span>
+                  </button>
+                )}
               </div>
             </div>
           </motion.div>
@@ -240,4 +267,5 @@ export default function Navbar({
     </>
   );
 }
+
 

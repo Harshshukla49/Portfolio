@@ -17,15 +17,7 @@ export default function WelcomeReveal({ onComplete, forceShow = false }: Welcome
     setPhase(0);
     setIsVisible(true);
 
-    // Ultra-fast, crisp timeline for instant readability (< 1s to full visibility)
-    // 0ms: Ambient backdrop
-    // 150ms: Telemetry pill
-    // 250ms: "WELCOME" typography
-    // 400ms: "TO THE HARSH" 3D title
-    // 550ms: Subtitle ("Where code meets creativity.")
-    // 650ms: Circular Profile Portrait Orb
-    // 800ms: Developer Badges ("DEVELOPER • BUILDER • CREATOR")
-    // 1950ms: Camera moves through into live portfolio
+    // Crisp reveal within ~1s, then remains visible for 10 seconds total
     const t1 = setTimeout(() => setPhase(1), 150);
     const t2 = setTimeout(() => setPhase(2), 260);
     const t3 = setTimeout(() => setPhase(3), 420);
@@ -34,7 +26,7 @@ export default function WelcomeReveal({ onComplete, forceShow = false }: Welcome
     const t6 = setTimeout(() => setPhase(6), 820);
     const t7 = setTimeout(() => {
       handleFinish();
-    }, 2100);
+    }, 10000);
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
@@ -260,19 +252,32 @@ export default function WelcomeReveal({ onComplete, forceShow = false }: Welcome
             </div>
           </div>
 
-          {/* Bottom Fast Enter Indicator */}
-          <div className="absolute bottom-6 inset-x-0 flex items-center justify-between px-6 sm:px-10 text-[0.7rem] font-mono text-slate-500">
-            <span className="hidden sm:inline-block">PRESS [ESC] OR CLICK ANYWHERE TO ENTER</span>
+          {/* Bottom Fast Enter Indicator & 10s Timer */}
+          <div className="absolute bottom-6 inset-x-0 flex items-center justify-between px-6 sm:px-10 text-[0.7rem] font-mono text-slate-400">
+            <div className="flex items-center gap-2">
+              <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-ping" />
+              <span>AUTO-ENTERING IN 10S // CLICK ANYWHERE OR PRESS [ESC]</span>
+            </div>
             <button
               onClick={(e) => {
                 e.stopPropagation();
                 handleFinish();
               }}
-              className="ml-auto inline-flex items-center gap-2 rounded-full border border-cyan-400/40 bg-cyan-500/10 px-4 py-1.5 text-xs font-bold text-cyan-300 hover:bg-cyan-500/20 hover:border-cyan-400 transition-all shadow-[0_0_15px_rgba(6,182,212,0.25)]"
+              className="ml-auto inline-flex items-center gap-2 rounded-full border border-cyan-400/40 bg-cyan-500/10 px-4 py-1.5 text-xs font-bold text-cyan-300 hover:bg-cyan-500/20 hover:border-cyan-400 transition-all shadow-[0_0_15px_rgba(6,182,212,0.25)] hover:scale-105 active:scale-95"
             >
               <span>ENTER NOW</span>
               <FaArrowRight className="text-[0.65rem]" />
             </button>
+          </div>
+
+          {/* 10-Second Visual Progress Line */}
+          <div className="absolute bottom-0 inset-x-0 h-[2px] bg-white/10 overflow-hidden">
+            <motion.div
+              initial={{ width: '0%' }}
+              animate={{ width: '100%' }}
+              transition={{ duration: 10, ease: 'linear' }}
+              className="h-full bg-gradient-to-r from-purple-500 via-cyan-400 to-emerald-400 shadow-[0_0_10px_#06b6d4]"
+            />
           </div>
         </motion.div>
       )}

@@ -19,7 +19,7 @@ import { portfolioData } from './data/portfolioData';
 
 export default function App() {
   const [isAIOpen, setIsAIOpen] = useState(false);
-  const [forceShowWelcome, setForceShowWelcome] = useState(false);
+  const [showWelcome, setShowWelcome] = useState(true);
   const { activeSection, isTransitioning, targetSection, transitionToSection } =
     useCinematicNavigation();
 
@@ -42,10 +42,11 @@ export default function App() {
   return (
     <div className="relative min-h-screen bg-[#030305] text-slate-100 font-sans selection:bg-purple-500/40 selection:text-white overflow-x-hidden">
       {/* 3D Cinematic Opening Sequence ("WELCOME TO THE HARSH") */}
-      <WelcomeReveal
-        onComplete={() => setForceShowWelcome(false)}
-        forceShow={forceShowWelcome}
-      />
+      {showWelcome && (
+        <WelcomeReveal
+          onComplete={() => setShowWelcome(false)}
+        />
+      )}
 
       {/* Desktop Magnetic Cyber Cursor */}
       <CustomCursor />
@@ -65,7 +66,7 @@ export default function App() {
         onNavigate={transitionToSection}
         onOpenAI={() => setIsAIOpen(true)}
         onDownloadResume={handleDownloadResume}
-        onReplayIntro={() => setForceShowWelcome(true)}
+        onReplayIntro={() => setShowWelcome(true)}
       />
 
       {/* Main Content Sections with 3D perspective scene container */}

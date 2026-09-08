@@ -1,6 +1,6 @@
-﻿import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaWandMagicSparkles, FaArrowRight } from 'react-icons/fa6';
+import { FaArrowRight } from 'react-icons/fa6';
 
 interface WelcomeRevealProps {
   onComplete: () => void;
@@ -13,32 +13,26 @@ export default function WelcomeReveal({ onComplete, forceShow = false }: Welcome
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
-    // Check session storage
-    if (!forceShow) {
-      const hasSeen = sessionStorage.getItem('harsh_intro_seen');
-      if (hasSeen === 'true') {
-        setIsVisible(false);
-        onComplete();
-        return;
-      }
-    }
+    // Reset phase when shown
+    setPhase(0);
+    setIsVisible(true);
 
-    // Phase timers
-    // 0ms: Black screen & singularity
-    // 250ms: Singularity ignites
-    // 500ms: WELCOME appears in 3D
-    // 900ms: TO THE HARSH emerges
-    // 1400ms: Subtitle & tags reveal
-    // 2000ms: Camera moves through text
-    // 2400ms: Complete and reveal portfolio
-    const t1 = setTimeout(() => setPhase(1), 250);
-    const t2 = setTimeout(() => setPhase(2), 550);
-    const t3 = setTimeout(() => setPhase(3), 950);
-    const t4 = setTimeout(() => setPhase(4), 1450);
-    const t5 = setTimeout(() => setPhase(5), 2050);
+    // Fast, crisp cinematic timeline (Total ~2.1s)
+    // 0ms: Singularity & background glow
+    // 150ms: Singularity ignites
+    // 350ms: "WELCOME" emerges from 3D Z-space
+    // 750ms: "TO THE HARSH" emerges in vibrant gradient
+    // 1150ms: Subtitle and discipline badges appear
+    // 1650ms: Camera moves forward through the typography
+    // 2050ms: Smooth cross-fade into the live portfolio
+    const t1 = setTimeout(() => setPhase(1), 150);
+    const t2 = setTimeout(() => setPhase(2), 380);
+    const t3 = setTimeout(() => setPhase(3), 780);
+    const t4 = setTimeout(() => setPhase(4), 1180);
+    const t5 = setTimeout(() => setPhase(5), 1680);
     const t6 = setTimeout(() => {
       handleFinish();
-    }, 2450);
+    }, 2100);
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {

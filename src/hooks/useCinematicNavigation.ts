@@ -8,6 +8,15 @@ export function useCinematicNavigation() {
   const [targetSection, setTargetSection] = useState<CinematicSection | null>(null);
   const transitionTimerRef = useRef<number | null>(null);
 
+  const settleTransition = useCallback(() => {
+    if (transitionTimerRef.current !== null) {
+      window.clearTimeout(transitionTimerRef.current);
+      transitionTimerRef.current = null;
+    }
+    setIsTransitioning(false);
+    setTargetSection(null);
+  }, []);
+
   // Instant non-blocking transition engine
   const transitionToSection = useCallback((sectionId: string) => {
     const cleanId = sectionId.replace('#', '') as CinematicSection;
@@ -28,13 +37,24 @@ export function useCinematicNavigation() {
       el.scrollIntoView({ behavior: 'smooth' });
     }
 
-    // Step 2: Complete the GPU camera jump and settling effect in 550ms
+    // Step 2: Complete the GPU camera jump and settling effect in 600ms
     transitionTimerRef.current = window.setTimeout(() => {
       setIsTransitioning(false);
       setTargetSection(null);
       transitionTimerRef.current = null;
     }, 600);
   }, []);
+
+  // Keyboard shortcut to instantly settle transition
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' || e.key === 'Enter') {
+        settleTransition();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [settleTransition]);
 
   // Scrollspy for manual user scrolling
   useEffect(() => {

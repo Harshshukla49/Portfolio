@@ -12,7 +12,7 @@ import ContactSection from './components/ContactSection';
 import Footer from './components/Footer';
 import AIAssistant from './components/AIAssistant';
 import FloatingAITrigger from './components/FloatingAITrigger';
-import CinematicTransitionTunnel from './components/CinematicTransitionTunnel';
+import CinematicSceneDive from './components/CinematicSceneDive';
 import WelcomeReveal from './components/WelcomeReveal';
 import { useCinematicNavigation } from './hooks/useCinematicNavigation';
 import { portfolioData } from './data/portfolioData';
@@ -41,7 +41,7 @@ export default function App() {
 
   return (
     <div className="relative min-h-screen bg-[#030305] text-slate-100 font-sans selection:bg-purple-500/40 selection:text-white overflow-x-hidden">
-      {/* 3D Cinematic Opening Sequence ("WELCOME TO THE HARSH") */}
+      {/* 3D Cinematic Opening Sequence ("ENTER HARSH'S WORLD") */}
       {showWelcome && (
         <WelcomeReveal
           onComplete={() => setShowWelcome(false)}
@@ -51,8 +51,8 @@ export default function App() {
       {/* Desktop Magnetic Cyber Cursor */}
       <CustomCursor />
 
-      {/* Cinematic 3D Warp Flight Tunnel Overlay */}
-      <CinematicTransitionTunnel
+      {/* Cinematic 3D Scene Dive & Particle Travel (No Pill Badges) */}
+      <CinematicSceneDive
         isTransitioning={isTransitioning}
         targetSection={targetSection}
       />
@@ -69,37 +69,53 @@ export default function App() {
         onReplayIntro={() => setShowWelcome(true)}
       />
 
-      {/* Main Content Sections with 3D perspective scene container */}
+      {/* Main Content Sections with Whole-Page 3D Perspective Scene Dive */}
       <motion.main
         animate={
           isTransitioning
             ? {
-                scale: 0.96,
-                opacity: 0.75,
-                translateZ: -60,
+                scale: targetSection === 'projects' ? 0.93 : 0.96,
+                opacity: 0.8,
+                translateZ:
+                  targetSection === 'projects'
+                    ? -140
+                    : targetSection === 'skills'
+                    ? -100
+                    : -75,
                 rotateY:
                   targetSection === 'skills'
-                    ? -2.5
+                    ? -3.5
                     : targetSection === 'projects'
-                    ? 2.5
+                    ? 3
                     : targetSection === 'milestones'
-                    ? -1.5
-                    : 1,
-                filter: 'blur(1.5px)',
+                    ? -4
+                    : targetSection === 'contact'
+                    ? 2
+                    : 0,
+                rotateX:
+                  targetSection === 'skills'
+                    ? 2
+                    : targetSection === 'contact'
+                    ? -2
+                    : targetSection === 'about'
+                    ? 1.5
+                    : 0,
+                filter: 'blur(0.8px)',
               }
             : {
                 scale: 1,
                 opacity: 1,
                 translateZ: 0,
                 rotateY: 0,
+                rotateX: 0,
                 filter: 'blur(0px)',
               }
         }
         transition={{
-          duration: isTransitioning ? 0.18 : 0.32,
-          ease: [0.25, 1, 0.5, 1],
+          duration: isTransitioning ? 0.22 : 0.42,
+          ease: isTransitioning ? [0.22, 1, 0.36, 1] : [0.16, 1, 0.3, 1],
         }}
-        style={{ perspective: 1200, transformStyle: 'preserve-3d' }}
+        style={{ perspective: 1400, transformStyle: 'preserve-3d' }}
         className="relative z-10 will-change-transform"
       >
         <Hero

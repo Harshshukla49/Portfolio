@@ -84,7 +84,7 @@ export default function AboutSection() {
                   <img
                     src={portfolioData.personal.photoUrl}
                     alt="Harsh Shukla - AI & Machine Learning Engineer"
-                    className="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-105 filter brightness-105 contrast-105"
+                    className="h-full w-full object-cover object-[center_20%] transition-transform duration-700 group-hover:scale-105 filter brightness-105 contrast-105"
                     loading="eager"
                   />
                   {/* Subtle futuristic scanline and gradient lighting */}

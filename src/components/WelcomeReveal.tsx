@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaArrowRight } from 'react-icons/fa6';
+import { FaArrowRight, FaBrain, FaCode, FaRocket } from 'react-icons/fa6';
+import { portfolioData } from '../data/portfolioData';
 
 interface WelcomeRevealProps {
   onComplete: () => void;
@@ -13,24 +14,25 @@ export default function WelcomeReveal({ onComplete, forceShow = false }: Welcome
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
-    // Reset phase when shown
     setPhase(0);
     setIsVisible(true);
 
-    // Fast, crisp cinematic timeline (Total ~2.1s)
-    // 0ms: Singularity & background glow
-    // 150ms: Singularity ignites
-    // 350ms: "WELCOME" emerges from 3D Z-space
-    // 750ms: "TO THE HARSH" emerges in vibrant gradient
-    // 1150ms: Subtitle and discipline badges appear
-    // 1650ms: Camera moves forward through the typography
-    // 2050ms: Smooth cross-fade into the live portfolio
+    // Ultra-fast, crisp timeline for instant readability (< 1s to full visibility)
+    // 0ms: Ambient backdrop
+    // 150ms: Telemetry pill
+    // 250ms: "WELCOME" typography
+    // 400ms: "TO THE HARSH" 3D title
+    // 550ms: Subtitle ("Where code meets creativity.")
+    // 650ms: Circular Profile Portrait Orb
+    // 800ms: Developer Badges ("DEVELOPER • BUILDER • CREATOR")
+    // 1950ms: Camera moves through into live portfolio
     const t1 = setTimeout(() => setPhase(1), 150);
-    const t2 = setTimeout(() => setPhase(2), 380);
-    const t3 = setTimeout(() => setPhase(3), 780);
-    const t4 = setTimeout(() => setPhase(4), 1180);
-    const t5 = setTimeout(() => setPhase(5), 1680);
-    const t6 = setTimeout(() => {
+    const t2 = setTimeout(() => setPhase(2), 260);
+    const t3 = setTimeout(() => setPhase(3), 420);
+    const t4 = setTimeout(() => setPhase(4), 560);
+    const t5 = setTimeout(() => setPhase(5), 680);
+    const t6 = setTimeout(() => setPhase(6), 820);
+    const t7 = setTimeout(() => {
       handleFinish();
     }, 2100);
 
@@ -49,11 +51,12 @@ export default function WelcomeReveal({ onComplete, forceShow = false }: Welcome
       clearTimeout(t4);
       clearTimeout(t5);
       clearTimeout(t6);
+      clearTimeout(t7);
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [forceShow]);
 
-  // Ambient singularity particles
+  // Subtle ambient stardust canvas
   useEffect(() => {
     if (!isVisible) return;
     const canvas = canvasRef.current;
@@ -65,7 +68,7 @@ export default function WelcomeReveal({ onComplete, forceShow = false }: Welcome
     const w = (canvas.width = window.innerWidth);
     const h = (canvas.height = window.innerHeight);
 
-    const particles = Array.from({ length: 60 }, () => ({
+    const particles = Array.from({ length: 45 }, () => ({
       x: (Math.random() - 0.5) * w,
       y: (Math.random() - 0.5) * h,
       z: Math.random() * 800 + 100,
@@ -74,14 +77,14 @@ export default function WelcomeReveal({ onComplete, forceShow = false }: Welcome
     }));
 
     const render = () => {
-      ctx.fillStyle = 'rgba(2, 2, 6, 0.4)';
+      ctx.fillStyle = 'rgba(2, 2, 5, 0.35)';
       ctx.fillRect(0, 0, w, h);
 
       const cx = w / 2;
       const cy = h / 2;
 
       particles.forEach((p) => {
-        p.z -= 4;
+        p.z -= 3;
         if (p.z <= 10) p.z = 900;
 
         const k = 350 / p.z;
@@ -92,7 +95,7 @@ export default function WelcomeReveal({ onComplete, forceShow = false }: Welcome
           ctx.beginPath();
           ctx.arc(px, py, p.size * k, 0, Math.PI * 2);
           ctx.fillStyle = p.color;
-          ctx.shadowBlur = 10;
+          ctx.shadowBlur = 8;
           ctx.shadowColor = p.color;
           ctx.fill();
         }
@@ -119,118 +122,156 @@ export default function WelcomeReveal({ onComplete, forceShow = false }: Welcome
       {isVisible && (
         <motion.div
           initial={{ opacity: 1 }}
-          exit={{ opacity: 0, scale: 1.08, filter: 'blur(10px)' }}
-          transition={{ duration: 0.45, ease: 'easeInOut' }}
-          className="fixed inset-0 z-[10000] flex flex-col items-center justify-center bg-[#020205] text-white select-none overflow-hidden cursor-pointer"
+          exit={{ opacity: 0, scale: 1.06, filter: 'blur(8px)' }}
+          transition={{ duration: 0.35, ease: 'easeInOut' }}
+          className="fixed inset-0 z-[10000] flex flex-col items-center justify-center bg-[#020205] text-white select-none overflow-hidden cursor-pointer px-4"
           onClick={handleFinish}
         >
           {/* Ambient Cosmic Canvas */}
           <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none" />
 
-          {/* Glowing Radial Core */}
-          <div className="absolute h-[500px] w-[500px] rounded-full bg-gradient-to-tr from-purple-600/20 via-cyan-500/15 to-transparent blur-[120px] pointer-events-none" />
+          {/* Ambient Lighting Volumetric Glows */}
+          <div className="absolute top-1/3 h-80 w-80 rounded-full bg-purple-600/20 blur-[100px] pointer-events-none" />
+          <div className="absolute bottom-1/3 h-80 w-80 rounded-full bg-cyan-500/15 blur-[100px] pointer-events-none" />
 
-          {/* 3D Cinematic Scene Container */}
+          {/* 3D Cinematic Scene Layout Container */}
           <div
-            className="relative z-10 flex flex-col items-center justify-center text-center px-4 max-w-4xl"
+            className="relative z-10 flex flex-col items-center justify-center text-center max-w-2xl w-full"
             style={{ perspective: 1200, transformStyle: 'preserve-3d' }}
           >
-            {/* Top HUD Telemetry */}
+            {/* Top Micro-HUD Badge */}
             <motion.div
-              initial={{ opacity: 0, y: -15 }}
-              animate={phase >= 1 ? { opacity: 1, y: 0 } : { opacity: 0, y: -15 }}
-              transition={{ duration: 0.4 }}
-              className="inline-flex items-center gap-2 rounded-full border border-cyan-400/40 bg-cyan-500/10 px-4 py-1.5 text-xs font-mono tracking-[0.25em] text-cyan-300 backdrop-blur-md mb-6"
+              initial={{ opacity: 0, y: -10 }}
+              animate={phase >= 1 ? { opacity: 1, y: 0 } : { opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 }}
+              className="inline-flex items-center gap-2 rounded-full border border-cyan-400/40 bg-cyan-500/10 px-3.5 py-1 text-[0.65rem] sm:text-xs font-mono tracking-[0.25em] text-cyan-300 backdrop-blur-md mb-4"
             >
-              <span className="h-2 w-2 rounded-full bg-cyan-400 animate-ping" />
-              <span>INITIALIZING NEURAL PORTFOLIO SYSTEM</span>
+              <span className="h-2 w-2 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_8px_#06b6d4]" />
+              <span>DIGITAL REALM // INITIALIZED</span>
             </motion.div>
 
-            {/* Main 3D Title Sequence */}
-            <div className="relative overflow-hidden py-2" style={{ transformStyle: 'preserve-3d' }}>
+            {/* Typography Section (Title + Subtitle) */}
+            <div className="flex flex-col items-center" style={{ transformStyle: 'preserve-3d' }}>
               {/* "WELCOME" */}
-              <motion.h1
-                initial={{ opacity: 0, scale: 0.5, z: -400, filter: 'blur(12px)' }}
+              <motion.h2
+                initial={{ opacity: 0, y: 15, z: -80 }}
                 animate={
                   phase >= 2
-                    ? {
-                        opacity: 1,
-                        scale: phase >= 5 ? 1.35 : 1,
-                        z: phase >= 5 ? 150 : 0,
-                        filter: 'blur(0px)',
-                      }
-                    : { opacity: 0, scale: 0.5, z: -400, filter: 'blur(12px)' }
+                    ? { opacity: 1, y: 0, z: 0 }
+                    : { opacity: 0, y: 15, z: -80 }
                 }
-                transition={{ duration: 0.65, ease: 'easeOut' }}
-                className="text-4xl sm:text-6xl md:text-7xl font-black uppercase tracking-[0.2em] text-white font-mono leading-none drop-shadow-[0_0_30px_rgba(255,255,255,0.4)]"
+                transition={{ duration: 0.45, ease: 'easeOut' }}
+                className="text-2xl sm:text-4xl md:text-5xl font-black uppercase tracking-[0.25em] text-slate-300 font-mono leading-none"
               >
                 WELCOME
-              </motion.h1>
+              </motion.h2>
 
               {/* "TO THE HARSH" */}
-              <motion.h2
-                initial={{ opacity: 0, scale: 0.6, y: 25, z: -300, filter: 'blur(10px)' }}
+              <motion.h1
+                initial={{ opacity: 0, y: 20, z: -100, scale: 0.95 }}
                 animate={
                   phase >= 3
-                    ? {
-                        opacity: 1,
-                        scale: phase >= 5 ? 1.4 : 1,
-                        y: 0,
-                        z: phase >= 5 ? 200 : 0,
-                        filter: 'blur(0px)',
-                      }
-                    : { opacity: 0, scale: 0.6, y: 25, z: -300, filter: 'blur(10px)' }
+                    ? { opacity: 1, y: 0, z: 0, scale: 1 }
+                    : { opacity: 0, y: 20, z: -100, scale: 0.95 }
                 }
-                transition={{ duration: 0.7, ease: 'easeOut' }}
-                className="mt-2 text-3xl sm:text-5xl md:text-6xl font-black uppercase tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-300 drop-shadow-[0_0_40px_rgba(168,85,247,0.6)]"
+                transition={{ duration: 0.5, ease: 'easeOut' }}
+                className="mt-1.5 text-3xl sm:text-5xl md:text-6xl font-black uppercase tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-300 drop-shadow-[0_0_35px_rgba(168,85,247,0.5)]"
               >
                 TO THE HARSH
-              </motion.h2>
+              </motion.h1>
+
+              {/* Secondary Line */}
+              <motion.p
+                initial={{ opacity: 0, y: 10 }}
+                animate={phase >= 4 ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+                transition={{ duration: 0.4 }}
+                className="mt-2 text-xs sm:text-base font-medium text-slate-300 tracking-wider"
+              >
+                Where code meets creativity.
+              </motion.p>
             </div>
 
-            {/* Subtitle Line */}
-            <motion.p
-              initial={{ opacity: 0, y: 15 }}
-              animate={phase >= 4 ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
-              transition={{ duration: 0.5 }}
-              className="mt-6 text-sm sm:text-lg font-medium text-slate-300 tracking-wider"
-            >
-              Where code meets creativity & applied intelligence.
-            </motion.p>
-
-            {/* Discipline Badges */}
+            {/* Profile Image in Perfect Circular Futuristic Frame */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={phase >= 4 ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="mt-5 flex flex-wrap items-center justify-center gap-2 text-[0.65rem] sm:text-xs font-mono text-slate-400"
+              initial={{ opacity: 0, scale: 0.82, z: -120 }}
+              animate={
+                phase >= 5
+                  ? { opacity: 1, scale: 1, z: 0 }
+                  : { opacity: 0, scale: 0.82, z: -120 }
+              }
+              transition={{ duration: 0.55, ease: 'easeOut' }}
+              className="relative my-5 sm:my-6 flex items-center justify-center group"
             >
-              <span className="rounded-lg border border-purple-500/30 bg-purple-500/10 px-3 py-1 text-purple-300">
-                AI & ML ENGINEER
-              </span>
-              <span className="text-slate-600">•</span>
-              <span className="rounded-lg border border-cyan-500/30 bg-cyan-500/10 px-3 py-1 text-cyan-300">
-                FULL STACK ARCHITECT
-              </span>
-              <span className="text-slate-600">•</span>
-              <span className="rounded-lg border border-pink-500/30 bg-pink-500/10 px-3 py-1 text-pink-300">
-                CREATIVE BUILDER
-              </span>
+              {/* Outer Rotating Accent Ring */}
+              <div className="absolute -inset-2.5 rounded-full border border-dashed border-cyan-400/30 animate-[spin_20s_linear_infinite]" />
+              <div className="absolute -inset-1 rounded-full border border-purple-500/30 animate-[spin_15s_linear_infinite_reverse]" />
+
+              {/* Glowing Outer Atmosphere Ring */}
+              <div className="relative h-36 w-36 sm:h-44 sm:w-44 md:h-48 md:w-48 rounded-full p-[3px] bg-gradient-to-tr from-purple-600 via-cyan-400 to-indigo-500 shadow-[0_0_40px_rgba(6,182,212,0.4)]">
+                {/* Floating Inner Portrait Circle */}
+                <motion.div
+                  animate={{ y: [0, -5, 0] }}
+                  transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+                  className="relative h-full w-full rounded-full overflow-hidden bg-slate-900 border-2 border-black/80 shadow-2xl"
+                >
+                  <img
+                    src={portfolioData.personal.photoUrl}
+                    alt="Harsh Shukla"
+                    className="h-full w-full object-cover object-[center_20%] filter brightness-105 contrast-105 group-hover:scale-105 transition-transform duration-500"
+                    loading="eager"
+                  />
+                  {/* Subtle Inner Glass Horizon Light */}
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                </motion.div>
+              </div>
             </motion.div>
+
+            {/* Bottom Developer Identity & Tagline */}
+            <div className="flex flex-col items-center">
+              {/* Small Label Badges */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={phase >= 6 ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+                transition={{ duration: 0.4 }}
+                className="inline-flex flex-wrap items-center justify-center gap-2 font-mono text-[0.65rem] sm:text-xs text-slate-300 font-semibold uppercase tracking-wider"
+              >
+                <span className="rounded-lg border border-purple-500/40 bg-purple-500/10 px-2.5 py-1 text-purple-300">
+                  DEVELOPER
+                </span>
+                <span className="text-slate-600">•</span>
+                <span className="rounded-lg border border-cyan-500/40 bg-cyan-500/10 px-2.5 py-1 text-cyan-300">
+                  BUILDER
+                </span>
+                <span className="text-slate-600">•</span>
+                <span className="rounded-lg border border-pink-500/40 bg-pink-500/10 px-2.5 py-1 text-pink-300">
+                  CREATOR
+                </span>
+              </motion.div>
+
+              {/* Supporting Line */}
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={phase >= 6 ? { opacity: 1 } : { opacity: 0 }}
+                transition={{ duration: 0.4, delay: 0.1 }}
+                className="mt-2.5 text-[0.7rem] sm:text-xs font-mono text-slate-400 tracking-wide"
+              >
+                Explore my world of ideas, technology & innovation.
+              </motion.p>
+            </div>
           </div>
 
-          {/* Bottom Interactive Skip Prompt */}
-          <div className="absolute bottom-8 inset-x-0 flex items-center justify-between px-8 text-xs font-mono text-slate-500">
+          {/* Bottom Fast Enter Indicator */}
+          <div className="absolute bottom-6 inset-x-0 flex items-center justify-between px-6 sm:px-10 text-[0.7rem] font-mono text-slate-500">
             <span className="hidden sm:inline-block">PRESS [ESC] OR CLICK ANYWHERE TO ENTER</span>
             <button
               onClick={(e) => {
                 e.stopPropagation();
                 handleFinish();
               }}
-              className="ml-auto inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-4 py-2 text-xs font-semibold text-slate-200 hover:border-cyan-400 hover:bg-cyan-500/20 hover:text-white transition-all shadow-lg"
+              className="ml-auto inline-flex items-center gap-2 rounded-full border border-cyan-400/40 bg-cyan-500/10 px-4 py-1.5 text-xs font-bold text-cyan-300 hover:bg-cyan-500/20 hover:border-cyan-400 transition-all shadow-[0_0_15px_rgba(6,182,212,0.25)]"
             >
               <span>ENTER NOW</span>
-              <FaArrowRight className="text-cyan-400 text-[0.7rem]" />
+              <FaArrowRight className="text-[0.65rem]" />
             </button>
           </div>
         </motion.div>
@@ -238,3 +279,4 @@ export default function WelcomeReveal({ onComplete, forceShow = false }: Welcome
     </AnimatePresence>
   );
 }
+

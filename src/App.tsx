@@ -75,20 +75,29 @@ export default function App() {
           isTransitioning
             ? {
                 scale: 0.96,
-                opacity: 0.4,
-                filter: 'blur(4px)',
-                rotateX: 2,
+                opacity: 0.75,
+                translateZ: -60,
+                rotateY:
+                  targetSection === 'skills'
+                    ? -2.5
+                    : targetSection === 'projects'
+                    ? 2.5
+                    : targetSection === 'milestones'
+                    ? -1.5
+                    : 1,
+                filter: 'blur(1.5px)',
               }
             : {
                 scale: 1,
                 opacity: 1,
+                translateZ: 0,
+                rotateY: 0,
                 filter: 'blur(0px)',
-                rotateX: 0,
               }
         }
         transition={{
-          duration: isTransitioning ? 0.25 : 0.35,
-          ease: 'easeOut',
+          duration: isTransitioning ? 0.18 : 0.32,
+          ease: [0.25, 1, 0.5, 1],
         }}
         style={{ perspective: 1200, transformStyle: 'preserve-3d' }}
         className="relative z-10 will-change-transform"

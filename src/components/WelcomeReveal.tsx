@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaArrowRight, FaBrain, FaCode, FaRocket } from 'react-icons/fa6';
+import { FaArrowRight } from 'react-icons/fa6';
 import { portfolioData } from '../data/portfolioData';
 
 interface WelcomeRevealProps {
@@ -17,14 +17,19 @@ export default function WelcomeReveal({ onComplete, forceShow = false }: Welcome
     setPhase(0);
     setIsVisible(true);
 
-    // Crisp reveal within ~1s, then remains visible for 10 seconds total
+    // Fast, crisp cinematic timeline
+    // 0ms: Ambient backdrop
+    // 150ms: Title begins appearing
+    // 350ms: "ENTER HARSH'S WORLD" fully readable
+    // 500ms: Circular profile portrait emerges
+    // 650ms: Subtitle appears
+    // 800ms: Developer identity tags appear
     const t1 = setTimeout(() => setPhase(1), 150);
-    const t2 = setTimeout(() => setPhase(2), 260);
-    const t3 = setTimeout(() => setPhase(3), 420);
-    const t4 = setTimeout(() => setPhase(4), 560);
-    const t5 = setTimeout(() => setPhase(5), 680);
-    const t6 = setTimeout(() => setPhase(6), 820);
-    const t7 = setTimeout(() => {
+    const t2 = setTimeout(() => setPhase(2), 350);
+    const t3 = setTimeout(() => setPhase(3), 500);
+    const t4 = setTimeout(() => setPhase(4), 650);
+    const t5 = setTimeout(() => setPhase(5), 800);
+    const t6 = setTimeout(() => {
       handleFinish();
     }, 10000);
 
@@ -43,7 +48,6 @@ export default function WelcomeReveal({ onComplete, forceShow = false }: Welcome
       clearTimeout(t4);
       clearTimeout(t5);
       clearTimeout(t6);
-      clearTimeout(t7);
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [forceShow]);
@@ -60,12 +64,12 @@ export default function WelcomeReveal({ onComplete, forceShow = false }: Welcome
     const w = (canvas.width = window.innerWidth);
     const h = (canvas.height = window.innerHeight);
 
-    const particles = Array.from({ length: 45 }, () => ({
+    const particles = Array.from({ length: 35 }, () => ({
       x: (Math.random() - 0.5) * w,
       y: (Math.random() - 0.5) * h,
       z: Math.random() * 800 + 100,
-      size: Math.random() * 2 + 1,
-      color: Math.random() > 0.5 ? '#06b6d4' : '#a855f7',
+      size: Math.random() * 1.8 + 0.8,
+      color: Math.random() > 0.5 ? 'rgba(6,182,212,0.8)' : 'rgba(168,85,247,0.8)',
     }));
 
     const render = () => {
@@ -76,7 +80,7 @@ export default function WelcomeReveal({ onComplete, forceShow = false }: Welcome
       const cy = h / 2;
 
       particles.forEach((p) => {
-        p.z -= 3;
+        p.z -= 2;
         if (p.z <= 10) p.z = 900;
 
         const k = 350 / p.z;
@@ -87,7 +91,7 @@ export default function WelcomeReveal({ onComplete, forceShow = false }: Welcome
           ctx.beginPath();
           ctx.arc(px, py, p.size * k, 0, Math.PI * 2);
           ctx.fillStyle = p.color;
-          ctx.shadowBlur = 8;
+          ctx.shadowBlur = 6;
           ctx.shadowColor = p.color;
           ctx.fill();
         }
@@ -114,7 +118,7 @@ export default function WelcomeReveal({ onComplete, forceShow = false }: Welcome
       {isVisible && (
         <motion.div
           initial={{ opacity: 1 }}
-          exit={{ opacity: 0, scale: 1.06, filter: 'blur(8px)' }}
+          exit={{ opacity: 0, scale: 1.04, filter: 'blur(6px)' }}
           transition={{ duration: 0.35, ease: 'easeInOut' }}
           className="fixed inset-0 z-[10000] flex flex-col items-center justify-center bg-[#020205] text-white select-none overflow-hidden cursor-pointer px-4"
           onClick={handleFinish}
@@ -123,8 +127,8 @@ export default function WelcomeReveal({ onComplete, forceShow = false }: Welcome
           <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none" />
 
           {/* Ambient Lighting Volumetric Glows */}
-          <div className="absolute top-1/3 h-80 w-80 rounded-full bg-purple-600/20 blur-[100px] pointer-events-none" />
-          <div className="absolute bottom-1/3 h-80 w-80 rounded-full bg-cyan-500/15 blur-[100px] pointer-events-none" />
+          <div className="absolute top-1/4 h-80 w-80 rounded-full bg-purple-600/15 blur-[120px] pointer-events-none" />
+          <div className="absolute bottom-1/4 h-80 w-80 rounded-full bg-cyan-500/15 blur-[120px] pointer-events-none" />
 
           {/* 3D Cinematic Scene Layout Container */}
           <div
@@ -133,49 +137,35 @@ export default function WelcomeReveal({ onComplete, forceShow = false }: Welcome
           >
             {/* Top Micro-HUD Badge */}
             <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={phase >= 1 ? { opacity: 1, y: 0 } : { opacity: 0, y: -10 }}
+              initial={{ opacity: 0, y: -8 }}
+              animate={phase >= 1 ? { opacity: 1, y: 0 } : { opacity: 0, y: -8 }}
               transition={{ duration: 0.3 }}
-              className="inline-flex items-center gap-2 rounded-full border border-cyan-400/40 bg-cyan-500/10 px-3.5 py-1 text-[0.65rem] sm:text-xs font-mono tracking-[0.25em] text-cyan-300 backdrop-blur-md mb-4"
+              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-1 text-[0.65rem] sm:text-xs font-mono tracking-[0.25em] text-cyan-300 backdrop-blur-md mb-3"
             >
-              <span className="h-2 w-2 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_8px_#06b6d4]" />
-              <span>DIGITAL REALM // INITIALIZED</span>
+              <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_8px_#06b6d4]" />
+              <span>DIGITAL WORLD // HARSH SHUKLA</span>
             </motion.div>
 
             {/* Typography Section (Title + Subtitle) */}
             <div className="flex flex-col items-center" style={{ transformStyle: 'preserve-3d' }}>
-              {/* "WELCOME" */}
-              <motion.h2
-                initial={{ opacity: 0, y: 15, z: -80 }}
+              {/* Main Title: "ENTER HARSH'S WORLD" */}
+              <motion.h1
+                initial={{ opacity: 0, y: 15, z: -80, scale: 0.95 }}
                 animate={
                   phase >= 2
-                    ? { opacity: 1, y: 0, z: 0 }
-                    : { opacity: 0, y: 15, z: -80 }
-                }
-                transition={{ duration: 0.45, ease: 'easeOut' }}
-                className="text-2xl sm:text-4xl md:text-5xl font-black uppercase tracking-[0.25em] text-slate-300 font-mono leading-none"
-              >
-                WELCOME
-              </motion.h2>
-
-              {/* "TO THE HARSH" */}
-              <motion.h1
-                initial={{ opacity: 0, y: 20, z: -100, scale: 0.95 }}
-                animate={
-                  phase >= 3
                     ? { opacity: 1, y: 0, z: 0, scale: 1 }
-                    : { opacity: 0, y: 20, z: -100, scale: 0.95 }
+                    : { opacity: 0, y: 15, z: -80, scale: 0.95 }
                 }
-                transition={{ duration: 0.5, ease: 'easeOut' }}
-                className="mt-1.5 text-3xl sm:text-5xl md:text-6xl font-black uppercase tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-300 drop-shadow-[0_0_35px_rgba(168,85,247,0.5)]"
+                transition={{ duration: 0.5, ease: [0.25, 1, 0.5, 1] }}
+                className="text-3xl sm:text-5xl md:text-6xl font-black uppercase tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-100 to-cyan-300 drop-shadow-[0_0_35px_rgba(255,255,255,0.25)]"
               >
-                TO THE HARSH
+                ENTER HARSH'S WORLD
               </motion.h1>
 
-              {/* Secondary Line */}
+              {/* Secondary Line: "Where code meets creativity." */}
               <motion.p
-                initial={{ opacity: 0, y: 10 }}
-                animate={phase >= 4 ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+                initial={{ opacity: 0, y: 8 }}
+                animate={phase >= 4 ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
                 transition={{ duration: 0.4 }}
                 className="mt-2 text-xs sm:text-base font-medium text-slate-300 tracking-wider"
               >
@@ -183,29 +173,21 @@ export default function WelcomeReveal({ onComplete, forceShow = false }: Welcome
               </motion.p>
             </div>
 
-            {/* Profile Image in Perfect Circular Futuristic Frame */}
+            {/* Profile Image in Premium Circular Frame */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.82, z: -120 }}
+              initial={{ opacity: 0, scale: 0.9, z: -80 }}
               animate={
-                phase >= 5
+                phase >= 3
                   ? { opacity: 1, scale: 1, z: 0 }
-                  : { opacity: 0, scale: 0.82, z: -120 }
+                  : { opacity: 0, scale: 0.9, z: -80 }
               }
-              transition={{ duration: 0.55, ease: 'easeOut' }}
+              transition={{ duration: 0.55, ease: [0.25, 1, 0.5, 1] }}
               className="relative my-5 sm:my-6 flex items-center justify-center group"
             >
-              {/* Outer Rotating Accent Ring */}
-              <div className="absolute -inset-2.5 rounded-full border border-dashed border-cyan-400/30 animate-[spin_20s_linear_infinite]" />
-              <div className="absolute -inset-1 rounded-full border border-purple-500/30 animate-[spin_15s_linear_infinite_reverse]" />
-
-              {/* Glowing Outer Atmosphere Ring */}
-              <div className="relative h-36 w-36 sm:h-44 sm:w-44 md:h-48 md:w-48 rounded-full p-[3px] bg-gradient-to-tr from-purple-600 via-cyan-400 to-indigo-500 shadow-[0_0_40px_rgba(6,182,212,0.4)]">
-                {/* Floating Inner Portrait Circle */}
-                <motion.div
-                  animate={{ y: [0, -5, 0] }}
-                  transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-                  className="relative h-full w-full rounded-full overflow-hidden bg-slate-900 border-2 border-black/80 shadow-2xl"
-                >
+              {/* Subtle Outer Glowing Rim */}
+              <div className="relative h-36 w-36 sm:h-44 sm:w-44 md:h-48 md:w-48 rounded-full p-[2px] bg-gradient-to-tr from-purple-500/50 via-cyan-400/60 to-indigo-500/50 shadow-[0_0_35px_rgba(6,182,212,0.3)]">
+                {/* Inner Portrait Circle */}
+                <div className="relative h-full w-full rounded-full overflow-hidden bg-slate-900 border border-white/20 shadow-2xl">
                   <img
                     src={portfolioData.personal.photoUrl}
                     alt="Harsh Shukla"
@@ -213,8 +195,8 @@ export default function WelcomeReveal({ onComplete, forceShow = false }: Welcome
                     loading="eager"
                   />
                   {/* Subtle Inner Glass Horizon Light */}
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-                </motion.div>
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
+                </div>
               </div>
             </motion.div>
 
@@ -222,20 +204,20 @@ export default function WelcomeReveal({ onComplete, forceShow = false }: Welcome
             <div className="flex flex-col items-center">
               {/* Small Label Badges */}
               <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={phase >= 6 ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+                initial={{ opacity: 0, y: 8 }}
+                animate={phase >= 5 ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
                 transition={{ duration: 0.4 }}
                 className="inline-flex flex-wrap items-center justify-center gap-2 font-mono text-[0.65rem] sm:text-xs text-slate-300 font-semibold uppercase tracking-wider"
               >
-                <span className="rounded-lg border border-purple-500/40 bg-purple-500/10 px-2.5 py-1 text-purple-300">
+                <span className="rounded-lg border border-purple-500/30 bg-purple-500/10 px-2.5 py-1 text-purple-300">
                   DEVELOPER
                 </span>
                 <span className="text-slate-600">•</span>
-                <span className="rounded-lg border border-cyan-500/40 bg-cyan-500/10 px-2.5 py-1 text-cyan-300">
+                <span className="rounded-lg border border-cyan-500/30 bg-cyan-500/10 px-2.5 py-1 text-cyan-300">
                   BUILDER
                 </span>
                 <span className="text-slate-600">•</span>
-                <span className="rounded-lg border border-pink-500/40 bg-pink-500/10 px-2.5 py-1 text-pink-300">
+                <span className="rounded-lg border border-pink-500/30 bg-pink-500/10 px-2.5 py-1 text-pink-300">
                   CREATOR
                 </span>
               </motion.div>
@@ -243,9 +225,9 @@ export default function WelcomeReveal({ onComplete, forceShow = false }: Welcome
               {/* Supporting Line */}
               <motion.p
                 initial={{ opacity: 0 }}
-                animate={phase >= 6 ? { opacity: 1 } : { opacity: 0 }}
+                animate={phase >= 5 ? { opacity: 1 } : { opacity: 0 }}
                 transition={{ duration: 0.4, delay: 0.1 }}
-                className="mt-2.5 text-[0.7rem] sm:text-xs font-mono text-slate-400 tracking-wide"
+                className="mt-2 text-[0.7rem] sm:text-xs font-mono text-slate-400 tracking-wide"
               >
                 Explore my world of ideas, technology & innovation.
               </motion.p>
@@ -284,4 +266,5 @@ export default function WelcomeReveal({ onComplete, forceShow = false }: Welcome
     </AnimatePresence>
   );
 }
+
 

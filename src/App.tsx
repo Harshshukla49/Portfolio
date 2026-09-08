@@ -112,8 +112,8 @@ export default function App() {
               }
         }
         transition={{
-          duration: isTransitioning ? 0.22 : 0.42,
-          ease: isTransitioning ? [0.22, 1, 0.36, 1] : [0.16, 1, 0.3, 1],
+          duration: isTransitioning ? 0.9 : 0.8,
+          ease: [0.16, 1, 0.3, 1],
         }}
         style={{ perspective: 1400, transformStyle: 'preserve-3d' }}
         className="relative z-10 will-change-transform"

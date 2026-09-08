@@ -130,25 +130,26 @@ export default function CinematicSceneDive({
           {/* Particle Velocity Canvas */}
           <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none" />
 
-          {/* Elegant Circular Glowing Portal / Energy Ring */}
+          {/* Elegant Circular Glowing Portal / Energy Ring (3-Second Experience) */}
           <motion.div
-            initial={{ scale: 0.35, opacity: 0 }}
+            initial={{ scale: 0.3, opacity: 0 }}
             animate={{
-              scale: [0.35, 1.05, 1.45],
-              opacity: [0, 0.7, 0],
+              scale: [0.3, 0.85, 1.05, 1.55],
+              opacity: [0, 0.85, 0.7, 0],
             }}
             exit={{ opacity: 0 }}
             transition={{
-              duration: 0.6,
-              ease: [0.22, 1, 0.36, 1],
+              duration: 3.0,
+              times: [0, 0.2, 0.75, 1],
+              ease: [0.16, 1, 0.3, 1],
             }}
             className="relative flex items-center justify-center pointer-events-none"
           >
             {/* Outer Soft Atmosphere Ring */}
             <div
-              className="h-80 w-80 sm:h-[420px] sm:w-[420px] rounded-full border border-white/20 blur-[1px]"
+              className="h-80 w-80 sm:h-[440px] sm:w-[440px] rounded-full border border-white/20 blur-[1px]"
               style={{
-                boxShadow: `0 0 60px ${theme.glow}, inset 0 0 40px ${theme.glow}`,
+                boxShadow: `0 0 70px ${theme.glow}, inset 0 0 50px ${theme.glow}`,
                 borderColor: theme.accent,
               }}
             />
@@ -157,16 +158,16 @@ export default function CinematicSceneDive({
             <div
               className="absolute h-56 w-56 sm:h-72 sm:w-72 rounded-full border border-white/40"
               style={{
-                boxShadow: `0 0 30px ${theme.glow}`,
+                boxShadow: `0 0 35px ${theme.glow}`,
               }}
             />
 
             {/* Center Volumetric Iris Light */}
             <div
-              className="absolute h-32 w-32 rounded-full blur-2xl"
+              className="absolute h-36 w-36 rounded-full blur-2xl"
               style={{
                 backgroundColor: theme.accent,
-                opacity: 0.25,
+                opacity: 0.3,
               }}
             />
           </motion.div>
@@ -175,11 +176,15 @@ export default function CinematicSceneDive({
           <motion.div
             initial={{ scaleX: 0.1, opacity: 0 }}
             animate={{
-              scaleX: [0.1, 1.2, 1.8],
-              opacity: [0, 0.45, 0],
+              scaleX: [0.1, 1.0, 1.3, 1.8],
+              opacity: [0, 0.5, 0.35, 0],
             }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            transition={{
+              duration: 3.0,
+              times: [0, 0.2, 0.75, 1],
+              ease: [0.16, 1, 0.3, 1],
+            }}
             className="absolute inset-x-0 h-[1px] blur-sm pointer-events-none"
             style={{
               background: `linear-gradient(90deg, transparent 0%, ${theme.accent} 50%, transparent 100%)`,

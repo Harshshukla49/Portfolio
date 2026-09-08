@@ -37,12 +37,12 @@ export function useCinematicNavigation() {
       el.scrollIntoView({ behavior: 'smooth' });
     }
 
-    // Step 2: Complete the GPU camera jump and settling effect in 600ms
+    // Step 2: Transition works for exactly 3 seconds, after that no transition comes
     transitionTimerRef.current = window.setTimeout(() => {
       setIsTransitioning(false);
       setTargetSection(null);
       transitionTimerRef.current = null;
-    }, 600);
+    }, 3000);
   }, []);
 
   // Keyboard shortcut to instantly settle transition

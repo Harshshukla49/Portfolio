@@ -16,10 +16,11 @@ import AIVisualization from './AIVisualization';
 
 interface HeroProps {
   onOpenAI: () => void;
+  onNavigate?: (sectionId: string) => void;
   onDownloadResume?: () => void;
 }
 
-export default function Hero({ onOpenAI }: HeroProps) {
+export default function Hero({ onOpenAI, onNavigate, onDownloadResume }: HeroProps) {
   const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
 
   const roles = [
@@ -37,8 +38,12 @@ export default function Hero({ onOpenAI }: HeroProps) {
   }, [roles.length]);
 
   const scrollToSection = (id: string) => {
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
+    if (onNavigate) {
+      onNavigate(id);
+    } else {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   return (

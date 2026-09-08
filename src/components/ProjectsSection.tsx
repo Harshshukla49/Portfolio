@@ -15,6 +15,159 @@ import {
 import { portfolioData, ProjectItem } from '../data/portfolioData';
 import CaseStudyModal from './CaseStudyModal';
 
+interface Project3DCardProps {
+  project: ProjectItem;
+  index: number;
+  isEven: boolean;
+  onOpenCaseStudy: (p: ProjectItem) => void;
+  getVisualPreview: (p: ProjectItem) => React.ReactNode;
+}
+
+function Project3DCard({
+  project,
+  index,
+  isEven,
+  onOpenCaseStudy,
+  getVisualPreview,
+}: Project3DCardProps) {
+  const [tilt, setTilt] = useState({ x: 0, y: 0, glareX: 50, glareY: 50 });
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width;
+    const y = (e.clientY - rect.top) / rect.height;
+    // -7 to +7 deg tilt
+    const rotX = (y - 0.5) * -12;
+    const rotY = (x - 0.5) * 12;
+    setTilt({ x: rotX, y: rotY, glareX: x * 100, glareY: y * 100 });
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setTilt({ x: 0, y: 0, glareX: 50, glareY: 50 });
+    setIsHovered(false);
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 35, scale: 0.95 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, margin: '-60px' }}
+      transition={{ duration: 0.6, delay: index * 0.1, ease: 'easeOut' }}
+      style={{ perspective: 1200 }}
+      className="w-full"
+    >
+      <motion.div
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        animate={{
+          rotateX: tilt.x,
+          rotateY: tilt.y,
+          translateZ: isHovered ? 20 : 0,
+        }}
+        transition={{ type: 'spring', stiffness: 260, damping: 24 }}
+        data-cursor="project"
+        onClick={() => onOpenCaseStudy(project)}
+        className="group relative cursor-pointer overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.04] to-black/85 p-6 sm:p-8 lg:p-10 shadow-[0_20px_60px_rgba(0,0,0,0.7)] backdrop-blur-2xl hover:border-cyan-400/50 hover:shadow-[0_25px_90px_rgba(6,182,212,0.25)] transition-all duration-300"
+      >
+        {/* Dynamic Holographic Cursor Reflection Sheen */}
+        <div
+          className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          style={{
+            background: `radial-gradient(circle at ${tilt.glareX}% ${tilt.glareY}%, rgba(6, 182, 212, 0.14), rgba(168, 85, 247, 0.06), transparent 70%)`,
+          }}
+        />
+
+        <div className={`grid grid-cols-1 lg:grid-cols-12 gap-8 items-center ${isEven ? '' : 'lg:flex-row-reverse'}`}>
+          {/* Visual Preview Container */}
+          <div className={`lg:col-span-6 ${isEven ? 'lg:order-1' : 'lg:order-2'}`}>
+            <div className="relative group-hover:scale-[1.03] transition-transform duration-500 will-change-transform">
+              {getVisualPreview(project)}
+            </div>
+          </div>
+
+          {/* Project Info & Actions */}
+          <div className={`lg:col-span-6 text-left flex flex-col justify-between ${isEven ? 'lg:order-2' : 'lg:order-1'}`}>
+            <div>
+              {/* Meta Pill */}
+              <div className="flex items-center gap-3 font-mono text-xs">
+                <span className="rounded-lg bg-gradient-to-r from-purple-500/25 to-cyan-500/25 border border-cyan-400/30 px-2.5 py-1 font-bold text-cyan-300">
+                  PROJECT {project.number}
+                </span>
+                <span className="text-slate-400 uppercase tracking-wider">{project.category}</span>
+              </div>
+
+              {/* Title */}
+              <h3 className="mt-4 text-2xl sm:text-3xl font-bold text-white group-hover:text-cyan-300 transition-colors">
+                {project.title}
+              </h3>
+
+              <p className="mt-3 text-sm sm:text-base text-slate-300 leading-relaxed">
+                {project.description}
+              </p>
+
+              {/* Tech Chips */}
+              <div className="mt-5 flex flex-wrap gap-2">
+                {project.tech.map((t) => (
+                  <span
+                    key={t}
+                    className="rounded-xl border border-white/10 bg-white/[0.03] px-3 py-1 text-xs font-mono text-slate-300 group-hover:border-white/20 transition-colors"
+                  >
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Action Bar */}
+            <div className="mt-8 pt-6 border-t border-white/10 flex flex-wrap items-center justify-between gap-4">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onOpenCaseStudy(project);
+                }}
+                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-500 px-4 py-2.5 text-xs font-bold text-white shadow-md hover:brightness-110 transition-all hover:scale-105"
+              >
+                <FaLayerGroup className="text-xs" />
+                <span>View Deep Case Study ↗</span>
+              </button>
+
+              <div className="flex items-center gap-2.5">
+                {project.liveUrl && (
+                  <a
+                    href={project.liveUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="flex items-center gap-1.5 rounded-xl border border-cyan-400/40 bg-cyan-500/10 px-3.5 py-2 text-xs font-mono text-cyan-300 hover:bg-cyan-500/20 transition-all"
+                  >
+                    <span>Live App</span>
+                    <FaArrowUpRightFromSquare className="text-[0.65rem]" />
+                  </a>
+                )}
+
+                {project.githubUrl && (
+                  <a
+                    href={project.githubUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-3.5 py-2 text-xs font-mono text-slate-300 hover:border-white/30 hover:text-white transition-all"
+                  >
+                    <FaGithub />
+                    <span>Code</span>
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
 export default function ProjectsSection() {
   const [activeCaseStudy, setActiveCaseStudy] = useState<ProjectItem | null>(null);
 
@@ -188,7 +341,7 @@ export default function ProjectsSection() {
   };
 
   return (
-    <section id="projects" className="relative scroll-mt-20 py-14 sm:py-16 lg:py-20 overflow-hidden">
+    <section id="projects" className="relative scroll-mt-20 py-16 sm:py-20 lg:py-24 overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto">
@@ -209,109 +362,18 @@ export default function ProjectsSection() {
           </p>
         </div>
 
-        {/* Projects Showcase List */}
-        <div className="mt-10 sm:mt-12 space-y-8 sm:space-y-10 lg:space-y-12">
-          {portfolioData.projects.map((project, index) => {
-            const isEven = index % 2 === 0;
-
-            return (
-              <motion.div
-                key={project.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-50px' }}
-                transition={{ duration: 0.6 }}
-                data-cursor="project"
-                onClick={() => setActiveCaseStudy(project)}
-                className="group relative cursor-pointer overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.04] to-black/80 p-6 sm:p-8 lg:p-10 shadow-[0_20px_60px_rgba(0,0,0,0.6)] backdrop-blur-2xl hover:border-purple-500/50 hover:shadow-[0_20px_80px_rgba(168,85,247,0.2)] transition-all duration-500"
-              >
-                <div className={`grid grid-cols-1 lg:grid-cols-12 gap-8 items-center ${isEven ? '' : 'lg:flex-row-reverse'}`}>
-                  {/* Visual Preview Container */}
-                  <div className={`lg:col-span-6 ${isEven ? 'lg:order-1' : 'lg:order-2'}`}>
-                    <div className="relative group-hover:scale-[1.02] transition-transform duration-500">
-                      {getVisualPreview(project)}
-                    </div>
-                  </div>
-
-                  {/* Project Info & Actions */}
-                  <div className={`lg:col-span-6 text-left flex flex-col justify-between ${isEven ? 'lg:order-2' : 'lg:order-1'}`}>
-                    <div>
-                      {/* Meta Pill */}
-                      <div className="flex items-center gap-3 font-mono text-xs">
-                        <span className="rounded-lg bg-purple-500/20 px-2.5 py-1 font-bold text-purple-300">
-                          PROJECT {project.number}
-                        </span>
-                        <span className="text-slate-400 uppercase">{project.category}</span>
-                      </div>
-
-                      {/* Title */}
-                      <h3 className="mt-4 text-2xl sm:text-3xl font-bold text-white group-hover:text-cyan-300 transition-colors">
-                        {project.title}
-                      </h3>
-
-                      <p className="mt-3 text-sm sm:text-base text-slate-300 leading-relaxed">
-                        {project.description}
-                      </p>
-
-                      {/* Tech Chips */}
-                      <div className="mt-5 flex flex-wrap gap-2">
-                        {project.tech.map((t) => (
-                          <span
-                            key={t}
-                            className="rounded-xl border border-white/10 bg-white/[0.03] px-3 py-1 text-xs font-mono text-slate-300"
-                          >
-                            {t}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Action Bar */}
-                    <div className="mt-8 pt-6 border-t border-white/10 flex flex-wrap items-center justify-between gap-4">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setActiveCaseStudy(project);
-                        }}
-                        className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-500 px-4 py-2.5 text-xs font-bold text-white shadow-md hover:brightness-110 transition-all hover:scale-105"
-                      >
-                        <FaLayerGroup className="text-xs" />
-                        <span>View Deep Case Study ↗</span>
-                      </button>
-
-                      <div className="flex items-center gap-2.5">
-                        {project.liveUrl && (
-                          <a
-                            href={project.liveUrl}
-                            target="_blank"
-                            rel="noreferrer"
-                            onClick={(e) => e.stopPropagation()}
-                            className="flex items-center gap-1.5 rounded-xl border border-cyan-400/40 bg-cyan-500/10 px-3.5 py-2 text-xs font-mono text-cyan-300 hover:bg-cyan-500/20 transition-all"
-                          >
-                            <span>Live App</span>
-                            <FaArrowUpRightFromSquare className="text-[0.65rem]" />
-                          </a>
-                        )}
-
-                        {project.githubUrl && (
-                          <a
-                            href={project.githubUrl}
-                            target="_blank"
-                            rel="noreferrer"
-                            onClick={(e) => e.stopPropagation()}
-                            className="flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-3.5 py-2 text-xs font-mono text-slate-300 hover:border-white/30 hover:text-white transition-all"
-                          >
-                            <FaGithub />
-                            <span>Code</span>
-                          </a>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            );
-          })}
+        {/* Projects Showcase List with 3D Depth */}
+        <div className="mt-12 sm:mt-14 space-y-10 sm:space-y-14">
+          {portfolioData.projects.map((project, index) => (
+            <Project3DCard
+              key={project.id}
+              project={project}
+              index={index}
+              isEven={index % 2 === 0}
+              onOpenCaseStudy={setActiveCaseStudy}
+              getVisualPreview={getVisualPreview}
+            />
+          ))}
         </div>
       </div>
 
@@ -323,3 +385,4 @@ export default function ProjectsSection() {
     </section>
   );
 }
+

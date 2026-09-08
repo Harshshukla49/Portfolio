@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { motion } from 'framer-motion';
 import CustomCursor from './components/CustomCursor';
 import BackgroundEffects from './components/BackgroundEffects';
 import Navbar from './components/Navbar';
@@ -11,10 +12,14 @@ import ContactSection from './components/ContactSection';
 import Footer from './components/Footer';
 import AIAssistant from './components/AIAssistant';
 import FloatingAITrigger from './components/FloatingAITrigger';
+import CinematicTransitionTunnel from './components/CinematicTransitionTunnel';
+import { useCinematicNavigation } from './hooks/useCinematicNavigation';
 import { portfolioData } from './data/portfolioData';
 
 export default function App() {
   const [isAIOpen, setIsAIOpen] = useState(false);
+  const { activeSection, isTransitioning, targetSection, transitionToSection } =
+    useCinematicNavigation();
 
   // Direct Official PDF Resume Downloader
   const handleDownloadResume = useCallback(() => {
@@ -33,23 +38,54 @@ export default function App() {
   }, []);
 
   return (
-    <div className="relative min-h-screen bg-[#030305] text-slate-100 font-sans selection:bg-purple-500/40 selection:text-white">
+    <div className="relative min-h-screen bg-[#030305] text-slate-100 font-sans selection:bg-purple-500/40 selection:text-white overflow-x-hidden">
       {/* Desktop Magnetic Cyber Cursor */}
       <CustomCursor />
 
-      {/* Futuristic Background System */}
+      {/* Cinematic 3D Warp Flight Tunnel Overlay */}
+      <CinematicTransitionTunnel
+        isTransitioning={isTransitioning}
+        targetSection={targetSection}
+      />
+
+      {/* Futuristic Background Universe & Grid System */}
       <BackgroundEffects />
 
-      {/* Floating Glassmorphic Navbar */}
+      {/* Floating Glassmorphic Navbar with 3D Scene Controls */}
       <Navbar
+        activeSection={activeSection}
+        onNavigate={transitionToSection}
         onOpenAI={() => setIsAIOpen(true)}
         onDownloadResume={handleDownloadResume}
       />
 
-      {/* Main Content Sections */}
-      <main className="relative z-10">
+      {/* Main Content Sections with 3D perspective scene container */}
+      <motion.main
+        animate={
+          isTransitioning
+            ? {
+                scale: 0.94,
+                opacity: 0.25,
+                filter: 'blur(6px)',
+                rotateX: 4,
+              }
+            : {
+                scale: 1,
+                opacity: 1,
+                filter: 'blur(0px)',
+                rotateX: 0,
+              }
+        }
+        transition={{
+          duration: isTransitioning ? 0.35 : 0.45,
+          ease: 'easeInOut',
+        }}
+        style={{ perspective: 1200, transformStyle: 'preserve-3d' }}
+        className="relative z-10 will-change-transform"
+      >
         <Hero
           onOpenAI={() => setIsAIOpen(true)}
+          onNavigate={transitionToSection}
           onDownloadResume={handleDownloadResume}
         />
 
@@ -72,7 +108,7 @@ export default function App() {
         <div className="w-full max-w-6xl mx-auto h-[1px] bg-gradient-to-r from-transparent via-purple-500/20 via-cyan-500/20 to-transparent" />
 
         <ContactSection onDownloadResume={handleDownloadResume} />
-      </main>
+      </motion.main>
 
       {/* Futuristic Cyber Footer */}
       <Footer />

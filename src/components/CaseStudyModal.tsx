@@ -11,6 +11,7 @@ import {
   FaChartLine,
 } from 'react-icons/fa6';
 import { ProjectItem } from '../data/portfolioData';
+import { projectImages } from '../assets/projects';
 
 interface CaseStudyModalProps {
   project: ProjectItem | null;
@@ -70,22 +71,26 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
           </div>
 
           {/* Project Preview Image Banner */}
-          {project.imageUrl && (
-            <div className="relative mt-6 aspect-[16/9] w-full overflow-hidden rounded-2xl border border-white/15 bg-slate-950 shadow-2xl">
-              <img
-                src={project.imageUrl}
-                alt={project.title}
-                className="h-full w-full object-cover object-center"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 pointer-events-none" />
-              {project.status && (
-                <div className="absolute top-4 left-4 inline-flex items-center gap-2 rounded-full border border-cyan-400/40 bg-black/70 px-3 py-1 text-xs font-mono font-bold text-cyan-300 backdrop-blur-md">
-                  <span className="h-2 w-2 rounded-full bg-cyan-400 animate-pulse" />
-                  <span>{project.status}</span>
-                </div>
-              )}
-            </div>
-          )}
+          {(() => {
+            const displayImg = projectImages[project.id] || project.imageUrl;
+            if (!displayImg) return null;
+            return (
+              <div className="relative mt-6 aspect-[16/9] w-full overflow-hidden rounded-2xl border border-white/15 bg-slate-950 shadow-2xl">
+                <img
+                  src={displayImg}
+                  alt={project.title}
+                  className="h-full w-full object-cover object-center"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 pointer-events-none" />
+                {project.status && (
+                  <div className="absolute top-4 left-4 inline-flex items-center gap-2 rounded-full border border-cyan-400/40 bg-black/70 px-3 py-1 text-xs font-mono font-bold text-cyan-300 backdrop-blur-md">
+                    <span className="h-2 w-2 rounded-full bg-cyan-400 animate-pulse" />
+                    <span>{project.status}</span>
+                  </div>
+                )}
+              </div>
+            );
+          })()}
 
           {/* Key Links & Quick Stats */}
           <div className="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4 font-mono text-xs">

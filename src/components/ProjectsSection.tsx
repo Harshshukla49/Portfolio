@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   FaArrowUpRightFromSquare,
@@ -8,15 +8,11 @@ import {
   FaCirclePause,
   FaRotateRight,
   FaRotateLeft,
-  FaGlobe,
-  FaMicrochip,
   FaBrain,
-  FaBolt,
-  FaEye,
-  FaSliders,
   FaCompass,
 } from 'react-icons/fa6';
 import { portfolioData, ProjectItem } from '../data/portfolioData';
+import { projectImages } from '../assets/projects';
 import CaseStudyModal from './CaseStudyModal';
 
 interface OrbitNodeConfig {
@@ -28,13 +24,13 @@ interface OrbitNodeConfig {
 
 const ORBIT_CONFIGS: OrbitNodeConfig[] = [
   // Orbit 1 (Inner): Smart Healthcare (0) & Twitter Sentiment (π)
-  { orbitIndex: 0, radiusX: 250, radiusY: 130, angleOffset: 0 },
-  { orbitIndex: 0, radiusX: 250, radiusY: 130, angleOffset: Math.PI },
+  { orbitIndex: 0, radiusX: 290, radiusY: 150, angleOffset: 0 },
+  { orbitIndex: 0, radiusX: 290, radiusY: 150, angleOffset: Math.PI },
   // Orbit 2 (Middle): Face Recognition (π/2) & Speech Emotion (3π/2)
-  { orbitIndex: 1, radiusX: 380, radiusY: 200, angleOffset: Math.PI / 2 },
-  { orbitIndex: 1, radiusX: 380, radiusY: 200, angleOffset: (3 * Math.PI) / 2 },
+  { orbitIndex: 1, radiusX: 430, radiusY: 220, angleOffset: Math.PI / 2 },
+  { orbitIndex: 1, radiusX: 430, radiusY: 220, angleOffset: (3 * Math.PI) / 2 },
   // Orbit 3 (Outer): Murder Mystery (π/4)
-  { orbitIndex: 2, radiusX: 510, radiusY: 270, angleOffset: Math.PI / 4 },
+  { orbitIndex: 2, radiusX: 570, radiusY: 290, angleOffset: Math.PI / 4 },
 ];
 
 export default function ProjectsSection() {
@@ -56,8 +52,7 @@ export default function ProjectsSection() {
       lastTimeRef.current = time;
 
       if (!isPaused && !hoveredProjectId) {
-        // Base rotational speed ~ 0.12 rad/sec
-        const deltaAngle = 0.12 * orbitSpeed * delta;
+        const deltaAngle = 0.11 * orbitSpeed * delta;
         setGlobalAngle((prev) => (prev + deltaAngle) % (2 * Math.PI));
       }
 
@@ -76,8 +71,8 @@ export default function ProjectsSection() {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width;
     const y = (e.clientY - rect.top) / rect.height;
-    const rotX = (y - 0.5) * -14;
-    const rotY = (x - 0.5) * 14;
+    const rotX = (y - 0.5) * -12;
+    const rotY = (x - 0.5) * 12;
     setTilt((prev) => ({
       ...prev,
       [id]: { x: rotX, y: rotY, glareX: x * 100, glareY: y * 100 },
@@ -95,7 +90,6 @@ export default function ProjectsSection() {
   const rotateToProject = (index: number) => {
     setFocusedIndex(index);
     const targetOffset = ORBIT_CONFIGS[index]?.angleOffset || 0;
-    // Rotate so that the project lands in front center (angle = π/2)
     const newGlobal = (Math.PI / 2 - targetOffset + 2 * Math.PI) % (2 * Math.PI);
     setGlobalAngle(newGlobal);
   };
@@ -109,12 +103,12 @@ export default function ProjectsSection() {
   return (
     <section id="projects" className="relative scroll-mt-20 py-16 sm:py-20 lg:py-24 overflow-hidden select-none">
       {/* Background Cosmic Atmosphere */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[750px] w-[750px] rounded-full bg-[radial-gradient(circle,rgba(168,85,247,0.08),rgba(6,182,212,0.05),transparent_70%)] blur-3xl pointer-events-none" />
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[800px] w-[800px] rounded-full bg-[radial-gradient(circle,rgba(168,85,247,0.08),rgba(6,182,212,0.05),transparent_70%)] blur-3xl pointer-events-none" />
       <div className="absolute inset-0 bg-[radial-gradient(#ffffff0a_1px,transparent_1px)] [background-size:32px_32px] pointer-events-none opacity-40" />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-12">
+        <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-10">
           <div className="inline-flex items-center gap-2 rounded-full border border-purple-500/40 bg-purple-500/10 px-4 py-1.5 text-xs font-mono tracking-widest text-purple-300 uppercase shadow-[0_0_15px_rgba(168,85,247,0.2)]">
             <FaCompass className="text-xs text-cyan-400 animate-spin-slow" />
             <span>PROJECT UNIVERSE // 3D ORBITAL SHOWCASE</span>
@@ -132,7 +126,7 @@ export default function ProjectsSection() {
           </p>
 
           {/* Interactive Desktop Orbit Controls */}
-          <div className="hidden lg:flex items-center justify-center gap-3 mt-6 font-mono text-xs">
+          <div className="hidden lg:flex items-center justify-center gap-3 mt-5 font-mono text-xs">
             <button
               onClick={() => cycleProjects('prev')}
               className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3.5 py-1.5 text-slate-300 hover:border-cyan-400 hover:text-cyan-300 transition-all active:scale-95"
@@ -187,29 +181,29 @@ export default function ProjectsSection() {
         {/* ========================================================================= */}
         {/* DESKTOP & TABLET: 3D INTERACTIVE ORBITAL SOLAR SYSTEM ( >= 768px )        */}
         {/* ========================================================================= */}
-        <div className="hidden md:block relative w-full h-[680px] lg:h-[760px] mx-auto overflow-hidden">
+        <div className="hidden md:block relative w-full h-[760px] lg:h-[840px] xl:h-[880px] mx-auto overflow-hidden">
           <div className="relative w-full h-full flex items-center justify-center">
             {/* SVG 3D Orbital Rings Ground Plane */}
             <svg
               className="absolute inset-0 w-full h-full pointer-events-none"
               style={{ overflow: 'visible' }}
-              viewBox="-600 -400 1200 800"
+              viewBox="-650 -420 1300 840"
             >
               <defs>
                 <radialGradient id="coreAura" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" stopColor="#06b6d4" stopOpacity="0.45" />
-                  <stop offset="60%" stopColor="#a855f7" stopOpacity="0.15" />
+                  <stop offset="0%" stopColor="#06b6d4" stopOpacity="0.4" />
+                  <stop offset="60%" stopColor="#a855f7" stopOpacity="0.12" />
                   <stop offset="100%" stopColor="transparent" stopOpacity="0" />
                 </radialGradient>
                 <linearGradient id="ringGlow" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#06b6d4" stopOpacity="0.3" />
-                  <stop offset="50%" stopColor="#a855f7" stopOpacity="0.4" />
-                  <stop offset="100%" stopColor="#ec4899" stopOpacity="0.25" />
+                  <stop offset="0%" stopColor="#06b6d4" stopOpacity="0.35" />
+                  <stop offset="50%" stopColor="#a855f7" stopOpacity="0.45" />
+                  <stop offset="100%" stopColor="#ec4899" stopOpacity="0.3" />
                 </linearGradient>
               </defs>
 
               {/* Core Ambient Glow Disc */}
-              <circle cx="0" cy="0" r="140" fill="url(#coreAura)" />
+              <circle cx="0" cy="0" r="130" fill="url(#coreAura)" />
 
               {/* Orbit 1 Ellipse (Inner) */}
               <ellipse
@@ -221,7 +215,7 @@ export default function ProjectsSection() {
                 stroke="url(#ringGlow)"
                 strokeWidth="1.5"
                 strokeDasharray="4 6"
-                className="opacity-70 animate-pulse"
+                className="opacity-75 animate-pulse"
                 style={{ animationDuration: '6s' }}
               />
 
@@ -235,7 +229,7 @@ export default function ProjectsSection() {
                 stroke="url(#ringGlow)"
                 strokeWidth="1.5"
                 strokeDasharray="6 8"
-                className="opacity-50"
+                className="opacity-55"
               />
 
               {/* Orbit 3 Ellipse (Outer) */}
@@ -248,7 +242,7 @@ export default function ProjectsSection() {
                 stroke="url(#ringGlow)"
                 strokeWidth="1.2"
                 strokeDasharray="8 12"
-                className="opacity-35"
+                className="opacity-40"
               />
 
               {/* Laser Beam connector to hovered project */}
@@ -269,7 +263,7 @@ export default function ProjectsSection() {
                       stroke="#06b6d4"
                       strokeWidth="2"
                       strokeDasharray="4 4"
-                      className="opacity-80"
+                      className="opacity-90"
                     />
                   );
                 })()
@@ -278,40 +272,40 @@ export default function ProjectsSection() {
 
             {/* Central Holographic Stellar Core Node */}
             <motion.div
-              className="absolute z-20 flex flex-col items-center justify-center text-center p-6 rounded-full border border-cyan-400/40 bg-gradient-to-b from-[#0a0f24]/90 via-[#060814]/90 to-[#02030a]/90 backdrop-blur-2xl shadow-[0_0_60px_rgba(6,182,212,0.35)] cursor-pointer group"
-              style={{ width: '220px', height: '220px' }}
+              className="absolute z-20 flex flex-col items-center justify-center text-center p-5 rounded-full border border-cyan-400/40 bg-gradient-to-b from-[#0a0f24]/90 via-[#060814]/90 to-[#02030a]/90 backdrop-blur-2xl shadow-[0_0_50px_rgba(6,182,212,0.35)] cursor-pointer group"
+              style={{ width: '175px', height: '175px' }}
               whileHover={{ scale: 1.05 }}
               onClick={() => setIsPaused(!isPaused)}
             >
               {/* Outer Pulsing Rings */}
               <div className="absolute inset-0 rounded-full border border-purple-500/30 animate-ping pointer-events-none" style={{ animationDuration: '4s' }} />
-              <div className="absolute -inset-3 rounded-full border border-cyan-400/20 pointer-events-none" />
+              <div className="absolute -inset-2.5 rounded-full border border-cyan-400/20 pointer-events-none" />
 
               <div className="relative z-10 flex flex-col items-center">
-                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-tr from-purple-600 via-indigo-600 to-cyan-400 p-[1px] shadow-[0_0_20px_rgba(6,182,212,0.6)] mb-2">
-                  <div className="flex h-full w-full items-center justify-center rounded-[15px] bg-black">
-                    <FaBrain className="text-cyan-300 text-lg group-hover:text-purple-300 transition-colors" />
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-purple-600 via-indigo-600 to-cyan-400 p-[1px] shadow-[0_0_15px_rgba(6,182,212,0.6)] mb-1.5">
+                  <div className="flex h-full w-full items-center justify-center rounded-[11px] bg-black">
+                    <FaBrain className="text-cyan-300 text-sm group-hover:text-purple-300 transition-colors" />
                   </div>
                 </div>
 
-                <span className="text-[0.65rem] font-mono tracking-[0.3em] uppercase text-cyan-300 font-bold">
+                <span className="text-[0.62rem] font-mono tracking-[0.25em] uppercase text-cyan-300 font-bold">
                   PROJECTS
                 </span>
-                <h3 className="text-xs font-black tracking-wider text-white uppercase mt-0.5">
+                <h3 className="text-[0.65rem] font-black tracking-wide text-white uppercase mt-0.5">
                   AI • SOFTWARE • FULL STACK
                 </h3>
-                <p className="text-[0.6rem] font-mono text-slate-400 uppercase mt-1">
-                  {portfolioData.projects.length} ACTIVE ORBITALS
+                <p className="text-[0.55rem] font-mono text-slate-400 uppercase mt-0.5">
+                  5 ACTIVE ORBITS
                 </p>
 
-                <div className="mt-2.5 inline-flex items-center gap-1.5 rounded-full border border-emerald-400/30 bg-emerald-500/10 px-2.5 py-0.5 text-[0.6rem] font-mono text-emerald-300">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  <span>{isPaused ? 'ORBIT PAUSED' : 'ORBIT ACTIVE'}</span>
+                <div className="mt-2 inline-flex items-center gap-1 rounded-full border border-emerald-400/30 bg-emerald-500/10 px-2 py-0.5 text-[0.55rem] font-mono text-emerald-300">
+                  <span className="h-1 w-1 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>{isPaused ? 'PAUSED' : 'ORBIT ACTIVE'}</span>
                 </div>
               </div>
             </motion.div>
 
-            {/* Revolving Planetary Project Node Cards */}
+            {/* Revolving Planetary Project Node Cards (Compact & Proportioned) */}
             {portfolioData.projects.map((project, index) => {
               const cfg = ORBIT_CONFIGS[index];
               const angle = globalAngle + cfg.angleOffset;
@@ -321,11 +315,12 @@ export default function ProjectsSection() {
 
               const isHovered = hoveredProjectId === project.id;
               const cardTilt = tilt[project.id] || { x: 0, y: 0, glareX: 50, glareY: 50 };
+              const projectImg = projectImages[project.id] || project.imageUrl;
 
               // Depth styling hierarchy
-              const depthScale = isHovered ? 1.15 : sinVal >= 0 ? 0.95 + 0.12 * sinVal : 0.82 + 0.1 * (1 + sinVal);
-              const depthOpacity = isHovered ? 1.0 : sinVal >= 0 ? 0.92 + 0.08 * sinVal : 0.68 + 0.2 * (1 + sinVal);
-              const depthBlur = isHovered ? 0 : sinVal < -0.2 ? (Math.abs(sinVal) - 0.2) * 1.5 : 0;
+              const depthScale = isHovered ? 1.14 : sinVal >= 0 ? 0.95 + 0.1 * sinVal : 0.82 + 0.08 * (1 + sinVal);
+              const depthOpacity = isHovered ? 1.0 : sinVal >= 0 ? 0.92 + 0.08 * sinVal : 0.7 + 0.2 * (1 + sinVal);
+              const depthBlur = isHovered ? 0 : sinVal < -0.3 ? (Math.abs(sinVal) - 0.3) * 1.2 : 0;
               const zIndex = isHovered ? 60 : Math.round(25 + sinVal * 15);
 
               return (
@@ -354,96 +349,92 @@ export default function ProjectsSection() {
                     }}
                     transition={{ type: 'spring', stiffness: 260, damping: 24 }}
                     style={{ perspective: 1000 }}
-                    className="relative w-[300px] lg:w-[330px] rounded-3xl border border-white/15 bg-gradient-to-b from-[#0c0d1a]/95 via-[#080914]/95 to-[#04040a]/95 p-4 shadow-[0_20px_60px_rgba(0,0,0,0.85)] backdrop-blur-2xl group transition-all duration-300 hover:border-cyan-400/60 hover:shadow-[0_0_40px_rgba(6,182,212,0.35)]"
+                    className="relative w-[215px] sm:w-[230px] lg:w-[245px] rounded-2xl border border-white/15 bg-gradient-to-b from-[#0c0d1a]/95 via-[#080914]/95 to-[#04040a]/95 p-3 shadow-[0_15px_45px_rgba(0,0,0,0.85)] backdrop-blur-2xl group transition-all duration-300 hover:border-cyan-400/60 hover:shadow-[0_0_35px_rgba(6,182,212,0.35)]"
                   >
                     {/* Holographic Cursor Sheen Glare */}
                     <div
-                      className="pointer-events-none absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                       style={{
                         background: `radial-gradient(circle at ${cardTilt.glareX}% ${cardTilt.glareY}%, rgba(6, 182, 212, 0.2), rgba(168, 85, 247, 0.08), transparent 70%)`,
                       }}
                     />
 
                     {/* Top 16:9 Image Preview */}
-                    <div className="relative aspect-[16/9] w-full overflow-hidden rounded-2xl border border-white/10 bg-slate-950 shadow-inner">
+                    <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl border border-white/10 bg-slate-950 shadow-inner">
                       <img
-                        src={project.imageUrl}
+                        src={projectImg}
                         alt={project.title}
                         className="h-full w-full object-cover object-center filter brightness-105 group-hover:scale-105 transition-transform duration-500"
-                        loading="lazy"
+                        loading="eager"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 pointer-events-none" />
 
                       {/* Top Badges */}
-                      <div className="absolute top-2.5 inset-x-2.5 flex items-center justify-between font-mono text-[0.65rem]">
-                        <span className="rounded-lg bg-black/70 border border-cyan-400/40 px-2.5 py-0.5 font-bold text-cyan-300 backdrop-blur-md">
+                      <div className="absolute top-2 inset-x-2 flex items-center justify-between font-mono text-[0.6rem]">
+                        <span className="rounded-md bg-black/75 border border-cyan-400/40 px-2 py-0.5 font-bold text-cyan-300 backdrop-blur-md">
                           PROJECT {project.number}
                         </span>
                         {project.status && (
-                          <span className="rounded-lg bg-black/70 border border-emerald-400/40 px-2 py-0.5 font-bold text-emerald-300 backdrop-blur-md">
+                          <span className="rounded-md bg-black/75 border border-emerald-400/40 px-1.5 py-0.5 font-bold text-emerald-300 backdrop-blur-md">
                             {project.status}
                           </span>
                         )}
                       </div>
 
-                      {/* Bottom Image Domain Tag */}
-                      <div className="absolute bottom-2 left-2.5 text-[0.65rem] font-mono text-purple-300 uppercase tracking-wider font-semibold">
+                      {/* Bottom Domain Tag */}
+                      <div className="absolute bottom-1.5 left-2 text-[0.6rem] font-mono text-purple-300 uppercase tracking-wider font-semibold truncate max-w-[90%]">
                         {project.domain || project.category}
                       </div>
                     </div>
 
-                    {/* Project Information */}
-                    <div className="mt-3 text-left">
-                      <h3 className="text-sm lg:text-base font-bold text-white group-hover:text-cyan-300 transition-colors line-clamp-1">
+                    {/* Compact Project Information */}
+                    <div className="mt-2.5 text-left">
+                      <h3 className="text-xs sm:text-sm font-bold text-white group-hover:text-cyan-300 transition-colors truncate">
                         {project.title}
                       </h3>
 
-                      <p className="mt-1 text-xs text-slate-300 line-clamp-2 leading-relaxed">
-                        {project.description}
-                      </p>
-
                       {/* Primary Tech Stack Chips */}
-                      <div className="mt-3 flex flex-wrap gap-1.5">
-                        {project.tech.slice(0, 3).map((t) => (
+                      <div className="mt-2 flex flex-wrap gap-1">
+                        {project.tech.slice(0, 2).map((t) => (
                           <span
                             key={t}
-                            className="rounded-lg border border-white/10 bg-white/[0.04] px-2 py-0.5 text-[0.65rem] font-mono text-slate-300"
+                            className="rounded-md border border-white/10 bg-white/[0.04] px-1.5 py-0.5 text-[0.58rem] font-mono text-slate-300"
                           >
                             {t}
                           </span>
                         ))}
-                        {project.tech.length > 3 && (
-                          <span className="rounded-lg border border-white/5 bg-white/[0.02] px-1.5 py-0.5 text-[0.6rem] font-mono text-slate-400">
-                            +{project.tech.length - 3}
+                        {project.tech.length > 2 && (
+                          <span className="rounded-md border border-white/5 bg-white/[0.02] px-1 py-0.5 text-[0.55rem] font-mono text-slate-400">
+                            +{project.tech.length - 2}
                           </span>
                         )}
                       </div>
 
                       {/* Action Links Bar */}
-                      <div className="mt-3.5 pt-3 border-t border-white/10 flex items-center justify-between gap-2">
+                      <div className="mt-2.5 pt-2 border-t border-white/10 flex items-center justify-between gap-1.5">
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
                             setActiveCaseStudy(project);
                           }}
-                          className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-cyan-500 px-3 py-1.5 text-[0.7rem] font-bold text-white shadow-md hover:brightness-110 transition-all hover:scale-105 active:scale-95"
+                          className="inline-flex items-center gap-1 rounded-lg bg-gradient-to-r from-purple-600 via-indigo-600 to-cyan-500 px-2.5 py-1 text-[0.65rem] font-bold text-white shadow-md hover:brightness-110 transition-all hover:scale-105 active:scale-95"
                         >
-                          <FaLayerGroup className="text-[0.65rem]" />
+                          <FaLayerGroup className="text-[0.6rem]" />
                           <span>Case Study ↗</span>
                         </button>
 
-                        <div className="flex items-center gap-1.5">
+                        <div className="flex items-center gap-1">
                           {project.liveUrl && (
                             <a
                               href={project.liveUrl}
                               target="_blank"
                               rel="noreferrer"
                               onClick={(e) => e.stopPropagation()}
-                              className="inline-flex items-center gap-1 rounded-xl border border-cyan-400/40 bg-cyan-500/10 px-2.5 py-1 text-[0.65rem] font-mono text-cyan-300 hover:bg-cyan-500/20 transition-all"
-                              title="Open Live App"
+                              className="inline-flex items-center gap-1 rounded-lg border border-cyan-400/40 bg-cyan-500/10 px-2 py-0.5 text-[0.6rem] font-mono text-cyan-300 hover:bg-cyan-500/20 transition-all"
+                              title="Live Demo"
                             >
-                              <span>Demo</span>
-                              <FaArrowUpRightFromSquare className="text-[0.6rem]" />
+                              <span>Live</span>
+                              <FaArrowUpRightFromSquare className="text-[0.55rem]" />
                             </a>
                           )}
 
@@ -453,10 +444,10 @@ export default function ProjectsSection() {
                               target="_blank"
                               rel="noreferrer"
                               onClick={(e) => e.stopPropagation()}
-                              className="inline-flex items-center justify-center h-7 w-7 rounded-xl border border-white/10 bg-white/5 text-slate-300 hover:border-white/30 hover:text-white transition-all"
+                              className="inline-flex items-center justify-center h-6 w-6 rounded-lg border border-white/10 bg-white/5 text-slate-300 hover:border-white/30 hover:text-white transition-all"
                               title="View GitHub Repository"
                             >
-                              <FaGithub className="text-xs" />
+                              <FaGithub className="text-[0.7rem]" />
                             </a>
                           )}
                         </div>
@@ -472,10 +463,10 @@ export default function ProjectsSection() {
         {/* ========================================================================= */}
         {/* MOBILE: VERTICAL CONNECTED CYBERNETIC ORBIT TIMELINE ( < 768px )          */}
         {/* ========================================================================= */}
-        <div className="block md:hidden space-y-8">
+        <div className="block md:hidden space-y-6">
           {/* Mobile Orbital Track Navigation Pills */}
           <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
-            {portfolioData.projects.map((p, idx) => (
+            {portfolioData.projects.map((p) => (
               <button
                 key={p.id}
                 onClick={() => {
@@ -491,105 +482,109 @@ export default function ProjectsSection() {
 
           {/* Connected Vertical Planetary Stack */}
           <div className="relative pl-6 space-y-6 before:absolute before:left-2 before:top-4 before:bottom-4 before:w-[2px] before:bg-gradient-to-b before:from-purple-500 before:via-cyan-400 before:to-pink-500">
-            {portfolioData.projects.map((project) => (
-              <div
-                key={project.id}
-                id={`mobile-proj-${project.id}`}
-                className="relative scroll-mt-28"
-              >
-                {/* Glowing Checkpoint Orbital Node */}
-                <div className="absolute -left-[31px] top-6 flex h-4 w-4 items-center justify-center rounded-full bg-black border-2 border-cyan-400 shadow-[0_0_10px_#06b6d4]">
-                  <div className="h-1.5 w-1.5 rounded-full bg-white" />
-                </div>
+            {portfolioData.projects.map((project) => {
+              const projectImg = projectImages[project.id] || project.imageUrl;
 
-                <div className="rounded-3xl border border-white/15 bg-gradient-to-b from-[#0c0d1a]/95 via-[#080914]/95 to-[#04040a]/95 p-5 shadow-[0_20px_60px_rgba(0,0,0,0.85)] text-left backdrop-blur-2xl">
-                  {/* 16:9 Image Preview */}
-                  <div className="relative aspect-[16/9] w-full overflow-hidden rounded-2xl border border-white/10 bg-slate-950 shadow-inner">
-                    <img
-                      src={project.imageUrl}
-                      alt={project.title}
-                      className="h-full w-full object-cover object-center"
-                      loading="lazy"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 pointer-events-none" />
-
-                    <div className="absolute top-2.5 inset-x-2.5 flex items-center justify-between font-mono text-[0.65rem]">
-                      <span className="rounded-lg bg-black/70 border border-cyan-400/40 px-2.5 py-0.5 font-bold text-cyan-300">
-                        PROJECT {project.number}
-                      </span>
-                      {project.status && (
-                        <span className="rounded-lg bg-black/70 border border-emerald-400/40 px-2 py-0.5 font-bold text-emerald-300">
-                          {project.status}
-                        </span>
-                      )}
-                    </div>
-
-                    <div className="absolute bottom-2 left-2.5 text-[0.65rem] font-mono text-purple-300 uppercase tracking-wider font-semibold">
-                      {project.domain || project.category}
-                    </div>
+              return (
+                <div
+                  key={project.id}
+                  id={`mobile-proj-${project.id}`}
+                  className="relative scroll-mt-28"
+                >
+                  {/* Glowing Checkpoint Orbital Node */}
+                  <div className="absolute -left-[31px] top-6 flex h-4 w-4 items-center justify-center rounded-full bg-black border-2 border-cyan-400 shadow-[0_0_10px_#06b6d4]">
+                    <div className="h-1.5 w-1.5 rounded-full bg-white" />
                   </div>
 
-                  {/* Title & Description */}
-                  <div className="mt-4">
-                    <h3 className="text-lg font-bold text-white">
-                      {project.title}
-                    </h3>
+                  <div className="rounded-3xl border border-white/15 bg-gradient-to-b from-[#0c0d1a]/95 via-[#080914]/95 to-[#04040a]/95 p-4 sm:p-5 shadow-[0_20px_60px_rgba(0,0,0,0.85)] text-left backdrop-blur-2xl">
+                    {/* 16:9 Image Preview */}
+                    <div className="relative aspect-[16/9] w-full overflow-hidden rounded-2xl border border-white/10 bg-slate-950 shadow-inner">
+                      <img
+                        src={projectImg}
+                        alt={project.title}
+                        className="h-full w-full object-cover object-center"
+                        loading="eager"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 pointer-events-none" />
 
-                    <p className="mt-2 text-xs sm:text-sm text-slate-300 leading-relaxed">
-                      {project.description}
-                    </p>
-
-                    {/* Tech Stack */}
-                    <div className="mt-3 flex flex-wrap gap-1.5">
-                      {project.tech.map((t) => (
-                        <span
-                          key={t}
-                          className="rounded-lg border border-white/10 bg-white/[0.04] px-2 py-0.5 text-[0.65rem] font-mono text-slate-300"
-                        >
-                          {t}
+                      <div className="absolute top-2.5 inset-x-2.5 flex items-center justify-between font-mono text-[0.65rem]">
+                        <span className="rounded-lg bg-black/70 border border-cyan-400/40 px-2.5 py-0.5 font-bold text-cyan-300">
+                          PROJECT {project.number}
                         </span>
-                      ))}
+                        {project.status && (
+                          <span className="rounded-lg bg-black/70 border border-emerald-400/40 px-2 py-0.5 font-bold text-emerald-300">
+                            {project.status}
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="absolute bottom-2 left-2.5 text-[0.65rem] font-mono text-purple-300 uppercase tracking-wider font-semibold">
+                        {project.domain || project.category}
+                      </div>
                     </div>
 
-                    {/* Action Buttons */}
-                    <div className="mt-4 pt-3 border-t border-white/10 flex flex-wrap items-center justify-between gap-3">
-                      <button
-                        onClick={() => setActiveCaseStudy(project)}
-                        className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-500 px-4 py-2 text-xs font-bold text-white shadow-md"
-                      >
-                        <FaLayerGroup className="text-xs" />
-                        <span>View Deep Case Study ↗</span>
-                      </button>
+                    {/* Title & Description */}
+                    <div className="mt-3.5">
+                      <h3 className="text-base sm:text-lg font-bold text-white">
+                        {project.title}
+                      </h3>
 
-                      <div className="flex items-center gap-2">
-                        {project.liveUrl && (
-                          <a
-                            href={project.liveUrl}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="inline-flex items-center gap-1 rounded-xl border border-cyan-400/40 bg-cyan-500/10 px-3 py-1.5 text-xs font-mono text-cyan-300"
-                          >
-                            <span>Live</span>
-                            <FaArrowUpRightFromSquare className="text-[0.6rem]" />
-                          </a>
-                        )}
+                      <p className="mt-1.5 text-xs sm:text-sm text-slate-300 leading-relaxed">
+                        {project.description}
+                      </p>
 
-                        {project.githubUrl && (
-                          <a
-                            href={project.githubUrl}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="inline-flex items-center justify-center h-8 w-8 rounded-xl border border-white/10 bg-white/5 text-slate-300"
+                      {/* Tech Stack */}
+                      <div className="mt-3 flex flex-wrap gap-1.5">
+                        {project.tech.map((t) => (
+                          <span
+                            key={t}
+                            className="rounded-lg border border-white/10 bg-white/[0.04] px-2 py-0.5 text-[0.65rem] font-mono text-slate-300"
                           >
-                            <FaGithub />
-                          </a>
-                        )}
+                            {t}
+                          </span>
+                        ))}
+                      </div>
+
+                      {/* Action Buttons */}
+                      <div className="mt-4 pt-3 border-t border-white/10 flex flex-wrap items-center justify-between gap-3">
+                        <button
+                          onClick={() => setActiveCaseStudy(project)}
+                          className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-500 px-4 py-2 text-xs font-bold text-white shadow-md"
+                        >
+                          <FaLayerGroup className="text-xs" />
+                          <span>View Deep Case Study ↗</span>
+                        </button>
+
+                        <div className="flex items-center gap-2">
+                          {project.liveUrl && (
+                            <a
+                              href={project.liveUrl}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="inline-flex items-center gap-1 rounded-xl border border-cyan-400/40 bg-cyan-500/10 px-3 py-1.5 text-xs font-mono text-cyan-300"
+                            >
+                              <span>Live</span>
+                              <FaArrowUpRightFromSquare className="text-[0.6rem]" />
+                            </a>
+                          )}
+
+                          {project.githubUrl && (
+                            <a
+                              href={project.githubUrl}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="inline-flex items-center justify-center h-8 w-8 rounded-xl border border-white/10 bg-white/5 text-slate-300"
+                            >
+                              <FaGithub />
+                            </a>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>

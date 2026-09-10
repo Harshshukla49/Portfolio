@@ -47,6 +47,12 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                 <span>PROJECT {project.number}</span>
                 <span>•</span>
                 <span className="uppercase text-purple-300">{project.category}</span>
+                {project.domain && (
+                  <>
+                    <span>•</span>
+                    <span className="text-slate-400 uppercase">{project.domain}</span>
+                  </>
+                )}
               </div>
               <h2 className="mt-2 text-2xl sm:text-3xl font-black text-white uppercase tracking-tight">
                 {project.title}
@@ -62,6 +68,24 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
               <FaXmark className="text-lg" />
             </button>
           </div>
+
+          {/* Project Preview Image Banner */}
+          {project.imageUrl && (
+            <div className="relative mt-6 aspect-[16/9] w-full overflow-hidden rounded-2xl border border-white/15 bg-slate-950 shadow-2xl">
+              <img
+                src={project.imageUrl}
+                alt={project.title}
+                className="h-full w-full object-cover object-center"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 pointer-events-none" />
+              {project.status && (
+                <div className="absolute top-4 left-4 inline-flex items-center gap-2 rounded-full border border-cyan-400/40 bg-black/70 px-3 py-1 text-xs font-mono font-bold text-cyan-300 backdrop-blur-md">
+                  <span className="h-2 w-2 rounded-full bg-cyan-400 animate-pulse" />
+                  <span>{project.status}</span>
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Key Links & Quick Stats */}
           <div className="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4 font-mono text-xs">

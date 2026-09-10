@@ -36,6 +36,9 @@ export interface ProjectItem {
   number: string;
   title: string;
   category: string;
+  domain: string;
+  status: string;
+  imageUrl: string;
   tagline: string;
   description: string;
   tech: string[];
@@ -206,6 +209,9 @@ export const portfolioData = {
       number: '01',
       title: 'Smart Healthcare Remote Monitoring System',
       category: 'AI Healthcare / Full Stack',
+      domain: 'AI Healthcare & Telemetry',
+      status: 'LIVE ON RENDER',
+      imageUrl: '/projects/smart-healthcare.jpg',
       tagline: 'Real-time patient tracking with doctor-patient dashboards and ML predictions.',
       description:
         'Full-stack healthcare monitoring platform with real-time patient vital tracking, doctor-patient dashboards, and machine learning risk score predictions.',
@@ -246,6 +252,9 @@ export const portfolioData = {
       number: '02',
       title: 'Twitter Sentiment Analysis Platform',
       category: 'NLP / Machine Learning',
+      domain: 'Natural Language Processing',
+      status: 'PRODUCTION DEPLOYED',
+      imageUrl: '/projects/twitter-sentiment.jpg',
       tagline: 'Processed 1,000+ tweets using Twitter API and NLP, boosting accuracy by 12%.',
       description:
         'Processed 1,000+ tweets using Twitter API and NLP techniques. Improved sentiment classification accuracy by 12% and deployed via Streamlit interactive dashboard.',
@@ -286,6 +295,9 @@ export const portfolioData = {
       number: '03',
       title: 'Face Recognition Attendance Monitoring System',
       category: 'Computer Vision',
+      domain: 'Biometrics & Vision AI',
+      status: '90% ACCURACY',
+      imageUrl: '/projects/face-recognition.jpg',
       tagline: 'Automated biometric attendance with 90% accuracy, cutting manual effort by 85%.',
       description:
         'Developed automated attendance system using facial recognition techniques in Python, OpenCV, and Tkinter. Achieved 90% recognition accuracy and reduced manual effort by 85%.',
@@ -326,6 +338,9 @@ export const portfolioData = {
       number: '04',
       title: 'Murder Mystery Detective Game',
       category: 'Full Stack & Web Systems',
+      domain: 'Narrative Engine & REST API',
+      status: 'AUTHENTICATED STATE',
+      imageUrl: '/projects/murder-mystery.jpg',
       tagline: 'Interactive investigative narrative engine with secure REST APIs & optimized SQLite.',
       description:
         'Built full-stack web application with authentication and REST APIs. Optimized SQLite queries for improved performance and seamless detective gameplay experience.',
@@ -364,6 +379,9 @@ export const portfolioData = {
       number: '05',
       title: 'Speech Recognition System / Speech Emotion Recognition',
       category: 'Deep Learning / Audio AI',
+      domain: 'Acoustic Deep Learning',
+      status: '85% ACCURACY',
+      imageUrl: '/projects/speech-emotion.jpg',
       tagline: 'Deep learning CNN & LSTM model achieving 85% classification accuracy via MFCC.',
       description:
         'Developed deep learning model for speech emotion recognition using CNN, RNN, and LSTM architectures. Achieved 85% classification accuracy using MFCC-based acoustic features.',

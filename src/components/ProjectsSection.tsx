@@ -1,379 +1,596 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   FaArrowUpRightFromSquare,
   FaGithub,
-  FaFolderOpen,
-  FaBrain,
-  FaHeartPulse,
-  FaTwitter,
-  FaUserCheck,
-  FaVolumeHigh,
-  FaGamepad,
   FaLayerGroup,
+  FaCirclePlay,
+  FaCirclePause,
+  FaRotateRight,
+  FaRotateLeft,
+  FaGlobe,
+  FaMicrochip,
+  FaBrain,
+  FaBolt,
+  FaEye,
+  FaSliders,
+  FaCompass,
 } from 'react-icons/fa6';
 import { portfolioData, ProjectItem } from '../data/portfolioData';
 import CaseStudyModal from './CaseStudyModal';
 
-interface Project3DCardProps {
-  project: ProjectItem;
-  index: number;
-  isEven: boolean;
-  onOpenCaseStudy: (p: ProjectItem) => void;
-  getVisualPreview: (p: ProjectItem) => React.ReactNode;
+interface OrbitNodeConfig {
+  orbitIndex: number;
+  radiusX: number;
+  radiusY: number;
+  angleOffset: number;
 }
 
-function Project3DCard({
-  project,
-  index,
-  isEven,
-  onOpenCaseStudy,
-  getVisualPreview,
-}: Project3DCardProps) {
-  const [tilt, setTilt] = useState({ x: 0, y: 0, glareX: 50, glareY: 50 });
-  const [isHovered, setIsHovered] = useState(false);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width;
-    const y = (e.clientY - rect.top) / rect.height;
-    // -7 to +7 deg tilt
-    const rotX = (y - 0.5) * -12;
-    const rotY = (x - 0.5) * 12;
-    setTilt({ x: rotX, y: rotY, glareX: x * 100, glareY: y * 100 });
-    setIsHovered(true);
-  };
-
-  const handleMouseLeave = () => {
-    setTilt({ x: 0, y: 0, glareX: 50, glareY: 50 });
-    setIsHovered(false);
-  };
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 35, scale: 0.95 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true, margin: '-60px' }}
-      transition={{ duration: 0.6, delay: index * 0.1, ease: 'easeOut' }}
-      style={{ perspective: 1200 }}
-      className="w-full"
-    >
-      <motion.div
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
-        animate={{
-          rotateX: tilt.x,
-          rotateY: tilt.y,
-          translateZ: isHovered ? 20 : 0,
-        }}
-        transition={{ type: 'spring', stiffness: 260, damping: 24 }}
-        data-cursor="project"
-        onClick={() => onOpenCaseStudy(project)}
-        className="group relative cursor-pointer overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.04] to-black/85 p-6 sm:p-8 lg:p-10 shadow-[0_20px_60px_rgba(0,0,0,0.7)] backdrop-blur-2xl hover:border-cyan-400/50 hover:shadow-[0_25px_90px_rgba(6,182,212,0.25)] transition-all duration-300"
-      >
-        {/* Dynamic Holographic Cursor Reflection Sheen */}
-        <div
-          className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-          style={{
-            background: `radial-gradient(circle at ${tilt.glareX}% ${tilt.glareY}%, rgba(6, 182, 212, 0.14), rgba(168, 85, 247, 0.06), transparent 70%)`,
-          }}
-        />
-
-        <div className={`grid grid-cols-1 lg:grid-cols-12 gap-8 items-center ${isEven ? '' : 'lg:flex-row-reverse'}`}>
-          {/* Visual Preview Container */}
-          <div className={`lg:col-span-6 ${isEven ? 'lg:order-1' : 'lg:order-2'}`}>
-            <div className="relative group-hover:scale-[1.03] transition-transform duration-500 will-change-transform">
-              {getVisualPreview(project)}
-            </div>
-          </div>
-
-          {/* Project Info & Actions */}
-          <div className={`lg:col-span-6 text-left flex flex-col justify-between ${isEven ? 'lg:order-2' : 'lg:order-1'}`}>
-            <div>
-              {/* Meta Pill */}
-              <div className="flex items-center gap-3 font-mono text-xs">
-                <span className="rounded-lg bg-gradient-to-r from-purple-500/25 to-cyan-500/25 border border-cyan-400/30 px-2.5 py-1 font-bold text-cyan-300">
-                  PROJECT {project.number}
-                </span>
-                <span className="text-slate-400 uppercase tracking-wider">{project.category}</span>
-              </div>
-
-              {/* Title */}
-              <h3 className="mt-4 text-2xl sm:text-3xl font-bold text-white group-hover:text-cyan-300 transition-colors">
-                {project.title}
-              </h3>
-
-              <p className="mt-3 text-sm sm:text-base text-slate-300 leading-relaxed">
-                {project.description}
-              </p>
-
-              {/* Tech Chips */}
-              <div className="mt-5 flex flex-wrap gap-2">
-                {project.tech.map((t) => (
-                  <span
-                    key={t}
-                    className="rounded-xl border border-white/10 bg-white/[0.03] px-3 py-1 text-xs font-mono text-slate-300 group-hover:border-white/20 transition-colors"
-                  >
-                    {t}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            {/* Action Bar */}
-            <div className="mt-8 pt-6 border-t border-white/10 flex flex-wrap items-center justify-between gap-4">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onOpenCaseStudy(project);
-                }}
-                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-500 px-4 py-2.5 text-xs font-bold text-white shadow-md hover:brightness-110 transition-all hover:scale-105"
-              >
-                <FaLayerGroup className="text-xs" />
-                <span>View Deep Case Study ↗</span>
-              </button>
-
-              <div className="flex items-center gap-2.5">
-                {project.liveUrl && (
-                  <a
-                    href={project.liveUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    onClick={(e) => e.stopPropagation()}
-                    className="flex items-center gap-1.5 rounded-xl border border-cyan-400/40 bg-cyan-500/10 px-3.5 py-2 text-xs font-mono text-cyan-300 hover:bg-cyan-500/20 transition-all"
-                  >
-                    <span>Live App</span>
-                    <FaArrowUpRightFromSquare className="text-[0.65rem]" />
-                  </a>
-                )}
-
-                {project.githubUrl && (
-                  <a
-                    href={project.githubUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    onClick={(e) => e.stopPropagation()}
-                    className="flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-3.5 py-2 text-xs font-mono text-slate-300 hover:border-white/30 hover:text-white transition-all"
-                  >
-                    <FaGithub />
-                    <span>Code</span>
-                  </a>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      </motion.div>
-    </motion.div>
-  );
-}
+const ORBIT_CONFIGS: OrbitNodeConfig[] = [
+  // Orbit 1 (Inner): Smart Healthcare (0) & Twitter Sentiment (π)
+  { orbitIndex: 0, radiusX: 250, radiusY: 130, angleOffset: 0 },
+  { orbitIndex: 0, radiusX: 250, radiusY: 130, angleOffset: Math.PI },
+  // Orbit 2 (Middle): Face Recognition (π/2) & Speech Emotion (3π/2)
+  { orbitIndex: 1, radiusX: 380, radiusY: 200, angleOffset: Math.PI / 2 },
+  { orbitIndex: 1, radiusX: 380, radiusY: 200, angleOffset: (3 * Math.PI) / 2 },
+  // Orbit 3 (Outer): Murder Mystery (π/4)
+  { orbitIndex: 2, radiusX: 510, radiusY: 270, angleOffset: Math.PI / 4 },
+];
 
 export default function ProjectsSection() {
   const [activeCaseStudy, setActiveCaseStudy] = useState<ProjectItem | null>(null);
+  const [hoveredProjectId, setHoveredProjectId] = useState<string | null>(null);
+  const [focusedIndex, setFocusedIndex] = useState<number>(0);
+  const [isPaused, setIsPaused] = useState<boolean>(false);
+  const [orbitSpeed, setOrbitSpeed] = useState<number>(1);
+  const [globalAngle, setGlobalAngle] = useState<number>(0);
+  const [tilt, setTilt] = useState<{ [key: string]: { x: number; y: number; glareX: number; glareY: number } }>({});
 
-  const getVisualPreview = (project: ProjectItem) => {
-    switch (project.id) {
-      case 'smart-healthcare':
-        return (
-          <div className="relative h-64 sm:h-72 w-full overflow-hidden rounded-2xl bg-gradient-to-br from-cyan-950/40 via-black to-blue-950/40 p-5 flex flex-col justify-between border border-cyan-500/20">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3 font-mono text-xs text-cyan-300">
-              <div className="flex items-center gap-2">
-                <FaHeartPulse className="text-red-400 animate-pulse" />
-                <span>TELEMETRY STREAM // ACTIVE</span>
-              </div>
-              <span className="rounded-md bg-cyan-500/20 px-2 py-0.5 text-[0.65rem] text-cyan-200">RENDER LIVE</span>
-            </div>
+  const animFrameRef = useRef<number | null>(null);
+  const lastTimeRef = useRef<number>(performance.now());
 
-            {/* Mockup Vital Signs Monitor */}
-            <div className="grid grid-cols-3 gap-2 my-auto">
-              <div className="rounded-xl border border-white/10 bg-black/50 p-3 text-center">
-                <p className="text-[0.65rem] font-mono text-slate-400">HEART RATE</p>
-                <p className="text-xl font-mono font-bold text-emerald-400 mt-1">72 <span className="text-[0.6rem] text-slate-400">BPM</span></p>
-              </div>
-              <div className="rounded-xl border border-white/10 bg-black/50 p-3 text-center">
-                <p className="text-[0.65rem] font-mono text-slate-400">SPO2</p>
-                <p className="text-xl font-mono font-bold text-cyan-400 mt-1">98 <span className="text-[0.6rem] text-slate-400">%</span></p>
-              </div>
-              <div className="rounded-xl border border-white/10 bg-black/50 p-3 text-center">
-                <p className="text-[0.65rem] font-mono text-slate-400">AI RISK</p>
-                <p className="text-xl font-mono font-bold text-purple-400 mt-1">LOW</p>
-              </div>
-            </div>
+  // 60 FPS GPU-friendly Orbital Motion Engine
+  useEffect(() => {
+    const updateOrbit = (time: number) => {
+      const delta = Math.min((time - lastTimeRef.current) / 1000, 0.1);
+      lastTimeRef.current = time;
 
-            <div className="flex items-center justify-between pt-2 border-t border-white/10 text-[0.7rem] font-mono text-slate-400">
-              <span>LATENCY: &lt;100ms</span>
-              <span className="text-cyan-400">PATIENT PORTAL: SYNCED</span>
-            </div>
-          </div>
-        );
+      if (!isPaused && !hoveredProjectId) {
+        // Base rotational speed ~ 0.12 rad/sec
+        const deltaAngle = 0.12 * orbitSpeed * delta;
+        setGlobalAngle((prev) => (prev + deltaAngle) % (2 * Math.PI));
+      }
 
-      case 'twitter-sentiment':
-        return (
-          <div className="relative h-64 sm:h-72 w-full overflow-hidden rounded-2xl bg-gradient-to-br from-purple-950/40 via-black to-pink-950/40 p-5 flex flex-col justify-between border border-purple-500/20">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3 font-mono text-xs text-purple-300">
-              <div className="flex items-center gap-2">
-                <FaTwitter className="text-cyan-400" />
-                <span>NLP PIPELINE // 1,000+ TWEETS</span>
-              </div>
-              <span className="text-slate-400 text-[0.65rem]">NLTK • SCIKIT</span>
-            </div>
+      animFrameRef.current = requestAnimationFrame(updateOrbit);
+    };
 
-            <div className="space-y-2 my-auto">
-              <div>
-                <div className="flex justify-between text-[0.7rem] font-mono text-slate-300 mb-1">
-                  <span>Positive Sentiment</span>
-                  <span className="text-emerald-400 font-bold">64.8%</span>
-                </div>
-                <div className="h-2 w-full rounded-full bg-white/10 overflow-hidden">
-                  <div className="h-full bg-emerald-500 rounded-full w-[65%]" />
-                </div>
-              </div>
-              <div>
-                <div className="flex justify-between text-[0.7rem] font-mono text-slate-300 mb-1">
-                  <span>Neutral Sentiment</span>
-                  <span className="text-cyan-400 font-bold">21.4%</span>
-                </div>
-                <div className="h-2 w-full rounded-full bg-white/10 overflow-hidden">
-                  <div className="h-full bg-cyan-500 rounded-full w-[21%]" />
-                </div>
-              </div>
-              <div>
-                <div className="flex justify-between text-[0.7rem] font-mono text-slate-300 mb-1">
-                  <span>Negative Sentiment</span>
-                  <span className="text-pink-400 font-bold">13.8%</span>
-                </div>
-                <div className="h-2 w-full rounded-full bg-white/10 overflow-hidden">
-                  <div className="h-full bg-pink-500 rounded-full w-[14%]" />
-                </div>
-              </div>
-            </div>
+    animFrameRef.current = requestAnimationFrame(updateOrbit);
 
-            <div className="flex items-center justify-between pt-2 border-t border-white/10 text-[0.7rem] font-mono text-slate-400">
-              <span>STREAMLIT DASHBOARD</span>
-              <span className="text-purple-400">VECTORIZER: TF-IDF</span>
-            </div>
-          </div>
-        );
+    return () => {
+      if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
+    };
+  }, [isPaused, hoveredProjectId, orbitSpeed]);
 
-      case 'face-recognition-attendance':
-        return (
-          <div className="relative h-64 sm:h-72 w-full overflow-hidden rounded-2xl bg-gradient-to-br from-blue-950/40 via-black to-cyan-950/40 p-5 flex flex-col justify-between border border-blue-500/20">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3 font-mono text-xs text-blue-300">
-              <div className="flex items-center gap-2">
-                <FaUserCheck className="text-emerald-400" />
-                <span>OPENCV VISION RETICLE</span>
-              </div>
-              <span className="text-emerald-400 font-bold text-xs">90% ACCURACY</span>
-            </div>
+  // Card cursor 3D magnetic tilt calculation
+  const handleCardMouseMove = (id: string, e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width;
+    const y = (e.clientY - rect.top) / rect.height;
+    const rotX = (y - 0.5) * -14;
+    const rotY = (x - 0.5) * 14;
+    setTilt((prev) => ({
+      ...prev,
+      [id]: { x: rotX, y: rotY, glareX: x * 100, glareY: y * 100 },
+    }));
+  };
 
-            {/* Facial Recognition Scanner Box */}
-            <div className="relative my-auto flex items-center justify-center">
-              <div className="relative h-28 w-28 rounded-xl border-2 border-dashed border-cyan-400 p-2 flex flex-col items-center justify-center">
-                <div className="absolute -top-1.5 -left-1.5 h-3 w-3 border-t-2 border-l-2 border-cyan-400" />
-                <div className="absolute -top-1.5 -right-1.5 h-3 w-3 border-t-2 border-r-2 border-cyan-400" />
-                <div className="absolute -bottom-1.5 -left-1.5 h-3 w-3 border-b-2 border-l-2 border-cyan-400" />
-                <div className="absolute -bottom-1.5 -right-1.5 h-3 w-3 border-b-2 border-r-2 border-cyan-400" />
-                <FaBrain className="text-3xl text-cyan-300/80 animate-pulse" />
-                <span className="mt-1 text-[0.6rem] font-mono text-cyan-300 font-bold">MATCH: 94.2%</span>
-              </div>
-            </div>
+  const handleCardMouseLeave = (id: string) => {
+    setTilt((prev) => ({
+      ...prev,
+      [id]: { x: 0, y: 0, glareX: 50, glareY: 50 },
+    }));
+    setHoveredProjectId(null);
+  };
 
-            <div className="flex items-center justify-between pt-2 border-t border-white/10 text-[0.7rem] font-mono text-slate-400">
-              <span>SQLITE AUTO-LOGGING</span>
-              <span className="text-emerald-400">PROXY PREVENTION: ON</span>
-            </div>
-          </div>
-        );
+  const rotateToProject = (index: number) => {
+    setFocusedIndex(index);
+    const targetOffset = ORBIT_CONFIGS[index]?.angleOffset || 0;
+    // Rotate so that the project lands in front center (angle = π/2)
+    const newGlobal = (Math.PI / 2 - targetOffset + 2 * Math.PI) % (2 * Math.PI);
+    setGlobalAngle(newGlobal);
+  };
 
-      case 'speech-emotion-recognition':
-        return (
-          <div className="relative h-64 sm:h-72 w-full overflow-hidden rounded-2xl bg-gradient-to-br from-pink-950/40 via-black to-purple-950/40 p-5 flex flex-col justify-between border border-pink-500/20">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3 font-mono text-xs text-pink-300">
-              <div className="flex items-center gap-2">
-                <FaVolumeHigh className="text-pink-400 animate-bounce" />
-                <span>ACOUSTIC MFCC ANALYSIS</span>
-              </div>
-              <span className="text-slate-400 text-[0.65rem]">CNN + LSTM</span>
-            </div>
-
-            {/* Audio Waveform Spectrum simulation */}
-            <div className="flex items-end justify-center gap-1.5 h-20 my-auto px-4">
-              {[40, 65, 30, 90, 45, 80, 100, 70, 50, 85, 35, 95, 60, 40, 75, 55, 90, 30].map((h, i) => (
-                <div
-                  key={i}
-                  className="w-2.5 rounded-full bg-gradient-to-t from-purple-600 to-pink-400 transition-all duration-300"
-                  style={{ height: `${h}%` }}
-                />
-              ))}
-            </div>
-
-            <div className="flex items-center justify-between pt-2 border-t border-white/10 text-[0.7rem] font-mono text-slate-400">
-              <span>LIBROSA SPECTROGRAM</span>
-              <span className="text-pink-300 font-bold">EMOTION: CONFIDENT (88%)</span>
-            </div>
-          </div>
-        );
-
-      default:
-        return (
-          <div className="relative h-64 sm:h-72 w-full overflow-hidden rounded-2xl bg-gradient-to-br from-purple-950/30 via-black to-indigo-950/30 p-5 flex flex-col justify-between border border-purple-500/20">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3 font-mono text-xs text-purple-300">
-              <div className="flex items-center gap-2">
-                <FaGamepad className="text-purple-400" />
-                <span>STATE ENGINE // REST API</span>
-              </div>
-              <span className="text-slate-400 text-[0.65rem]">NODE.JS • SQLITE</span>
-            </div>
-
-            <div className="rounded-xl border border-white/10 bg-black/60 p-4 my-auto font-mono text-xs text-slate-300">
-              <p className="text-cyan-400">&gt; RESOLVING CLUE GRAPH...</p>
-              <p className="mt-1 text-slate-400">&gt; EVIDENCE IDENTIFIED: 12/12</p>
-              <p className="mt-1 text-emerald-400">&gt; SUSPECT ALIBI: VERIFIED FALSE</p>
-            </div>
-
-            <div className="flex items-center justify-between pt-2 border-t border-white/10 text-[0.7rem] font-mono text-slate-400">
-              <span>TRANSACTIONAL STATE</span>
-              <span className="text-purple-400">DECISION TREE ACTIVE</span>
-            </div>
-          </div>
-        );
-    }
+  const cycleProjects = (direction: 'next' | 'prev') => {
+    const total = portfolioData.projects.length;
+    const nextIdx = direction === 'next' ? (focusedIndex + 1) % total : (focusedIndex - 1 + total) % total;
+    rotateToProject(nextIdx);
   };
 
   return (
-    <section id="projects" className="relative scroll-mt-20 py-16 sm:py-20 lg:py-24 overflow-hidden">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <section id="projects" className="relative scroll-mt-20 py-16 sm:py-20 lg:py-24 overflow-hidden select-none">
+      {/* Background Cosmic Atmosphere */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[750px] w-[750px] rounded-full bg-[radial-gradient(circle,rgba(168,85,247,0.08),rgba(6,182,212,0.05),transparent_70%)] blur-3xl pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(#ffffff0a_1px,transparent_1px)] [background-size:32px_32px] pointer-events-none opacity-40" />
+
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 rounded-full border border-purple-500/30 bg-purple-500/10 px-4 py-1.5 text-xs font-mono tracking-widest text-purple-300 uppercase">
-            <FaFolderOpen className="text-xs" />
-            <span>SELECTED WORK // PORTFOLIO</span>
+        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-12">
+          <div className="inline-flex items-center gap-2 rounded-full border border-purple-500/40 bg-purple-500/10 px-4 py-1.5 text-xs font-mono tracking-widest text-purple-300 uppercase shadow-[0_0_15px_rgba(168,85,247,0.2)]">
+            <FaCompass className="text-xs text-cyan-400 animate-spin-slow" />
+            <span>PROJECT UNIVERSE // 3D ORBITAL SHOWCASE</span>
           </div>
 
-          <h2 className="mt-3 text-3xl sm:text-5xl font-black uppercase tracking-tight text-white">
+          <h2 className="mt-3 text-3xl sm:text-5xl font-black uppercase tracking-tight text-white leading-tight">
             FEATURED{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-indigo-300 to-purple-400 drop-shadow-[0_0_25px_rgba(6,182,212,0.3)]">
               PROJECTS
             </span>
           </h2>
 
           <p className="mt-3 text-base sm:text-lg text-slate-300">
-            Real-world systems combining applied machine learning, computer vision, and scalable full-stack engineering.
+            Explore the intelligent systems I've architected, trained, and deployed in real-time 3D orbit.
           </p>
+
+          {/* Interactive Desktop Orbit Controls */}
+          <div className="hidden lg:flex items-center justify-center gap-3 mt-6 font-mono text-xs">
+            <button
+              onClick={() => cycleProjects('prev')}
+              className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3.5 py-1.5 text-slate-300 hover:border-cyan-400 hover:text-cyan-300 transition-all active:scale-95"
+              title="Rotate Counter-Clockwise"
+            >
+              <FaRotateLeft className="text-[0.7rem]" />
+              <span>Rotate Left</span>
+            </button>
+
+            <button
+              onClick={() => setIsPaused(!isPaused)}
+              className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-1.5 font-bold transition-all active:scale-95 ${
+                isPaused
+                  ? 'border-emerald-400/50 bg-emerald-500/10 text-emerald-300 shadow-[0_0_12px_rgba(16,185,129,0.3)]'
+                  : 'border-cyan-400/50 bg-cyan-500/10 text-cyan-300 shadow-[0_0_12px_rgba(6,182,212,0.3)]'
+              }`}
+            >
+              {isPaused ? <FaCirclePlay /> : <FaCirclePause />}
+              <span>{isPaused ? 'RESUME ORBIT' : 'PAUSE ORBIT'}</span>
+            </button>
+
+            <button
+              onClick={() => cycleProjects('next')}
+              className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3.5 py-1.5 text-slate-300 hover:border-cyan-400 hover:text-cyan-300 transition-all active:scale-95"
+              title="Rotate Clockwise"
+            >
+              <span>Rotate Right</span>
+              <FaRotateRight className="text-[0.7rem]" />
+            </button>
+
+            <div className="h-4 w-[1px] bg-white/10 mx-1" />
+
+            {/* Orbit Speed Toggle */}
+            <div className="flex items-center gap-1 rounded-full border border-white/10 bg-black/40 p-1">
+              {[0.5, 1, 1.8].map((spd) => (
+                <button
+                  key={spd}
+                  onClick={() => setOrbitSpeed(spd)}
+                  className={`rounded-full px-2.5 py-0.5 text-[0.65rem] transition-all ${
+                    orbitSpeed === spd
+                      ? 'bg-purple-600 text-white font-bold shadow-sm'
+                      : 'text-slate-400 hover:text-white'
+                  }`}
+                >
+                  {spd}x
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
-        {/* Projects Showcase List with 3D Depth */}
-        <div className="mt-12 sm:mt-14 space-y-10 sm:space-y-14">
-          {portfolioData.projects.map((project, index) => (
-            <Project3DCard
-              key={project.id}
-              project={project}
-              index={index}
-              isEven={index % 2 === 0}
-              onOpenCaseStudy={setActiveCaseStudy}
-              getVisualPreview={getVisualPreview}
-            />
-          ))}
+        {/* ========================================================================= */}
+        {/* DESKTOP & TABLET: 3D INTERACTIVE ORBITAL SOLAR SYSTEM ( >= 768px )        */}
+        {/* ========================================================================= */}
+        <div className="hidden md:block relative w-full h-[680px] lg:h-[760px] mx-auto overflow-hidden">
+          <div className="relative w-full h-full flex items-center justify-center">
+            {/* SVG 3D Orbital Rings Ground Plane */}
+            <svg
+              className="absolute inset-0 w-full h-full pointer-events-none"
+              style={{ overflow: 'visible' }}
+              viewBox="-600 -400 1200 800"
+            >
+              <defs>
+                <radialGradient id="coreAura" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stopColor="#06b6d4" stopOpacity="0.45" />
+                  <stop offset="60%" stopColor="#a855f7" stopOpacity="0.15" />
+                  <stop offset="100%" stopColor="transparent" stopOpacity="0" />
+                </radialGradient>
+                <linearGradient id="ringGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#06b6d4" stopOpacity="0.3" />
+                  <stop offset="50%" stopColor="#a855f7" stopOpacity="0.4" />
+                  <stop offset="100%" stopColor="#ec4899" stopOpacity="0.25" />
+                </linearGradient>
+              </defs>
+
+              {/* Core Ambient Glow Disc */}
+              <circle cx="0" cy="0" r="140" fill="url(#coreAura)" />
+
+              {/* Orbit 1 Ellipse (Inner) */}
+              <ellipse
+                cx="0"
+                cy="0"
+                rx={ORBIT_CONFIGS[0].radiusX}
+                ry={ORBIT_CONFIGS[0].radiusY}
+                fill="none"
+                stroke="url(#ringGlow)"
+                strokeWidth="1.5"
+                strokeDasharray="4 6"
+                className="opacity-70 animate-pulse"
+                style={{ animationDuration: '6s' }}
+              />
+
+              {/* Orbit 2 Ellipse (Middle) */}
+              <ellipse
+                cx="0"
+                cy="0"
+                rx={ORBIT_CONFIGS[2].radiusX}
+                ry={ORBIT_CONFIGS[2].radiusY}
+                fill="none"
+                stroke="url(#ringGlow)"
+                strokeWidth="1.5"
+                strokeDasharray="6 8"
+                className="opacity-50"
+              />
+
+              {/* Orbit 3 Ellipse (Outer) */}
+              <ellipse
+                cx="0"
+                cy="0"
+                rx={ORBIT_CONFIGS[4].radiusX}
+                ry={ORBIT_CONFIGS[4].radiusY}
+                fill="none"
+                stroke="url(#ringGlow)"
+                strokeWidth="1.2"
+                strokeDasharray="8 12"
+                className="opacity-35"
+              />
+
+              {/* Laser Beam connector to hovered project */}
+              {hoveredProjectId && (
+                (() => {
+                  const idx = portfolioData.projects.findIndex((p) => p.id === hoveredProjectId);
+                  if (idx === -1) return null;
+                  const cfg = ORBIT_CONFIGS[idx];
+                  const angle = globalAngle + cfg.angleOffset;
+                  const px = cfg.radiusX * Math.cos(angle);
+                  const py = cfg.radiusY * Math.sin(angle);
+                  return (
+                    <line
+                      x1="0"
+                      y1="0"
+                      x2={px}
+                      y2={py}
+                      stroke="#06b6d4"
+                      strokeWidth="2"
+                      strokeDasharray="4 4"
+                      className="opacity-80"
+                    />
+                  );
+                })()
+              )}
+            </svg>
+
+            {/* Central Holographic Stellar Core Node */}
+            <motion.div
+              className="absolute z-20 flex flex-col items-center justify-center text-center p-6 rounded-full border border-cyan-400/40 bg-gradient-to-b from-[#0a0f24]/90 via-[#060814]/90 to-[#02030a]/90 backdrop-blur-2xl shadow-[0_0_60px_rgba(6,182,212,0.35)] cursor-pointer group"
+              style={{ width: '220px', height: '220px' }}
+              whileHover={{ scale: 1.05 }}
+              onClick={() => setIsPaused(!isPaused)}
+            >
+              {/* Outer Pulsing Rings */}
+              <div className="absolute inset-0 rounded-full border border-purple-500/30 animate-ping pointer-events-none" style={{ animationDuration: '4s' }} />
+              <div className="absolute -inset-3 rounded-full border border-cyan-400/20 pointer-events-none" />
+
+              <div className="relative z-10 flex flex-col items-center">
+                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-tr from-purple-600 via-indigo-600 to-cyan-400 p-[1px] shadow-[0_0_20px_rgba(6,182,212,0.6)] mb-2">
+                  <div className="flex h-full w-full items-center justify-center rounded-[15px] bg-black">
+                    <FaBrain className="text-cyan-300 text-lg group-hover:text-purple-300 transition-colors" />
+                  </div>
+                </div>
+
+                <span className="text-[0.65rem] font-mono tracking-[0.3em] uppercase text-cyan-300 font-bold">
+                  PROJECTS
+                </span>
+                <h3 className="text-xs font-black tracking-wider text-white uppercase mt-0.5">
+                  AI • SOFTWARE • FULL STACK
+                </h3>
+                <p className="text-[0.6rem] font-mono text-slate-400 uppercase mt-1">
+                  {portfolioData.projects.length} ACTIVE ORBITALS
+                </p>
+
+                <div className="mt-2.5 inline-flex items-center gap-1.5 rounded-full border border-emerald-400/30 bg-emerald-500/10 px-2.5 py-0.5 text-[0.6rem] font-mono text-emerald-300">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>{isPaused ? 'ORBIT PAUSED' : 'ORBIT ACTIVE'}</span>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Revolving Planetary Project Node Cards */}
+            {portfolioData.projects.map((project, index) => {
+              const cfg = ORBIT_CONFIGS[index];
+              const angle = globalAngle + cfg.angleOffset;
+              const x = cfg.radiusX * Math.cos(angle);
+              const y = cfg.radiusY * Math.sin(angle);
+              const sinVal = Math.sin(angle); // -1 (top/back) to +1 (bottom/front)
+
+              const isHovered = hoveredProjectId === project.id;
+              const cardTilt = tilt[project.id] || { x: 0, y: 0, glareX: 50, glareY: 50 };
+
+              // Depth styling hierarchy
+              const depthScale = isHovered ? 1.15 : sinVal >= 0 ? 0.95 + 0.12 * sinVal : 0.82 + 0.1 * (1 + sinVal);
+              const depthOpacity = isHovered ? 1.0 : sinVal >= 0 ? 0.92 + 0.08 * sinVal : 0.68 + 0.2 * (1 + sinVal);
+              const depthBlur = isHovered ? 0 : sinVal < -0.2 ? (Math.abs(sinVal) - 0.2) * 1.5 : 0;
+              const zIndex = isHovered ? 60 : Math.round(25 + sinVal * 15);
+
+              return (
+                <div
+                  key={project.id}
+                  className="absolute transition-transform duration-75 will-change-transform cursor-pointer"
+                  style={{
+                    transform: `translate3d(${x}px, ${y}px, 0px)`,
+                    zIndex,
+                  }}
+                  onMouseEnter={() => {
+                    setHoveredProjectId(project.id);
+                    setFocusedIndex(index);
+                  }}
+                  onMouseLeave={() => handleCardMouseLeave(project.id)}
+                  onMouseMove={(e) => handleCardMouseMove(project.id, e)}
+                  onClick={() => setActiveCaseStudy(project)}
+                >
+                  <motion.div
+                    animate={{
+                      scale: depthScale,
+                      opacity: depthOpacity,
+                      filter: `blur(${depthBlur}px)`,
+                      rotateX: cardTilt.x,
+                      rotateY: cardTilt.y,
+                    }}
+                    transition={{ type: 'spring', stiffness: 260, damping: 24 }}
+                    style={{ perspective: 1000 }}
+                    className="relative w-[300px] lg:w-[330px] rounded-3xl border border-white/15 bg-gradient-to-b from-[#0c0d1a]/95 via-[#080914]/95 to-[#04040a]/95 p-4 shadow-[0_20px_60px_rgba(0,0,0,0.85)] backdrop-blur-2xl group transition-all duration-300 hover:border-cyan-400/60 hover:shadow-[0_0_40px_rgba(6,182,212,0.35)]"
+                  >
+                    {/* Holographic Cursor Sheen Glare */}
+                    <div
+                      className="pointer-events-none absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      style={{
+                        background: `radial-gradient(circle at ${cardTilt.glareX}% ${cardTilt.glareY}%, rgba(6, 182, 212, 0.2), rgba(168, 85, 247, 0.08), transparent 70%)`,
+                      }}
+                    />
+
+                    {/* Top 16:9 Image Preview */}
+                    <div className="relative aspect-[16/9] w-full overflow-hidden rounded-2xl border border-white/10 bg-slate-950 shadow-inner">
+                      <img
+                        src={project.imageUrl}
+                        alt={project.title}
+                        className="h-full w-full object-cover object-center filter brightness-105 group-hover:scale-105 transition-transform duration-500"
+                        loading="lazy"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 pointer-events-none" />
+
+                      {/* Top Badges */}
+                      <div className="absolute top-2.5 inset-x-2.5 flex items-center justify-between font-mono text-[0.65rem]">
+                        <span className="rounded-lg bg-black/70 border border-cyan-400/40 px-2.5 py-0.5 font-bold text-cyan-300 backdrop-blur-md">
+                          PROJECT {project.number}
+                        </span>
+                        {project.status && (
+                          <span className="rounded-lg bg-black/70 border border-emerald-400/40 px-2 py-0.5 font-bold text-emerald-300 backdrop-blur-md">
+                            {project.status}
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Bottom Image Domain Tag */}
+                      <div className="absolute bottom-2 left-2.5 text-[0.65rem] font-mono text-purple-300 uppercase tracking-wider font-semibold">
+                        {project.domain || project.category}
+                      </div>
+                    </div>
+
+                    {/* Project Information */}
+                    <div className="mt-3 text-left">
+                      <h3 className="text-sm lg:text-base font-bold text-white group-hover:text-cyan-300 transition-colors line-clamp-1">
+                        {project.title}
+                      </h3>
+
+                      <p className="mt-1 text-xs text-slate-300 line-clamp-2 leading-relaxed">
+                        {project.description}
+                      </p>
+
+                      {/* Primary Tech Stack Chips */}
+                      <div className="mt-3 flex flex-wrap gap-1.5">
+                        {project.tech.slice(0, 3).map((t) => (
+                          <span
+                            key={t}
+                            className="rounded-lg border border-white/10 bg-white/[0.04] px-2 py-0.5 text-[0.65rem] font-mono text-slate-300"
+                          >
+                            {t}
+                          </span>
+                        ))}
+                        {project.tech.length > 3 && (
+                          <span className="rounded-lg border border-white/5 bg-white/[0.02] px-1.5 py-0.5 text-[0.6rem] font-mono text-slate-400">
+                            +{project.tech.length - 3}
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Action Links Bar */}
+                      <div className="mt-3.5 pt-3 border-t border-white/10 flex items-center justify-between gap-2">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setActiveCaseStudy(project);
+                          }}
+                          className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-cyan-500 px-3 py-1.5 text-[0.7rem] font-bold text-white shadow-md hover:brightness-110 transition-all hover:scale-105 active:scale-95"
+                        >
+                          <FaLayerGroup className="text-[0.65rem]" />
+                          <span>Case Study ↗</span>
+                        </button>
+
+                        <div className="flex items-center gap-1.5">
+                          {project.liveUrl && (
+                            <a
+                              href={project.liveUrl}
+                              target="_blank"
+                              rel="noreferrer"
+                              onClick={(e) => e.stopPropagation()}
+                              className="inline-flex items-center gap-1 rounded-xl border border-cyan-400/40 bg-cyan-500/10 px-2.5 py-1 text-[0.65rem] font-mono text-cyan-300 hover:bg-cyan-500/20 transition-all"
+                              title="Open Live App"
+                            >
+                              <span>Demo</span>
+                              <FaArrowUpRightFromSquare className="text-[0.6rem]" />
+                            </a>
+                          )}
+
+                          {project.githubUrl && (
+                            <a
+                              href={project.githubUrl}
+                              target="_blank"
+                              rel="noreferrer"
+                              onClick={(e) => e.stopPropagation()}
+                              className="inline-flex items-center justify-center h-7 w-7 rounded-xl border border-white/10 bg-white/5 text-slate-300 hover:border-white/30 hover:text-white transition-all"
+                              title="View GitHub Repository"
+                            >
+                              <FaGithub className="text-xs" />
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* ========================================================================= */}
+        {/* MOBILE: VERTICAL CONNECTED CYBERNETIC ORBIT TIMELINE ( < 768px )          */}
+        {/* ========================================================================= */}
+        <div className="block md:hidden space-y-8">
+          {/* Mobile Orbital Track Navigation Pills */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+            {portfolioData.projects.map((p, idx) => (
+              <button
+                key={p.id}
+                onClick={() => {
+                  const el = document.getElementById(`mobile-proj-${p.id}`);
+                  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }}
+                className="shrink-0 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-mono text-slate-300 active:border-cyan-400 active:text-cyan-300"
+              >
+                <span>{p.number} / {p.title.split(' ')[0]}</span>
+              </button>
+            ))}
+          </div>
+
+          {/* Connected Vertical Planetary Stack */}
+          <div className="relative pl-6 space-y-6 before:absolute before:left-2 before:top-4 before:bottom-4 before:w-[2px] before:bg-gradient-to-b before:from-purple-500 before:via-cyan-400 before:to-pink-500">
+            {portfolioData.projects.map((project) => (
+              <div
+                key={project.id}
+                id={`mobile-proj-${project.id}`}
+                className="relative scroll-mt-28"
+              >
+                {/* Glowing Checkpoint Orbital Node */}
+                <div className="absolute -left-[31px] top-6 flex h-4 w-4 items-center justify-center rounded-full bg-black border-2 border-cyan-400 shadow-[0_0_10px_#06b6d4]">
+                  <div className="h-1.5 w-1.5 rounded-full bg-white" />
+                </div>
+
+                <div className="rounded-3xl border border-white/15 bg-gradient-to-b from-[#0c0d1a]/95 via-[#080914]/95 to-[#04040a]/95 p-5 shadow-[0_20px_60px_rgba(0,0,0,0.85)] text-left backdrop-blur-2xl">
+                  {/* 16:9 Image Preview */}
+                  <div className="relative aspect-[16/9] w-full overflow-hidden rounded-2xl border border-white/10 bg-slate-950 shadow-inner">
+                    <img
+                      src={project.imageUrl}
+                      alt={project.title}
+                      className="h-full w-full object-cover object-center"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 pointer-events-none" />
+
+                    <div className="absolute top-2.5 inset-x-2.5 flex items-center justify-between font-mono text-[0.65rem]">
+                      <span className="rounded-lg bg-black/70 border border-cyan-400/40 px-2.5 py-0.5 font-bold text-cyan-300">
+                        PROJECT {project.number}
+                      </span>
+                      {project.status && (
+                        <span className="rounded-lg bg-black/70 border border-emerald-400/40 px-2 py-0.5 font-bold text-emerald-300">
+                          {project.status}
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="absolute bottom-2 left-2.5 text-[0.65rem] font-mono text-purple-300 uppercase tracking-wider font-semibold">
+                      {project.domain || project.category}
+                    </div>
+                  </div>
+
+                  {/* Title & Description */}
+                  <div className="mt-4">
+                    <h3 className="text-lg font-bold text-white">
+                      {project.title}
+                    </h3>
+
+                    <p className="mt-2 text-xs sm:text-sm text-slate-300 leading-relaxed">
+                      {project.description}
+                    </p>
+
+                    {/* Tech Stack */}
+                    <div className="mt-3 flex flex-wrap gap-1.5">
+                      {project.tech.map((t) => (
+                        <span
+                          key={t}
+                          className="rounded-lg border border-white/10 bg-white/[0.04] px-2 py-0.5 text-[0.65rem] font-mono text-slate-300"
+                        >
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="mt-4 pt-3 border-t border-white/10 flex flex-wrap items-center justify-between gap-3">
+                      <button
+                        onClick={() => setActiveCaseStudy(project)}
+                        className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-500 px-4 py-2 text-xs font-bold text-white shadow-md"
+                      >
+                        <FaLayerGroup className="text-xs" />
+                        <span>View Deep Case Study ↗</span>
+                      </button>
+
+                      <div className="flex items-center gap-2">
+                        {project.liveUrl && (
+                          <a
+                            href={project.liveUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center gap-1 rounded-xl border border-cyan-400/40 bg-cyan-500/10 px-3 py-1.5 text-xs font-mono text-cyan-300"
+                          >
+                            <span>Live</span>
+                            <FaArrowUpRightFromSquare className="text-[0.6rem]" />
+                          </a>
+                        )}
+
+                        {project.githubUrl && (
+                          <a
+                            href={project.githubUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center justify-center h-8 w-8 rounded-xl border border-white/10 bg-white/5 text-slate-300"
+                          >
+                            <FaGithub />
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -385,4 +602,3 @@ export default function ProjectsSection() {
     </section>
   );
 }
-

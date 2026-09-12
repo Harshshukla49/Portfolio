@@ -46,7 +46,12 @@ export default function CinematicSceneDive({
 }: CinematicSceneDiveProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const cleanTarget = (targetSection || 'projects').toLowerCase();
-  const theme = SECTION_THEMES[cleanTarget] || SECTION_THEMES.projects;
+  const theme = SECTION_THEMES[cleanTarget] || SECTION_THEMES.about;
+
+  // Never render transition dive overlay on projects section to keep the 3D orbit showcase crystal clear
+  if (cleanTarget === 'projects') {
+    return null;
+  }
 
   // GPU Canvas: 3D Camera Travel Particle Streaks
   useEffect(() => {

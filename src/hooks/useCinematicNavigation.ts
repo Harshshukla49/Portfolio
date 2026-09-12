@@ -27,17 +27,25 @@ export function useCinematicNavigation() {
       transitionTimerRef.current = null;
     }
 
-    // Step 1: Immediately set active state and scroll to target so DOM renders destination instantly
+    // Step 1: Immediately set active state and scroll to target
     setActiveSection(cleanId);
-    setTargetSection(cleanId);
-    setIsTransitioning(true);
 
     const el = document.getElementById(cleanId);
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
     }
 
-    // Step 2: Transition works for exactly 3 seconds, after that no transition comes
+    // Bypass transition dive overlay for projects section to prevent disturbing the 3D orbit
+    if (cleanId === 'projects') {
+      setIsTransitioning(false);
+      setTargetSection(null);
+      return;
+    }
+
+    setTargetSection(cleanId);
+    setIsTransitioning(true);
+
+    // Step 2: Transition works for exactly 3 seconds on other sections, after that no transition comes
     transitionTimerRef.current = window.setTimeout(() => {
       setIsTransitioning(false);
       setTargetSection(null);

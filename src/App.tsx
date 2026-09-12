@@ -51,11 +51,13 @@ export default function App() {
       {/* Desktop Magnetic Cyber Cursor */}
       <CustomCursor />
 
-      {/* Cinematic 3D Scene Dive & Particle Travel (No Pill Badges) */}
-      <CinematicSceneDive
-        isTransitioning={isTransitioning}
-        targetSection={targetSection}
-      />
+      {/* Cinematic 3D Scene Dive & Particle Travel (Disabled on Projects section) */}
+      {targetSection !== 'projects' && (
+        <CinematicSceneDive
+          isTransitioning={isTransitioning}
+          targetSection={targetSection}
+        />
+      )}
 
       {/* Futuristic Background Universe & Grid System */}
       <BackgroundEffects />
@@ -72,21 +74,17 @@ export default function App() {
       {/* Main Content Sections with Whole-Page 3D Perspective Scene Dive */}
       <motion.main
         animate={
-          isTransitioning
+          isTransitioning && targetSection !== 'projects'
             ? {
-                scale: targetSection === 'projects' ? 0.93 : 0.96,
-                opacity: 0.8,
+                scale: 0.96,
+                opacity: 0.85,
                 translateZ:
-                  targetSection === 'projects'
-                    ? -140
-                    : targetSection === 'skills'
+                  targetSection === 'skills'
                     ? -100
                     : -75,
                 rotateY:
                   targetSection === 'skills'
                     ? -3.5
-                    : targetSection === 'projects'
-                    ? 3
                     : targetSection === 'milestones'
                     ? -4
                     : targetSection === 'contact'
@@ -100,7 +98,7 @@ export default function App() {
                     : targetSection === 'about'
                     ? 1.5
                     : 0,
-                filter: 'blur(0.8px)',
+                filter: 'blur(0.5px)',
               }
             : {
                 scale: 1,

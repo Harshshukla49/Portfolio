@@ -1,103 +1,82 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 export type CinematicSection = 'hero' | 'about' | 'skills' | 'projects' | 'milestones' | 'contact';
 
 export function useCinematicNavigation() {
   const [activeSection, setActiveSection] = useState<CinematicSection>('hero');
-  const [isTransitioning, setIsTransitioning] = useState(false);
-  const [targetSection, setTargetSection] = useState<CinematicSection | null>(null);
-  const transitionTimerRef = useRef<number | null>(null);
 
-  const settleTransition = useCallback(() => {
-    if (transitionTimerRef.current !== null) {
-      window.clearTimeout(transitionTimerRef.current);
-      transitionTimerRef.current = null;
-    }
-    setIsTransitioning(false);
-    setTargetSection(null);
-  }, []);
-
-  // Instant non-blocking transition engine
+  // Instant, smooth scrolling to target section
   const transitionToSection = useCallback((sectionId: string) => {
     const cleanId = sectionId.replace('#', '') as CinematicSection;
-
-    // Clear any active animation timers immediately for rapid-click interruption
-    if (transitionTimerRef.current !== null) {
-      window.clearTimeout(transitionTimerRef.current);
-      transitionTimerRef.current = null;
-    }
-
-    // Step 1: Immediately set active state and scroll to target
     setActiveSection(cleanId);
 
-    const el = document.getElementById(cleanId);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-    }
-
-    // Bypass transition dive overlay for projects section to prevent disturbing the 3D orbit
-    if (cleanId === 'projects') {
-      setIsTransitioning(false);
-      setTargetSection(null);
+    if (cleanId === 'hero') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (window.history && window.history.pushState) {
+        window.history.pushState(null, '', window.location.pathname);
+      }
       return;
     }
 
-    setTargetSection(cleanId);
-    setIsTransitioning(true);
-
-    // Step 2: Transition works for exactly 3 seconds on other sections, after that no transition comes
-    transitionTimerRef.current = window.setTimeout(() => {
-      setIsTransitioning(false);
-      setTargetSection(null);
-      transitionTimerRef.current = null;
-    }, 3000);
+    const el = document.getElementById(cleanId);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (window.history && window.history.pushState) {
+        window.history.pushState(null, '', `#${cleanId}`);
+      }
+    }
   }, []);
 
-  // Keyboard shortcut to instantly settle transition
+  // Handle initial hash in URL if present on load
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' || e.key === 'Enter') {
-        settleTransition();
+    if (window.location.hash) {
+      const initialId = window.location.hash.replace('#', '');
+      const validSections: CinematicSection[] = ['hero', 'about', 'skills', 'projects', 'milestones', 'contact'];
+      if (validSections.includes(initialId as CinematicSection)) {
+        setTimeout(() => {
+          transitionToSection(initialId);
+        }, 100);
       }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [settleTransition]);
+    }
+  }, [transitionToSection]);
 
   // Scrollspy for manual user scrolling
   useEffect(() => {
+    let ticking = false;
+
     const handleScroll = () => {
-      if (isTransitioning) return;
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const sections: CinematicSection[] = ['hero', 'about', 'skills', 'projects', 'milestones', 'contact'];
+          const scrollPosition = window.scrollY + window.innerHeight * 0.35;
 
-      const sections: CinematicSection[] = ['hero', 'about', 'skills', 'projects', 'milestones', 'contact'];
-      const scrollPosition = window.scrollY + window.innerHeight * 0.35;
-
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const el = document.getElementById(sections[i]);
-        if (el) {
-          const top = el.offsetTop;
-          if (scrollPosition >= top) {
-            setActiveSection(sections[i]);
-            break;
+          for (let i = sections.length - 1; i >= 0; i--) {
+            const el = document.getElementById(sections[i]);
+            if (el) {
+              const top = el.offsetTop;
+              if (scrollPosition >= top) {
+                setActiveSection(sections[i]);
+                break;
+              }
+            }
           }
-        }
+          ticking = false;
+        });
+        ticking = true;
       }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      if (transitionTimerRef.current !== null) {
-        window.clearTimeout(transitionTimerRef.current);
-      }
-    };
-  }, [isTransitioning]);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return {
     activeSection,
-    isTransitioning,
-    targetSection,
+    isTransitioning: false,
+    targetSection: null,
     transitionToSection,
+    scrollToSection: transitionToSection,
   };
 }
+
 

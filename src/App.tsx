@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { motion } from 'framer-motion';
 import CustomCursor from './components/CustomCursor';
 import BackgroundEffects from './components/BackgroundEffects';
 import Navbar from './components/Navbar';
@@ -12,7 +11,6 @@ import ContactSection from './components/ContactSection';
 import Footer from './components/Footer';
 import AIAssistant from './components/AIAssistant';
 import FloatingAITrigger from './components/FloatingAITrigger';
-import CinematicSceneDive from './components/CinematicSceneDive';
 import WelcomeReveal from './components/WelcomeReveal';
 import { useCinematicNavigation } from './hooks/useCinematicNavigation';
 import { portfolioData } from './data/portfolioData';
@@ -20,8 +18,7 @@ import { portfolioData } from './data/portfolioData';
 export default function App() {
   const [isAIOpen, setIsAIOpen] = useState(false);
   const [showWelcome, setShowWelcome] = useState(true);
-  const { activeSection, isTransitioning, targetSection, transitionToSection } =
-    useCinematicNavigation();
+  const { activeSection, transitionToSection } = useCinematicNavigation();
 
   // Direct Official PDF Resume Downloader
   const handleDownloadResume = useCallback(() => {
@@ -51,18 +48,10 @@ export default function App() {
       {/* Desktop Magnetic Cyber Cursor */}
       <CustomCursor />
 
-      {/* Cinematic 3D Scene Dive & Particle Travel (Disabled on Projects section) */}
-      {targetSection !== 'projects' && (
-        <CinematicSceneDive
-          isTransitioning={isTransitioning}
-          targetSection={targetSection}
-        />
-      )}
-
       {/* Futuristic Background Universe & Grid System */}
       <BackgroundEffects />
 
-      {/* Floating Glassmorphic Navbar with 3D Scene Controls & Replay Option */}
+      {/* Floating Glassmorphic Navbar with Instant Section Navigation */}
       <Navbar
         activeSection={activeSection}
         onNavigate={transitionToSection}
@@ -71,51 +60,8 @@ export default function App() {
         onReplayIntro={() => setShowWelcome(true)}
       />
 
-      {/* Main Content Sections with Whole-Page 3D Perspective Scene Dive */}
-      <motion.main
-        animate={
-          isTransitioning && targetSection !== 'projects'
-            ? {
-                scale: 0.96,
-                opacity: 0.85,
-                translateZ:
-                  targetSection === 'skills'
-                    ? -100
-                    : -75,
-                rotateY:
-                  targetSection === 'skills'
-                    ? -3.5
-                    : targetSection === 'milestones'
-                    ? -4
-                    : targetSection === 'contact'
-                    ? 2
-                    : 0,
-                rotateX:
-                  targetSection === 'skills'
-                    ? 2
-                    : targetSection === 'contact'
-                    ? -2
-                    : targetSection === 'about'
-                    ? 1.5
-                    : 0,
-                filter: 'blur(0.5px)',
-              }
-            : {
-                scale: 1,
-                opacity: 1,
-                translateZ: 0,
-                rotateY: 0,
-                rotateX: 0,
-                filter: 'blur(0px)',
-              }
-        }
-        transition={{
-          duration: isTransitioning ? 0.9 : 0.8,
-          ease: [0.16, 1, 0.3, 1],
-        }}
-        style={{ perspective: 1400, transformStyle: 'preserve-3d' }}
-        className="relative z-10 will-change-transform"
-      >
+      {/* Main Content Sections with Direct, Smooth Navigation */}
+      <main className="relative z-10">
         <Hero
           onOpenAI={() => setIsAIOpen(true)}
           onNavigate={transitionToSection}
@@ -141,7 +87,7 @@ export default function App() {
         <div className="w-full max-w-6xl mx-auto h-[1px] bg-gradient-to-r from-transparent via-purple-500/20 via-cyan-500/20 to-transparent" />
 
         <ContactSection onDownloadResume={handleDownloadResume} />
-      </motion.main>
+      </main>
 
       {/* Futuristic Cyber Footer */}
       <Footer />

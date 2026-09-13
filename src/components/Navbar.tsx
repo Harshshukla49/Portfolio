@@ -87,16 +87,20 @@ export default function Navbar({
               </div>
             </button>
 
-            {/* Desktop Navigation Links (Cinematic Scene Selectors) */}
+            {/* Desktop Navigation Links (Scene Selectors) */}
             <nav className="hidden lg:flex items-center gap-1 rounded-full border border-white/10 bg-white/[0.03] p-1.5 shadow-inner backdrop-blur-md">
               {navItems.map((item) => {
                 const isActive = activeSection === item.id;
                 const isHovered = hoveredNav === item.id;
 
                 return (
-                  <button
+                  <a
                     key={item.id}
-                    onClick={() => handleNavClick(item.id)}
+                    href={`#${item.id}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleNavClick(item.id);
+                    }}
                     onMouseEnter={() => setHoveredNav(item.id)}
                     onMouseLeave={() => setHoveredNav(null)}
                     className={`relative rounded-full px-4 py-1.5 text-xs font-medium tracking-wide uppercase transition-all duration-200 select-none active:scale-95 ${
@@ -126,7 +130,7 @@ export default function Navbar({
                     )}
 
                     <span>{item.label}</span>
-                  </button>
+                  </a>
                 );
               })}
             </nav>
@@ -208,9 +212,13 @@ export default function Navbar({
               {navItems.map((item) => {
                 const isActive = activeSection === item.id;
                 return (
-                  <button
+                  <a
                     key={item.id}
-                    onClick={() => handleNavClick(item.id)}
+                    href={`#${item.id}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleNavClick(item.id);
+                    }}
                     className={`flex items-center justify-between rounded-2xl border px-4 py-3 text-left text-sm font-medium transition-all ${
                       isActive
                         ? 'border-cyan-400/50 bg-gradient-to-r from-purple-600/30 to-cyan-500/30 text-white font-bold'
@@ -219,7 +227,7 @@ export default function Navbar({
                   >
                     <span>{item.label}</span>
                     <span className="text-xs text-slate-500 font-mono">↗</span>
-                  </button>
+                  </a>
                 );
               })}
 

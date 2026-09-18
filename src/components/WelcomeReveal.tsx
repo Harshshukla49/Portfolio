@@ -92,6 +92,9 @@ export default function WelcomeReveal({
     }
 
     try {
+      if (window.speechSynthesis.paused) {
+        window.speechSynthesis.resume();
+      }
       window.speechSynthesis.cancel();
 
       const utterance = new SpeechSynthesisUtterance(WELCOME_VOICE_SCRIPT);
@@ -125,29 +128,77 @@ export default function WelcomeReveal({
     }
   }, [getPreferredVoice, isMuted]);
 
-  // Voice Initialization & Autoplay Attempt
+  // Voice Initialization & 100% Automatic Speech Trigger
   useEffect(() => {
     if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
       setVoiceState('ready');
       return;
     }
 
-    const initVoices = () => {
-      setVoiceState('ready');
-      // Attempt gentle initial speech
-      const timer = setTimeout(() => {
-        speakWelcomeVoice();
-      }, 700);
-      return () => clearTimeout(timer);
+    let hasTriggered = false;
+
+    const autoStartVoice = () => {
+      if (hasTriggered) return;
+      hasTriggered = true;
+      try {
+        if (window.speechSynthesis.paused) {
+          window.speechSynthesis.resume();
+        }
+      } catch (e) {}
+      speakWelcomeVoice();
     };
 
-    if (window.speechSynthesis.getVoices().length > 0) {
-      initVoices();
-    } else {
-      window.speechSynthesis.onvoiceschanged = initVoices;
-    }
+    // 1. Immediate speech attempt
+    autoStartVoice();
+
+    // 2. Delayed fallback for voice engine loading
+    const timer1 = setTimeout(() => {
+      autoStartVoice();
+    }, 300);
+
+    const timer2 = setTimeout(() => {
+      if (!window.speechSynthesis.speaking) {
+        autoStartVoice();
+      }
+    }, 800);
+
+    // 3. When browser voice list finishes loading
+    const handleVoicesChanged = () => {
+      autoStartVoice();
+    };
+    window.speechSynthesis.onvoiceschanged = handleVoicesChanged;
+
+    // 4. Fallback listener on any first micro-interaction in case browser restricts zero-gesture audio
+    const handleFirstGesture = () => {
+      try {
+        if (window.speechSynthesis.paused) {
+          window.speechSynthesis.resume();
+        }
+      } catch (e) {}
+      if (!window.speechSynthesis.speaking) {
+        speakWelcomeVoice();
+      }
+      cleanupGestureListeners();
+    };
+
+    const cleanupGestureListeners = () => {
+      window.removeEventListener('pointerdown', handleFirstGesture);
+      window.removeEventListener('touchstart', handleFirstGesture);
+      window.removeEventListener('mousemove', handleFirstGesture);
+      window.removeEventListener('keydown', handleFirstGesture);
+      window.removeEventListener('scroll', handleFirstGesture);
+    };
+
+    window.addEventListener('pointerdown', handleFirstGesture, { passive: true, once: true });
+    window.addEventListener('touchstart', handleFirstGesture, { passive: true, once: true });
+    window.addEventListener('mousemove', handleFirstGesture, { passive: true, once: true });
+    window.addEventListener('keydown', handleFirstGesture, { passive: true, once: true });
+    window.addEventListener('scroll', handleFirstGesture, { passive: true, once: true });
 
     return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+      cleanupGestureListeners();
       if ('speechSynthesis' in window) {
         window.speechSynthesis.onvoiceschanged = null;
       }
@@ -161,12 +212,10 @@ export default function WelcomeReveal({
     if (isMuted || voiceState === 'muted') {
       setIsMuted(false);
       speakWelcomeVoice();
-    } else if (voiceState === 'speaking') {
+    } else {
       setIsMuted(true);
       setVoiceState('muted');
       stopSpeech();
-    } else {
-      speakWelcomeVoice();
     }
   };
 
@@ -389,29 +438,22 @@ export default function WelcomeReveal({
               <button
                 onClick={handleToggleVoice}
                 className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-mono font-semibold transition-all backdrop-blur-md active:scale-95 ${
-                  isSpeaking
-                    ? 'border-cyan-400/60 bg-cyan-500/20 text-cyan-300 shadow-[0_0_15px_rgba(6,182,212,0.3)]'
-                    : isMuted
+                  isMuted
                     ? 'border-white/10 bg-white/5 text-slate-400 hover:text-white'
-                    : 'border-purple-400/40 bg-purple-500/10 text-purple-200 hover:border-cyan-400 hover:text-cyan-300'
+                    : 'border-cyan-400/60 bg-cyan-500/20 text-cyan-300 shadow-[0_0_15px_rgba(6,182,212,0.3)]'
                 }`}
-                title={isSpeaking ? 'Mute AI Voice' : 'Play / Unmute AI Voice'}
+                title={isMuted ? 'Unmute AI Voice' : 'Mute AI Voice'}
                 aria-label="Toggle AI Voice"
               >
-                {isSpeaking ? (
-                  <>
-                    <FaVolumeHigh className="text-xs animate-bounce" />
-                    <span className="hidden sm:inline">AI VOICE ON</span>
-                  </>
-                ) : isMuted ? (
+                {isMuted ? (
                   <>
                     <FaVolumeXmark className="text-xs text-slate-400" />
-                    <span className="hidden sm:inline">AI VOICE MUTED</span>
+                    <span className="hidden sm:inline">MUTED</span>
                   </>
                 ) : (
                   <>
-                    <FaPlay className="text-[0.65rem] text-cyan-300" />
-                    <span className="hidden sm:inline">ENABLE AI VOICE</span>
+                    <FaVolumeHigh className="text-xs animate-bounce text-cyan-300" />
+                    <span className="hidden sm:inline">AI VOICE ON</span>
                   </>
                 )}
               </button>

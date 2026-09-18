@@ -128,18 +128,20 @@ export default function WelcomeReveal({
     }
   }, [getPreferredVoice, isMuted]);
 
-  // Voice Initialization & 100% Automatic Speech Trigger
+  // Voice Initialization & Graceful 800ms Synchronized Automatic Speech Trigger
+  const hasTriggeredRef = useRef<boolean>(false);
+
   useEffect(() => {
     if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
       setVoiceState('ready');
       return;
     }
 
-    let hasTriggered = false;
+    hasTriggeredRef.current = false;
 
-    const autoStartVoice = () => {
-      if (hasTriggered) return;
-      hasTriggered = true;
+    const startVoiceGracefully = () => {
+      if (hasTriggeredRef.current) return;
+      hasTriggeredRef.current = true;
       try {
         if (window.speechSynthesis.paused) {
           window.speechSynthesis.resume();
@@ -148,35 +150,30 @@ export default function WelcomeReveal({
       speakWelcomeVoice();
     };
 
-    // 1. Immediate speech attempt
-    autoStartVoice();
-
-    // 2. Delayed fallback for voice engine loading
-    const timer1 = setTimeout(() => {
-      autoStartVoice();
-    }, 300);
-
-    const timer2 = setTimeout(() => {
-      if (!window.speechSynthesis.speaking) {
-        autoStartVoice();
-      }
+    // Smooth 800ms delay: allows the visual entrance (phases 1 to 5) to finish materializing first
+    const entranceTimer = setTimeout(() => {
+      startVoiceGracefully();
     }, 800);
 
-    // 3. When browser voice list finishes loading
+    // Fallback when voices finish loading asynchronously
     const handleVoicesChanged = () => {
-      autoStartVoice();
+      if (!hasTriggeredRef.current) {
+        setTimeout(() => {
+          startVoiceGracefully();
+        }, 400);
+      }
     };
     window.speechSynthesis.onvoiceschanged = handleVoicesChanged;
 
-    // 4. Fallback listener on any first micro-interaction in case browser restricts zero-gesture audio
+    // Fallback listener on any first micro-interaction in case browser restricts zero-gesture audio
     const handleFirstGesture = () => {
       try {
         if (window.speechSynthesis.paused) {
           window.speechSynthesis.resume();
         }
       } catch (e) {}
-      if (!window.speechSynthesis.speaking) {
-        speakWelcomeVoice();
+      if (!window.speechSynthesis.speaking && !hasTriggeredRef.current) {
+        startVoiceGracefully();
       }
       cleanupGestureListeners();
     };
@@ -184,20 +181,15 @@ export default function WelcomeReveal({
     const cleanupGestureListeners = () => {
       window.removeEventListener('pointerdown', handleFirstGesture);
       window.removeEventListener('touchstart', handleFirstGesture);
-      window.removeEventListener('mousemove', handleFirstGesture);
       window.removeEventListener('keydown', handleFirstGesture);
-      window.removeEventListener('scroll', handleFirstGesture);
     };
 
     window.addEventListener('pointerdown', handleFirstGesture, { passive: true, once: true });
     window.addEventListener('touchstart', handleFirstGesture, { passive: true, once: true });
-    window.addEventListener('mousemove', handleFirstGesture, { passive: true, once: true });
     window.addEventListener('keydown', handleFirstGesture, { passive: true, once: true });
-    window.addEventListener('scroll', handleFirstGesture, { passive: true, once: true });
 
     return () => {
-      clearTimeout(timer1);
-      clearTimeout(timer2);
+      clearTimeout(entranceTimer);
       cleanupGestureListeners();
       if ('speechSynthesis' in window) {
         window.speechSynthesis.onvoiceschanged = null;

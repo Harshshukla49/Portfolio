@@ -1,5 +1,42 @@
 import { portfolioData } from '../data/portfolioData';
 
+export interface ProjectCardData {
+  title: string;
+  category: string;
+  badge: string;
+  metrics: string;
+  description: string;
+  tech: string[];
+  liveUrl?: string;
+  githubUrl?: string;
+}
+
+export interface SkillItem {
+  name: string;
+  level: number;
+  tag: string;
+}
+
+export interface SkillCardData {
+  category: string;
+  skills: SkillItem[];
+}
+
+export interface RecruiterMatchData {
+  role: string;
+  matchScore: number;
+  verdict: string;
+  highlights: string[];
+  recommendedProjects: string[];
+  contactCta: string;
+}
+
+export type RichCard =
+  | { type: 'project'; data: ProjectCardData }
+  | { type: 'projects_list'; data: ProjectCardData[] }
+  | { type: 'skill_matrix'; data: SkillCardData[] }
+  | { type: 'recruiter_match'; data: RecruiterMatchData };
+
 export interface AIMessage {
   id: string;
   sender: 'user' | 'assistant';
@@ -7,12 +44,14 @@ export interface AIMessage {
   timestamp: string;
   action?: { label: string; link: string };
   suggestedQuestions?: string[];
+  richCard?: RichCard;
 }
 
-interface IntentResult {
+export interface IntentResult {
   text: string;
   action?: { label: string; link: string };
   suggestedQuestions: string[];
+  richCard?: RichCard;
 }
 
 export async function askHarshAI(query: string): Promise<IntentResult> {
@@ -20,9 +59,168 @@ export async function askHarshAI(query: string): Promise<IntentResult> {
   const normalized = rawQuery.toLowerCase();
 
   // Artificial short neural thinking latency for realistic AI UX
-  await new Promise((resolve) => setTimeout(resolve, 350));
+  await new Promise((resolve) => setTimeout(resolve, 320));
 
-  // --- 1. GREETINGS & INTRODUCTIONS ---
+  // --- 1. RECRUITER & ROLE MATCH EVALUATION ENGINE ---
+  if (
+    normalized.includes('match') ||
+    normalized.includes('fit for') ||
+    normalized.includes('evaluate') ||
+    normalized.includes('qualif') ||
+    normalized.includes('suitab') ||
+    normalized.includes('hire as') ||
+    normalized.includes('role')
+  ) {
+    if (
+      normalized.includes('ai') ||
+      normalized.includes('ml') ||
+      normalized.includes('machine learning') ||
+      normalized.includes('deep learning') ||
+      normalized.includes('computer vision')
+    ) {
+      return {
+        text: `🎯 **Candidate Match Evaluation: AI / ML Engineer**\n\nHarsh is an **exceptional match (96%)** for AI/ML Engineer and Deep Learning roles based on verified production projects and academic certifications.`,
+        action: { label: '💼 Contact Harsh for AI/ML Role', link: '#contact' },
+        suggestedQuestions: [
+          'Show his AI & ML skills matrix.',
+          'Tell me about his healthcare project.',
+          'Evaluate for Full Stack Developer role.',
+          'Download his verified resume.',
+        ],
+        richCard: {
+          type: 'recruiter_match',
+          data: {
+            role: 'AI / Machine Learning Engineer',
+            matchScore: 96,
+            verdict: 'High-Caliber Fit — Production ML & Neural Networks Specialist',
+            highlights: [
+              'IIIT Allahabad Certified in Machine Learning & Neural Networks',
+              'Engineered hybrid CNN + LSTM acoustic speech classifier (85% accuracy)',
+              'Built real-time biometric face recognition system (90% accuracy, 85% effort reduction)',
+              'High proficiency in Python (95%), OpenCV (89%), Scikit-Learn (92%), and NLTK (88%)',
+            ],
+            recommendedProjects: [
+              'Smart Healthcare Remote Monitoring System',
+              'Speech Emotion Recognition (CNN+LSTM)',
+              'Face Recognition Biometric Attendance',
+            ],
+            contactCta: 'shuklaharsh0207@gmail.com',
+          },
+        },
+      };
+    }
+
+    if (
+      normalized.includes('full stack') ||
+      normalized.includes('web') ||
+      normalized.includes('frontend') ||
+      normalized.includes('backend') ||
+      normalized.includes('software engineer') ||
+      normalized.includes('sde') ||
+      normalized.includes('mern')
+    ) {
+      return {
+        text: `🎯 **Candidate Match Evaluation: Full-Stack / Web Developer**\n\nHarsh scores **94% Match** for Full-Stack and Frontend Engineering positions, with proven capability in scalable MERN architectures and cloud hosting.`,
+        action: { label: '💼 Discuss Full-Stack Opportunities', link: '#contact' },
+        suggestedQuestions: [
+          'Show his full tech stack matrix.',
+          'Tell me about his live healthcare platform.',
+          'Evaluate for AI / ML Engineer role.',
+          'Download Harsh’s resume.',
+        ],
+        richCard: {
+          type: 'recruiter_match',
+          data: {
+            role: 'Full-Stack / Frontend Engineer',
+            matchScore: 94,
+            verdict: 'Production Ready — Modern React, Node.js & Cloud Integrations',
+            highlights: [
+              'Top 5 Rank in GDG Web Development Competition',
+              'Full-Stack Healthcare platform deployed live on Render with <100ms telemetry',
+              'Strong mastery of React.js (92%), Tailwind CSS (95%), Node.js (88%), and MongoDB (90%)',
+              'Experience designing secure REST APIs, Firebase Firestore, and responsive glassmorphism UI',
+            ],
+            recommendedProjects: [
+              'Smart Healthcare Telemetry & Doctor Portal',
+              'Murder Mystery Detective Narrative Engine',
+              'Twitter Real-Time Sentiment Platform',
+            ],
+            contactCta: 'shuklaharsh0207@gmail.com',
+          },
+        },
+      };
+    }
+
+    if (
+      normalized.includes('data science') ||
+      normalized.includes('data analyst') ||
+      normalized.includes('nlp')
+    ) {
+      return {
+        text: `🎯 **Candidate Match Evaluation: Data Scientist & NLP Specialist**\n\nHarsh scores **93% Match** for Data Science and NLP roles, featuring end-to-end data pipelines, TF-IDF vectorization, and data storytelling.`,
+        action: { label: '💼 Connect for Data Science Roles', link: '#contact' },
+        suggestedQuestions: [
+          'Tell me about his Twitter Sentiment project.',
+          'Show his AI & ML skills matrix.',
+          'Download Harsh’s verified resume.',
+        ],
+        richCard: {
+          type: 'recruiter_match',
+          data: {
+            role: 'Data Scientist / NLP Specialist',
+            matchScore: 93,
+            verdict: 'Proven Pipeline Builder — NLP, Feature Engineering & Analytics',
+            highlights: [
+              'Python for Data Science Certified (UIT) & Data Science Certified (Code With Harry)',
+              'Engineered Twitter sentiment model achieving +12% accuracy gain over baseline',
+              'Proficient in Pandas, NumPy, Scikit-Learn, NLTK, TF-IDF, and Streamlit dashboards',
+              'Strong foundation in statistical modeling, EDA, and telemetry data visualization',
+            ],
+            recommendedProjects: [
+              'Twitter Sentiment Analysis (NLTK + TF-IDF)',
+              'Speech Emotion Spectral Analysis (MFCCs)',
+              'Smart Healthcare Anomaly Detection',
+            ],
+            contactCta: 'shuklaharsh0207@gmail.com',
+          },
+        },
+      };
+    }
+
+    // Default General Evaluation
+    return {
+      text: `🎯 **Candidate Match Evaluation: General Technical Fit**\n\nHarsh is an **AI & Machine Learning Engineer** (B.Tech CSE at UIT / AKTU, 2023-2027) with an overarching **95% Technical Readiness Score** across AI/ML, Full-Stack, and Data Science.`,
+      action: { label: '💼 Contact Harsh Directly', link: '#contact' },
+      suggestedQuestions: [
+        'Evaluate for AI/ML Engineer role.',
+        'Evaluate for Full Stack Developer role.',
+        'Evaluate for Data Scientist role.',
+        'Download Harsh’s verified resume.',
+      ],
+      richCard: {
+        type: 'recruiter_match',
+        data: {
+          role: 'AI / ML & Full-Stack SDE',
+          matchScore: 95,
+          verdict: 'High-Impact Versatile Talent — AI Research + Full-Stack Execution',
+          highlights: [
+            'IIIT Allahabad ML Certification & GDG Top 5 Rank',
+            '5 Production projects across Healthcare, NLP, Biometrics, Audio DL & Web',
+            'Solid Computer Science fundamentals (DSA in C++, OOP, DBMS, OS)',
+            'Active volleyball team member with proven team communication & leadership',
+          ],
+          recommendedProjects: [
+            'Smart Healthcare Remote Monitoring System',
+            'Twitter Sentiment Analysis Platform',
+            'Face Recognition Attendance Monitoring',
+          ],
+          contactCta: 'shuklaharsh0207@gmail.com',
+        },
+      },
+    };
+  }
+
+  // --- 2. GREETINGS & INTRODUCTIONS ---
   if (
     /^(hi|hello|hey|hola|greetings|good morning|good afternoon|good evening|who are you|what can you do|help)/i.test(
       normalized
@@ -32,18 +230,18 @@ export async function askHarshAI(query: string): Promise<IntentResult> {
     normalized === 'hey'
   ) {
     return {
-      text: `👋 **Hello! I am Harsh's AI Portfolio Assistant.**\n\nI am connected directly to Harsh's verified portfolio intelligence database. I can provide detailed insights into:\n\n• 🚀 **AI/ML & Full-Stack Projects** (Healthcare AI, Twitter Sentiment, Facial Attendance, Speech AI)\n• 🧠 **Technical Skills & Stack** (Python, React.js, Deep Learning, OpenCV, Node.js, MongoDB)\n• 🎓 **Education & Certifications** (B.Tech at UIT / AKTU, IIIT Allahabad ML Certification)\n• 📬 **Contact & Hiring Information** (Email, Phone, LinkedIn, Resume)\n\nWhat would you like to explore first?`,
-      action: { label: 'Explore Projects', link: '#projects' },
+      text: `👋 **Hello! I am Harsh's AI Portfolio Assistant.**\n\nI am connected directly to Harsh's verified portfolio intelligence database. I can provide detailed insights into:\n\n• 🚀 **AI/ML & Full-Stack Projects** (Healthcare AI, Twitter Sentiment, Facial Attendance, Speech AI)\n• 🧠 **Technical Skills & Stack** (Python, React.js, Deep Learning, OpenCV, Node.js, MongoDB)\n• 🎓 **Education & Certifications** (B.Tech at UIT / AKTU, IIIT Allahabad ML Certification)\n• 🎯 **Recruiter Job Match Evaluations** (AI/ML, Full Stack, Data Science)\n• 📬 **Contact & Hiring Information** (Email, Phone, LinkedIn, Resume)\n\nWhat would you like to explore first?`,
+      action: { label: '🚀 Explore Featured Projects', link: '#projects' },
       suggestedQuestions: [
         'What projects has Harsh built?',
+        'Evaluate Harsh for an AI/ML role.',
         'What are his core AI skills?',
-        'Tell me about his healthcare project.',
         'How can I contact Harsh?',
       ],
     };
   }
 
-  // --- 2. RESUME & CV DOWNLOAD ---
+  // --- 3. RESUME & CV DOWNLOAD ---
   if (
     normalized.includes('resume') ||
     normalized.includes('cv') ||
@@ -51,17 +249,18 @@ export async function askHarshAI(query: string): Promise<IntentResult> {
     normalized.includes('curriculum vitae')
   ) {
     return {
-      text: `📄 **Harsh Shukla's Official Resume**\n\nYou can download Harsh's verified PDF resume directly. It includes his complete academic background, technical competencies in AI/ML & Web Development, production project case studies, and IIIT Allahabad certifications.\n\n• **Format:** PDF Document\n• **Status:** Updated & Verified for 2026 Opportunities\n• **Roles Open For:** AI/ML Engineer, Full Stack Developer, Data Scientist Intern/Full-Time`,
+      text: `📄 **Harsh Shukla's Official Resume**\n\nYou can download Harsh's verified PDF resume directly. It includes his complete academic background, technical competencies in AI/ML & Web Development, production project case studies, and IIIT Allahabad certifications.\n\n• **Format:** PDF Document\n• **Status:** Updated & Verified for 2026 Opportunities\n• **Roles Open For:** AI/ML Engineer, Full Stack Developer, Data Scientist (Internship / Full-Time)`,
       action: { label: '📥 Download Resume (PDF)', link: '/Harsh_Shukla_Resume.pdf' },
       suggestedQuestions: [
         'What projects has Harsh built?',
+        'Evaluate Harsh for an AI/ML role.',
         'What are his core AI skills?',
         'How can I contact Harsh?',
       ],
     };
   }
 
-  // --- 3. CONTACT & HIRING ---
+  // --- 4. CONTACT & HIRING ---
   if (
     normalized.includes('contact') ||
     normalized.includes('hire') ||
@@ -82,13 +281,14 @@ export async function askHarshAI(query: string): Promise<IntentResult> {
       action: { label: '✉️ Send Message via Contact Form', link: '#contact' },
       suggestedQuestions: [
         'What projects has Harsh built?',
+        'Evaluate Harsh for an AI/ML role.',
         'What are his core AI skills?',
         'Where can I download his resume?',
       ],
     };
   }
 
-  // --- 4. SPECIFIC PROJECT DEEP-DIVES ---
+  // --- 5. SPECIFIC PROJECT DEEP-DIVES WITH RICH CARDS ---
 
   // Project 1: Smart Healthcare
   if (
@@ -108,6 +308,19 @@ export async function askHarshAI(query: string): Promise<IntentResult> {
         'Tell me about his Face Recognition project.',
         'What other projects has Harsh built?',
       ],
+      richCard: {
+        type: 'project',
+        data: {
+          title: proj.title,
+          category: proj.category,
+          badge: 'PRODUCTION LIVE DEMO',
+          metrics: '<100ms Latency • Real-Time AI Telemetry',
+          description: proj.description,
+          tech: proj.tech,
+          liveUrl: proj.liveUrl || 'https://smart-health-rontend.onrender.com',
+          githubUrl: proj.githubUrl || 'https://github.com/Harshshukla49',
+        },
+      },
     };
   }
 
@@ -128,6 +341,18 @@ export async function askHarshAI(query: string): Promise<IntentResult> {
         'Tell me about his Speech Emotion project.',
         'What are his core AI skills?',
       ],
+      richCard: {
+        type: 'project',
+        data: {
+          title: proj.title,
+          category: proj.category,
+          badge: 'NLP & DATA SCIENCE',
+          metrics: '+12% Accuracy Boost • 1000+ Live Tweets Analyzed',
+          description: proj.description,
+          tech: proj.tech,
+          githubUrl: proj.githubUrl || 'https://github.com/Harshshukla49',
+        },
+      },
     };
   }
 
@@ -148,6 +373,18 @@ export async function askHarshAI(query: string): Promise<IntentResult> {
         'Tell me about his Smart Healthcare project.',
         'What are his core AI skills?',
       ],
+      richCard: {
+        type: 'project',
+        data: {
+          title: proj.title,
+          category: proj.category,
+          badge: 'COMPUTER VISION',
+          metrics: '90% Accuracy • 85% Manual Effort Reduction',
+          description: proj.description,
+          tech: proj.tech,
+          githubUrl: proj.githubUrl || 'https://github.com/Harshshukla49',
+        },
+      },
     };
   }
 
@@ -169,6 +406,18 @@ export async function askHarshAI(query: string): Promise<IntentResult> {
         'What are his core AI skills?',
         'What certifications does Harsh have?',
       ],
+      richCard: {
+        type: 'project',
+        data: {
+          title: proj.title,
+          category: proj.category,
+          badge: 'DEEP LEARNING NEURAL NET',
+          metrics: '85% Accuracy • Hybrid CNN + LSTM',
+          description: proj.description,
+          tech: proj.tech,
+          githubUrl: proj.githubUrl || 'https://github.com/Harshshukla49',
+        },
+      },
     };
   }
 
@@ -188,10 +437,22 @@ export async function askHarshAI(query: string): Promise<IntentResult> {
         'What are his core AI skills?',
         'How can I contact Harsh?',
       ],
+      richCard: {
+        type: 'project',
+        data: {
+          title: proj.title,
+          category: proj.category,
+          badge: 'FULL STACK WEB & SQL',
+          metrics: 'Dynamic Narrative Engine • Zero-Lag State Transitions',
+          description: proj.description,
+          tech: proj.tech,
+          githubUrl: proj.githubUrl || 'https://github.com/Harshshukla49',
+        },
+      },
     };
   }
 
-  // --- 5. ALL PROJECTS OVERVIEW ---
+  // --- 6. ALL PROJECTS OVERVIEW WITH LIST CARD ---
   if (
     normalized.includes('project') ||
     normalized.includes('built') ||
@@ -200,19 +461,62 @@ export async function askHarshAI(query: string): Promise<IntentResult> {
     normalized.includes('application') ||
     normalized.includes('showcase')
   ) {
+    const allProjectCards: ProjectCardData[] = [
+      {
+        title: 'Smart Healthcare Remote Monitoring',
+        category: 'Full-Stack & Telemetry',
+        badge: 'LIVE DEMO',
+        metrics: '<100ms Latency • AI Anomaly Detection',
+        description: 'Real-time telemetry and dual portals for doctors and patients with risk scoring.',
+        tech: ['React.js', 'Node.js', 'Firebase', 'ML'],
+        liveUrl: 'https://smart-health-rontend.onrender.com',
+      },
+      {
+        title: 'Twitter Sentiment Analysis',
+        category: 'NLP & Data Science',
+        badge: 'NLP PIPELINE',
+        metrics: '+12% Accuracy • 1000+ Tweets',
+        description: 'Analyzed 1,000+ tweets using NLTK and TF-IDF with an interactive Streamlit UI.',
+        tech: ['Python', 'NLP', 'Scikit-Learn', 'Streamlit'],
+        githubUrl: 'https://github.com/Harshshukla49',
+      },
+      {
+        title: 'Face Recognition Attendance',
+        category: 'Computer Vision',
+        badge: '90% ACCURACY',
+        metrics: '85% Manual Effort Cut',
+        description: 'Automated biometric attendance logger using OpenCV Haar cascades and SQLite.',
+        tech: ['Python', 'OpenCV', 'Tkinter', 'SQLite'],
+        githubUrl: 'https://github.com/Harshshukla49',
+      },
+      {
+        title: 'Speech Emotion Recognition',
+        category: 'Deep Learning',
+        badge: 'CNN + LSTM',
+        metrics: '85% Acoustic Accuracy',
+        description: 'Deep neural network classifying speech emotion nuance using MFCC acoustic features.',
+        tech: ['Python', 'CNN', 'LSTM', 'MFCC'],
+        githubUrl: 'https://github.com/Harshshukla49',
+      },
+    ];
+
     return {
-      text: `🚀 **Harsh Shukla's Featured Projects (5 Total):**\n\n1. 🏥 **Smart Healthcare Remote Monitoring System**\n   *Real-time patient telemetry, doctor portals & AI risk predictions (<100ms latency).*\n   • *Stack:* React.js, Node.js, Firebase, ML, Tailwind CSS\n   • *Live Demo:* [smart-health-rontend.onrender.com](https://smart-health-rontend.onrender.com)\n\n2. 📊 **Twitter Sentiment Analysis Platform**\n   *Processed 1,000+ tweets via NLTK/TF-IDF with +12% accuracy boost & Streamlit dashboard.*\n   • *Stack:* Python, NLP, Scikit-Learn, NLTK, Streamlit\n\n3. 👁️ **Face Recognition Attendance System**\n   *Biometric webcam attendance with 90% accuracy, cutting manual effort by 85%.*\n   • *Stack:* Python, OpenCV, Haar Cascades, Tkinter, SQLite\n\n4. 🎙️ **Speech Emotion Recognition System**\n   *Deep learning CNN + LSTM acoustic classifier achieving 85% accuracy using MFCCs.*\n   • *Stack:* Python, CNN, LSTM, MFCC, Scikit-Learn\n\n5. 🕵️ **Murder Mystery Detective Game**\n   *Interactive detective story web app with authentication & optimized SQLite queries.*\n   • *Stack:* Node.js, Express.js, SQLite, JavaScript\n\nClick below to view interactive case studies with architecture breakdowns!`,
+      text: `🚀 **Harsh Shukla's Featured Projects (5 Total):**\n\nHarsh has designed and deployed systems spanning **AI Telemetry, Natural Language Processing, Computer Vision, and Deep Neural Networks**.\n\nExplore the interactive project cards below or jump directly to the live demos:`,
       action: { label: '📂 Explore Projects Section', link: '#projects' },
       suggestedQuestions: [
         'Tell me about his healthcare project.',
+        'Evaluate Harsh for an AI/ML role.',
         'What are his core AI skills?',
-        'Tell me about his speech emotion project.',
         'How can I contact Harsh?',
       ],
+      richCard: {
+        type: 'projects_list',
+        data: allProjectCards,
+      },
     };
   }
 
-  // --- 6. AI & MACHINE LEARNING SKILLS ---
+  // --- 7. AI & MACHINE LEARNING SKILLS WITH SKILL MATRIX CARD ---
   if (
     normalized.includes('ai skill') ||
     normalized.includes('ml skill') ||
@@ -223,19 +527,43 @@ export async function askHarshAI(query: string): Promise<IntentResult> {
     normalized.includes('nlp') ||
     normalized.includes('data science')
   ) {
+    const aiSkillsMatrix: SkillCardData[] = [
+      {
+        category: 'AI, Deep Learning & Vision',
+        skills: [
+          { name: 'Machine Learning (Scikit-Learn)', level: 92, tag: 'Algorithms & Tuning' },
+          { name: 'Deep Learning (CNN & LSTM)', level: 86, tag: 'Neural Architectures' },
+          { name: 'Computer Vision (OpenCV)', level: 89, tag: 'Real-Time Biometrics' },
+          { name: 'NLP & Text Mining (NLTK)', level: 88, tag: 'TF-IDF & Sentiment' },
+        ],
+      },
+      {
+        category: 'Core Data Science & Python',
+        skills: [
+          { name: 'Python Engineering', level: 95, tag: 'Primary AI Language' },
+          { name: 'Pandas & NumPy Analytics', level: 90, tag: 'Data Wrangling & EDA' },
+          { name: 'Model Optimization & Testing', level: 87, tag: 'Performance & Latency' },
+        ],
+      },
+    ];
+
     return {
       text: `🧠 **Harsh's AI, Machine Learning & Data Science Expertise:**\n\n• 🤖 **Machine Learning (92%):** Supervised/unsupervised algorithms, Scikit-learn, regression, classification, clustering, hyperparameter tuning.\n• 🧬 **Deep Learning & Neural Nets (86%):** CNNs for computer vision, RNNs/LSTMs for sequential and acoustic audio data, PyTorch/TensorFlow principles.\n• 👁️ **Computer Vision (89%):** OpenCV, Haar Cascades, facial landmark detection, real-time webcam video stream processing.\n• 📝 **NLP & Text Mining (88%):** NLTK, TF-IDF vectorization, tokenization, lemmatization, sentiment polarity classification.\n• 📊 **Data Science & Analytics (90%):** Pandas, NumPy, Exploratory Data Analysis (EDA), data cleaning, feature engineering.\n• 📜 **Certified by IIIT Allahabad** in Machine Learning & Neural Networks!`,
       action: { label: '⚡ View Full Tech Stack', link: '#skills' },
       suggestedQuestions: [
         'What projects has Harsh built?',
+        'Evaluate Harsh for an AI/ML role.',
         'What are his web development skills?',
         'Tell me about his certifications.',
-        'How can I contact Harsh?',
       ],
+      richCard: {
+        type: 'skill_matrix',
+        data: aiSkillsMatrix,
+      },
     };
   }
 
-  // --- 7. WEB DEVELOPMENT & FULL STACK SKILLS ---
+  // --- 8. WEB DEVELOPMENT & FULL STACK SKILLS ---
   if (
     normalized.includes('web') ||
     normalized.includes('frontend') ||
@@ -246,19 +574,43 @@ export async function askHarshAI(query: string): Promise<IntentResult> {
     normalized.includes('express') ||
     normalized.includes('mern')
   ) {
+    const webSkillsMatrix: SkillCardData[] = [
+      {
+        category: 'Frontend Engineering',
+        skills: [
+          { name: 'React.js & Hooks', level: 92, tag: 'Component Architecture' },
+          { name: 'Tailwind CSS & Responsive UI', level: 95, tag: 'Modern Styling & Glassmorphism' },
+          { name: 'JavaScript ES6+ & TypeScript', level: 90, tag: 'Asynchronous & Type-Safe' },
+        ],
+      },
+      {
+        category: 'Backend, APIs & Databases',
+        skills: [
+          { name: 'Node.js & Express.js', level: 88, tag: 'RESTful API Services' },
+          { name: 'MongoDB & Mongoose', level: 90, tag: 'NoSQL Schema Design' },
+          { name: 'Firebase & Cloud Firestore', level: 85, tag: 'Real-Time Sync' },
+          { name: 'SQL (MySQL & SQLite)', level: 88, tag: 'Relational Modeling' },
+        ],
+      },
+    ];
+
     return {
       text: `💻 **Harsh's Full-Stack Web Development Stack:**\n\n• ⚛️ **Frontend Engineering:** React.js (92%), Tailwind CSS (95%), HTML5 & Modern CSS3, responsive glassmorphism, Framer Motion animations.\n• ⚙️ **Backend & APIs:** Node.js (88%), Express.js (90%), Flask (84%), RESTful API design, middleware authentication, CRUD pipelines.\n• 🗄️ **Databases & Cloud:** MongoDB (90%), MySQL (86%), Firebase Cloud Firestore (85%), Supabase (80%), SQLite (85%)\n• 🛠️ **Dev Tools:** Git & GitHub (94%), Postman (90%), VS Code (96%), Render Cloud deployment.\n• 🏆 **GDG Top 5 Ranking:** Awarded Top 5 in GDG On Campus Web Development Competition!`,
       action: { label: '⚡ View Full Tech Stack', link: '#skills' },
       suggestedQuestions: [
         'What projects has Harsh built?',
+        'Evaluate Harsh for a Full Stack role.',
         'What are his core AI skills?',
-        'Tell me about his healthcare project.',
         'How can I contact Harsh?',
       ],
+      richCard: {
+        type: 'skill_matrix',
+        data: webSkillsMatrix,
+      },
     };
   }
 
-  // --- 8. ALL SKILLS & TECH STACK ---
+  // --- 9. ALL SKILLS & TECH STACK ---
   if (
     normalized.includes('skill') ||
     normalized.includes('technolog') ||
@@ -269,19 +621,44 @@ export async function askHarshAI(query: string): Promise<IntentResult> {
     normalized.includes('database') ||
     normalized.includes('know')
   ) {
+    const fullSkillsMatrix: SkillCardData[] = [
+      {
+        category: 'Languages & AI Core',
+        skills: [
+          { name: 'Python (AI/ML & Vision)', level: 95, tag: 'Core AI Language' },
+          { name: 'C++ (DSA & Algorithms)', level: 85, tag: 'High-Performance Computing' },
+          { name: 'Machine Learning & Neural Nets', level: 92, tag: 'Scikit-Learn & CNN' },
+          { name: 'OpenCV Computer Vision', level: 89, tag: 'Real-Time Biometrics' },
+        ],
+      },
+      {
+        category: 'Full-Stack & Cloud Stack',
+        skills: [
+          { name: 'React.js & Tailwind CSS', level: 94, tag: 'Modern Frontend UI' },
+          { name: 'Node.js & Express APIs', level: 88, tag: 'Backend Services' },
+          { name: 'MongoDB, MySQL & Firebase', level: 89, tag: 'Polyglot Persistence' },
+          { name: 'Git, GitHub & Deployment', level: 94, tag: 'CI/CD & Cloud' },
+        ],
+      },
+    ];
+
     return {
       text: `⚡ **Harsh Shukla's Comprehensive Technical Stack:**\n\n• 🔤 **Languages:** Python (95%), C++ (85%), JavaScript (90%), SQL (88%)\n• 🧠 **AI & ML:** Machine Learning (92%), Deep Learning (86%), OpenCV (89%), NLP / NLTK (88%), Scikit-Learn (92%), Pandas/NumPy (90%)\n• ⚛️ **Frontend:** React.js (92%), Tailwind CSS (95%), HTML5/CSS3 (95%)\n• ⚙️ **Backend:** Node.js (88%), Express.js (90%), Flask (84%), REST APIs (92%)\n• 🗄️ **Databases:** MongoDB (90%), MySQL (86%), Firebase (85%), Supabase (80%), SQLite (85%)\n• 🛠️ **Tools & Core CS:** Git, GitHub, Postman, VS Code, DSA, OOP, DBMS, OS`,
       action: { label: '⚡ View Skills Section', link: '#skills' },
       suggestedQuestions: [
         'What projects has Harsh built?',
+        'Evaluate Harsh for an AI/ML role.',
         'Tell me about his healthcare project.',
         'What certifications does Harsh have?',
-        'How can I contact Harsh?',
       ],
+      richCard: {
+        type: 'skill_matrix',
+        data: fullSkillsMatrix,
+      },
     };
   }
 
-  // --- 9. EDUCATION & ACADEMICS ---
+  // --- 10. EDUCATION & ACADEMICS ---
   if (
     normalized.includes('education') ||
     normalized.includes('college') ||
@@ -303,12 +680,13 @@ export async function askHarshAI(query: string): Promise<IntentResult> {
       suggestedQuestions: [
         'What certifications does Harsh have?',
         'What projects has Harsh built?',
+        'Evaluate Harsh for an AI/ML role.',
         'How can I contact Harsh?',
       ],
     };
   }
 
-  // --- 10. CERTIFICATIONS & ACHIEVEMENTS ---
+  // --- 11. CERTIFICATIONS & ACHIEVEMENTS ---
   if (
     normalized.includes('certificat') ||
     normalized.includes('achievement') ||
@@ -326,13 +704,13 @@ export async function askHarshAI(query: string): Promise<IntentResult> {
       suggestedQuestions: [
         'What projects has Harsh built?',
         'What are his core AI skills?',
-        'What is his educational background?',
+        'Evaluate Harsh for an AI/ML role.',
         'How can I contact Harsh?',
       ],
     };
   }
 
-  // --- 11. INDIVIDUAL SKILL QUERIES (Python, React, C++, OpenCV, etc.) ---
+  // --- 12. INDIVIDUAL SKILL QUERIES (Python, React, C++, OpenCV, etc.) ---
   const specificSkillQueries: { [key: string]: { name: string; level: number; desc: string; projs: string } } = {
     python: {
       name: 'Python',
@@ -404,13 +782,25 @@ export async function askHarshAI(query: string): Promise<IntentResult> {
         suggestedQuestions: [
           'What projects has Harsh built?',
           'What are his other AI skills?',
+          'Evaluate Harsh for an AI/ML role.',
           'How can I contact Harsh?',
         ],
+        richCard: {
+          type: 'skill_matrix',
+          data: [
+            {
+              category: info.name,
+              skills: [
+                { name: info.name, level: info.level, tag: 'Verified Proficiency' },
+              ],
+            },
+          ],
+        },
       };
     }
   }
 
-  // --- 12. GENERAL ABOUT / BIO (Explicit requests for Harsh's profile) ---
+  // --- 13. GENERAL ABOUT / BIO ---
   if (
     normalized.includes('about harsh') ||
     normalized.includes('who is harsh') ||
@@ -425,21 +815,21 @@ export async function askHarshAI(query: string): Promise<IntentResult> {
       action: { label: '👤 View About Section', link: '#about' },
       suggestedQuestions: [
         'What projects has Harsh built?',
+        'Evaluate Harsh for an AI/ML role.',
         'What are his core AI skills?',
-        'Tell me about his healthcare project.',
         'How can I contact Harsh?',
       ],
     };
   }
 
-  // --- 13. INTELLIGENT FALLBACK WITH DIRECT OPTIONS ---
+  // --- 14. INTELLIGENT FALLBACK WITH DIRECT OPTIONS ---
   return {
-    text: `I searched Harsh's verified portfolio intelligence database for: *"**${rawQuery}**"*\n\nWhile I don't have a direct matching record for that exact phrasing, I can provide verified information on:\n\n• 🚀 **Projects:** Healthcare AI, Twitter Sentiment, Facial Attendance, Speech AI\n• 🧠 **Skills:** Python, Machine Learning, React.js, Deep Learning, OpenCV, Node.js\n• 🎓 **Education & Certifications:** B.Tech at UIT / AKTU & IIIT Allahabad\n• 📬 **Contact:** Email ([shuklaharsh0207@gmail.com](mailto:shuklaharsh0207@gmail.com)) or Phone (+91 86018 45515)\n\nFeel free to choose a topic below or reach Harsh directly!`,
+    text: `I searched Harsh's verified portfolio intelligence database for: *"**${rawQuery}**"*\n\nWhile I don't have a direct matching record for that exact phrasing, I can provide verified information on:\n\n• 🚀 **Projects:** Healthcare AI, Twitter Sentiment, Facial Attendance, Speech AI\n• 🧠 **Skills:** Python, Machine Learning, React.js, Deep Learning, OpenCV, Node.js\n• 🎯 **Recruiter Match:** Evaluate for AI/ML, Full Stack, or Data Science\n• 🎓 **Education & Certifications:** B.Tech at UIT / AKTU & IIIT Allahabad\n• 📬 **Contact:** Email ([shuklaharsh0207@gmail.com](mailto:shuklaharsh0207@gmail.com)) or Phone (+91 86018 45515)\n\nFeel free to choose a quick topic below or reach Harsh directly!`,
     action: { label: '✉️ Contact Harsh Directly', link: '#contact' },
     suggestedQuestions: [
       'What projects has Harsh built?',
+      'Evaluate Harsh for an AI/ML role.',
       'What are his core AI skills?',
-      'Tell me about his healthcare project.',
       'How can I contact Harsh?',
     ],
   };
